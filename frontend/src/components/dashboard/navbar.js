@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import '../dashboard.js/navbar.css'
+import '../dashboard/navbar.css'
 import '../../fontawesome/css/all.css';
 export default class navbar extends Component {
   render() {
