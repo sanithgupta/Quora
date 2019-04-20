@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
+import { Button, UncontrolledPopover, PopoverHeader, PopoverBody } from 'reactstrap';
 import '../dashboard/navbar.css'
 import '../../fontawesome/css/all.css';
 export default class navbar extends Component {
   render() {
+
     return (
       <div>
 <nav class="navbar navbar-expand-lg navbar-light" style={{backgroundColor:"white",height:"50px"}}>
