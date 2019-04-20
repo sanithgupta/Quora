@@ -42,8 +42,9 @@ export default class home extends Component {
     return (
       <div class="bg" >
         <Navbar/>
-
+<br></br>
         <div class="container">
+        <div class="row">
         <div class="col col-sm-3">
         <ul  >
         <li class="pad"  >
@@ -62,8 +63,9 @@ export default class home extends Component {
         
         <div class="col col-sm-2">
     
-      <img src={require('../../images/related_topics.JPG')} style={{ height: "130%", width: "130%" }} alt="Topics"></img>
+      <img src={require('../../images/related_topics.JPG')} style={{ height: "650px", width: "220px" }} alt="Topics"></img>
        
+        </div>
         </div>
         </div>
       </div>

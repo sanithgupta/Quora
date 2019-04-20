@@ -16,6 +16,9 @@ const answers = new mongoose.Schema({
     user_id:{
         type:String
     },
+    user_name:{
+        type:String
+    },
     owner_status:{
         type:String
     },
@@ -23,7 +26,7 @@ const answers = new mongoose.Schema({
         type:Array
     },
     is_anonymous:{
-        type:String
+        type:Boolean
     },
     upvotes:{
         type:Array

@@ -43,8 +43,10 @@ font-weight: 700
   padding:6px;
 }
 .question_size{
-  font-size: 22px;
-  font-weight: 600;
+  font-size: 24px;
+  font-weight: 800;
+  font-family:  Georgia, 'Times New Roman', Times, serif;
+
 }
 .date_size{
   font-size: 10px;
