@@ -1,8 +1,12 @@
 .Login-component {
     background: url(../../images//login_image.png) no-repeat center center fixed;
     width: 100%;
-    height: 733px;
+    height: 750px;
   background-size: cover;
+}
+
+a:hover{
+    text-decoration:underline;
 }
 
 .heading-block{
@@ -11,7 +15,7 @@
 
 .login-form {
     width: 650px;
-    height:550px;
+    height:auto;
     border: 1px solid #e2e2e2;
     box-shadow: 0 0 5px #888;
     background-color: white;
