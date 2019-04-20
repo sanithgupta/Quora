@@ -1,14 +1,14 @@
 var mongoose = require('mongoose')
 
-const users = new mongoose.Schema({
+const userDetail = new mongoose.Schema({
 
 user_id:{
     type:String
 },
-email:{
+email_id:{
     type:String
 },
-passwod:{
+password:{
     type:String
 },  
 first_name:{
@@ -28,10 +28,10 @@ state:{
     type:String
 },
 zip_code:{
-type:String,
+type:String
 },
 profile_image:{
-    type:BigInt64Array
+    type:String
 },
 education:{
     type:String
@@ -74,8 +74,8 @@ profile_views:{
 },
 questions_answered:{
     type:Array
-},
+}
 
-},{strict:"false"})
-var Users = mongoose.model('Users',users);
+})
+var Users = mongoose.model('Users', userDetail);
 module.exports = Users;

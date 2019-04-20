@@ -1,15 +1,15 @@
-// var mongoose = require('mongoose');
-// //var configLink=require('./../config');
-// mongoose.Promise = global.Promise;
+// import dbName from './settings';
+var config = require("./../config/settings");
 
-// // mongoose.set('useCreateIndex', true);
-// mongoose.connect("mongodb://admin:admin@cmpe273-lab2-shard-00-00-bmdyb.mongodb.net:27017,cmpe273-lab2-shard-00-01-bmdyb.mongodb.net:27017,cmpe273-lab2-shard-00-02-bmdyb.mongodb.net:27017/canvas?ssl=true&replicaSet=cmpe273-lab2-shard-0&authSource=admin",{useMongoClient: true});
-// // mongoose.set('useCreateIndex', true);
-// var mdb=mongoose.connection;
+var mongoose = require('mongoose');
+mongoose.Promise = global.Promise;
 
-// mdb.on('error',console.error.bind(console,'Connection error'))
-// mdb.on('open',()=>{
-//     console.log('MongoDB connected!')
-// })
+mongoose.connect(config.dbURL, { useNewUrlParser: true });
+var mdb=mongoose.connection;
 
-// module.exports = {mongoose};
+mdb.on('error',console.error.bind(console,'Connection error'))
+mdb.on('open',()=>{
+    console.log('MongoDB connected!')
+})
+
+module.exports = {mongoose};
