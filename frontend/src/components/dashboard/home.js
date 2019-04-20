@@ -3,6 +3,7 @@ import Navbar from './navbar';
 import './home.css'
 import UserFeed from './userfeed'
 export default class home extends Component {
+  
     constructor() {
         super();
     
@@ -12,6 +13,7 @@ export default class home extends Component {
         }
     }
   render() {
+    
     let topic_list = this.state.topics.map(topic => {
    
         return (

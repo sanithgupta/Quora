@@ -1,0 +1,19 @@
+.font1{
+    font-family:'Times New Roman', Times, serif;
+}
+
+.pointer1{
+    cursor:pointer;
+}
+
+.active{
+    background-color: #E6E6E6;
+}
+
+.circle1{
+    border-radius: 50%;
+}
+
+.addcred1{
+    cursor:pointer;
+}

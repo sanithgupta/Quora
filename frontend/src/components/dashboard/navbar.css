@@ -1,3 +1,7 @@
 .brandcol{
     color:"red"
 }
+
+.buttonRound{
+    border-radius: 50%;
+}
