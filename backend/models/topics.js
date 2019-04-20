@@ -8,7 +8,8 @@ const topics = new mongoose.Schema({topic_id:{
     },
     questions:{
         type:Array
-    },
+    }
+    ,
     users:{
         type:Array
     },

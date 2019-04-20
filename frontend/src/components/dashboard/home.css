@@ -1,0 +1,28 @@
+ul {
+    list-style-type: none;
+  }
+
+.text_color{
+    color:#777777;
+}
+.font_bold{
+font-weight: 500;
+}
+.font_more_bold{
+    font-weight: 650;
+    }
+    
+.bg{
+    background-color: #FAFAFA;
+}
+.font_white{
+    background-color:white
+}
+.border{
+    padding:20px;
+    width: 100%;
+    border: 1px solid #EFEFEF;
+  }
+.font_size{
+    font-size: 20px;
+}
