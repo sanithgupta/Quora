@@ -29,7 +29,7 @@ export default class navbar extends Component {
           <input type="text" class="form-control" placeholder="Search Quora"></input>
         </div>
         <a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "10%", width: "10%",marginLeft:"1%" }} alt="Quora LOGO"></img></a>
-        <button class="btn btn-danger" style={{marginLeft:"30px"}}>Add Question or Link</button>
+        <button class="btn" style={{marginLeft:"30px",backgroundColor:"#B92B27",color:"white"}}>Add Question or Link</button>
         
       </form>
      

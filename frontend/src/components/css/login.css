@@ -1,0 +1,57 @@
+.Login-component {
+    background: url(../../images//login_image.png) no-repeat center center fixed;
+    width: 100%;
+    height: 750px;
+  background-size: cover;
+}
+
+a:hover{
+    text-decoration:underline;
+}
+
+.heading-block{
+    margin-bottom: 75px
+}
+
+.login-form {
+    width: 650px;
+    height:auto;
+    border: 1px solid #e2e2e2;
+    box-shadow: 0 0 5px #888;
+    background-color: white;
+    margin-left: 30%;
+    margin-top: 5%;
+    position: absolute
+}
+
+.form-heading{
+    text-align: center;
+    font-size: 60px;
+    color: #B92B27;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600
+}
+
+.paragraph{
+    font-size: 17px;
+    color: #999999;
+    text-align: center;
+}
+
+.social{
+    text-align: left;
+}
+
+.google-btn{
+    background-color:#DF4930;
+    color:white;
+    width: 270px;
+    margin-bottom: 15px
+}
+
+.facebook-btn{
+    background-color:#507CC0;
+    color:white;
+    width: 270px;
+    margin-bottom: 15px
+}

@@ -41,13 +41,13 @@ career_info:{
 about:{
     type:String
 },
-credential:{
+credentials:{
     type:Array
 },
 activity:{
     type:Array
 },
-message:{
+messages:{
     type:Array
 },
 questions:{

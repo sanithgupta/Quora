@@ -31,3 +31,27 @@
     transform: rotate(360deg);
   }
 }
+
+.font_bold{
+  font-weight: 500;
+  }
+
+.font_more_bold{
+font-weight: 700
+}
+.pad{
+  padding:6px;
+}
+.question_size{
+  font-size: 22px;
+  font-weight: 600;
+}
+.date_size{
+  font-size: 10px;
+}
+.padmore{
+  padding:10px;
+}
+.padless{
+  padding:3px;
+}
