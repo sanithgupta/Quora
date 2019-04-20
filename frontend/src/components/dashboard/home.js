@@ -18,7 +18,7 @@ export default class home extends Component {
 
         <div class="container">
         <div class="col col-sm-3">
-        {topics}
+        {/* {topics} */}
         </div>
         <div class="col col-sm-6">
         Home
