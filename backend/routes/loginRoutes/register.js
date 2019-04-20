@@ -2,7 +2,8 @@ var routerr = require('express').Router();
 var kafka = require('./../../kafka/client');
 
 routerr.post('/register', function (req, res) {
-  console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@Inside Backend ",JSON.stringify(req.body))
+  console.log("BACKEND: ------- INSDIE Register User POST ----------");
+    console.log('Request Body: ', req.body);
 
 
   kafka.make_request('register', req.body, function(err, result){

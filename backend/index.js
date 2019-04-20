@@ -10,31 +10,12 @@ var bcrypt = require('bcryptjs');
 var mongoose = require('./config/mongodb');
 
 var passport = require('passport');
-//require('./app/routes')(app);
-// app.use(passport.initialize());
-
-// require('./auth/passport')(passport);
+app.use(passport.initialize());
+require('./auth/passport')(passport);
 
 
 var login = require('./routes/loginRoutes/login')
 var register = require('./routes/loginRoutes/register')
-// var profile = require('./apis/profile')
-// var course_register = require('./apis/course_register')
-// var dashboard_courses = require('./apis/dashboard_courses')
-// var grades = require('./apis/grades')
-// var search = require('./apis/search')
-// var announcements = require('./apis/announcements')
-// var quiz = require('./apis/quiz')
-// var people = require('./apis/people')
-// var add_course = require('./apis/add_course')
-// var messages = require('./apis/messages')
-// var create_assignment = require('./apis/create_assignment')
-// var get_assignment = require('./apis/get_assignment')
-// var assignment_files = require('./apis/assignment_files')
-// var files = require('./apis/files')
-// var see_folders = require('./apis/see_folders')
-// var permission_numbers = require('./apis/permission_numbers')
-// var assignment_marks_submit = require('./apis/assignment_marks_submit')
 
 
 //use cors to allow cross origin resource sharing
@@ -68,23 +49,6 @@ app.use(function (req, res, next) {
 
     app.use('/', login);
     app.use('/', register);
-    // app.use('/', profile);
-    // app.use('/', course_register);
-    // app.use('/', dashboard_courses);
-    // app.use('/', grades);
-    // app.use('/', search);
-    // app.use('/', announcements);
-    // app.use('/', quiz);
-    // app.use('/', people);
-    // app.use('/', add_course);
-    // app.use('/', messages);
-    // app.use('/', create_assignment);
-    // app.use('/', get_assignment);
-    // app.use('/', assignment_files);
-    // app.use('/', files);
-    // app.use('/', see_folders);
-    // app.use('/', permission_numbers);
-    // app.use('/', assignment_marks_submit);
 
 //start your server on port 3001
 app.listen(3001);
