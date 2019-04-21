@@ -2,9 +2,9 @@ var mongoose = require('mongoose')
 
 const questions = new mongoose.Schema({
 
-question_id:{
-    type:String
-},
+// question_id:{
+//     type:String
+// },
 count:{
     type:String
 },
