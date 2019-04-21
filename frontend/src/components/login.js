@@ -7,6 +7,7 @@ import './css/login.css'
 /* REDUX IMPORTS BEGIN */
 import { connect } from 'react-redux';
 import { submit_login } from '../actions/login_actions';
+import { submit_signup } from '../actions/signup_actions';
 import { stat } from 'fs';
 /* REDUX IMPORTS END */
 
@@ -14,8 +15,37 @@ class login extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            temp: true
+            temp: true,
+            email_id: '',
+            password: '',
+            redirectVar:'',
+            first_name:'',
+            last_name:''
         }
+    }
+
+    email_id_changehandler =(e) =>{
+        this.setState({
+            email_id: e.target.value,
+        })
+    }
+
+    password_changehandler =(e) =>{
+        this.setState({
+            password: e.target.value,
+        })
+    }
+
+    first_name_changehandler =(e) =>{
+        this.setState({
+            first_name: e.target.value,
+        })
+    }
+
+    last_name_changehandler =(e) =>{
+        this.setState({
+            last_name: e.target.value,
+        })
     }
 
     signin = (e) => {
@@ -30,9 +60,73 @@ class login extends Component {
         });
     }
 
+    renderRedirect = () => {
+        if (this.props.redirectVar) {
+            localStorage.setItem('email_id', this.state.email_id)
+            this.setState({
+                redirectVar: <Redirect to='/' />
+            })
+        }
+    }
+
+        //submit Login handler to send a request to the node backend
+        submitLogin = async (e) => {
+            var headers = new Headers();
+            //prevent page from refresh
+            e.preventDefault();
+            let { email_id, password } = this.state;
+    
+            //set the with credentials to true
+            axios.defaults.withCredentials = true;
+            await this.props.submit_login(email_id, password)
+    
+            setTimeout(() => {
+                if (this.props.response === 400) {
+                    alert('Error in login -- User not found');
+                }
+                else if (this.props.response === 401) {
+                    alert('Invalid Credentials');
+                }
+            }, 500);
+    
+            setTimeout(() => {
+                if(this.props.response == 200){
+                    alert('200 status in login')
+                }
+                this.renderRedirect();
+            }, 500);
+    
+        }
+
+        new_submit = async (e) => {
+            var headers = new Headers();
+            //prevent page from refresh
+            e.preventDefault();
+            let { email_id, password, first_name, last_name } = this.state;
+    
+    
+            //set the with credentials to true
+            axios.defaults.withCredentials = true;
+            await this.props.submit_signup(email_id, password, first_name, last_name)
+            setTimeout(() => {
+                if (this.props.response === 200) {
+                    alert('Signed Up Successfully');
+                }
+            }, 500)
+    
+            setTimeout(() => {
+                if (this.props.response === 400) {
+                    alert('Error creating user');
+                }
+                else if(this.props.response ===210){
+                    alert('Email Id already exists')
+                }
+            }, 500)
+        }
+
     render() {
         if (this.state.temp) {
-            var a =
+            var  toggle_block =
                 <div>
                     <div>
                         <button class="btn google-btn social-btn " type="button"><span><i class="fab fa-google-plus-g"></i> Sign in with Google+</span> </button>
@@ -52,7 +146,7 @@ class login extends Component {
                 </div>
         }
         else {
-            var a =
+            var toggle_block =
                 <div class = 'container'>
                     <form>
                         <label style={{ color: '#999999' }}><strong>Sign Up</strong></label><br></br>
@@ -61,16 +155,16 @@ class login extends Component {
                             <label style={{ color: '#999999' }} class = 'col' for ='last_name'><strong>Last Name</strong></label>
                         </div>
                         <div class = 'row'>
-                            <input class = 'col col-md-5 form-control'  type='text' id = 'first_name'></input>
-                            <input class = 'col col-md-5 offset-1 form-control'  type='text' id = 'last_name'></input>
+                            <input onChange = {this.first_name_changehandler} class = 'col col-md-5 form-control'  type='text' id = 'first_name'></input>
+                            <input onChange = {this.last_name_changehandler} class = 'col col-md-5 offset-1 form-control'  type='text' id = 'last_name'></input>
                         </div>
                         <div class = 'row'>
                             <label style={{ color: '#999999' }} for='email'><strong>Email</strong></label>
-                            <input class='form-control' type='text' id = 'email'></input>
+                            <input onChange = {this.email_id_changehandler} class='form-control' type='text' id = 'email'></input>
                         </div>
                         <div class = 'row'>
                             <label style={{ color: '#999999' }} for='password'><strong>Password</strong></label>
-                            <input class='form-control' type='password' id = 'password'></input>
+                            <input onChange = {this.password_changehandler} class='form-control' type='password' id = 'password'></input>
                         </div>
                         <div>
                             <p style={{ color: '#999999'}}>
@@ -81,7 +175,7 @@ class login extends Component {
                         </div>
                         <div style = {{textAlign:'right', marginBottom:'5%'}}>
                             <a style={{ color: '#999999'}} onClick={this.cancel}>Cancel</a>&nbsp;&nbsp;
-                            <button class = 'btn btn-primary'>Sign Up</button>
+                            <button onClick = {this.new_submit} class = 'btn btn-primary'>Sign Up</button>
                         </div>
                     </form>
                 </div>
@@ -90,6 +184,7 @@ class login extends Component {
 
         return (
             <div class="Login-component">
+                {this.state.redirectVar}
                 <div>
                     <div class='login-form container'>
                         <div class='heading-block col col-md-12'>
@@ -100,16 +195,16 @@ class login extends Component {
                         </div>
                         <div className="row">
                             <div className='col'>
-                                {a}
+                                {toggle_block}
                             </div>
                             <div className='col'>
                                 <div style={{ textAlign: 'left', marginBottom: '10%' }}>
                                     <form>
                                         <label style={{ color: '#999999' }}><strong>Login</strong></label><br></br>
-                                        <input class="form-control" style={{ width: '100%', marginBottom: '5%' }} type='text' placeholder='Email'></input>
-                                        <input class="form-control" style={{ width: '100%', marginBottom: '3%' }} type='password' placeholder='Password'></input>
+                                        <input class="form-control" onChange ={this.email_id_changehandler} style={{ width: '100%', marginBottom: '5%' }} type='text' placeholder='Email'></input>
+                                        <input class="form-control" onChange = {this.password_changehandler} style={{ width: '100%', marginBottom: '3%' }} type='password' placeholder='Password'></input>
                                         <a style={{ marginRight: '35%', color: '#999999' }} href='#'>Forgot Password?</a>
-                                        <button class='btn btn-primary' type='submit'>Login</button>
+                                        <button onClick = {this.submitLogin} class='btn btn-primary' type='submit'>Login</button>
                                     </form>
                                 </div>
                                 <p style={{ color: '#999999' }}>
@@ -151,4 +246,12 @@ class login extends Component {
     }
 }
 
-export default login;
+//subscribe to Redux store updates.
+const mapStateToProps = (state) => ({
+    // variables below are subscribed to changes in loginState variables (redirectVar,Response) and can be used with props.
+    redirectVar: state.loginState.redirectVar,
+    response: state.loginState.response
+})
+
+export default connect(mapStateToProps, { submit_login, submit_signup })(login);
+//export default Login;
