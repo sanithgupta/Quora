@@ -50,7 +50,7 @@ routerr.post('/login', function (req, res) {
                 
                 var Result = {
                     success: true,
-                    token: `JWT ${token}`,
+                    token: token,
                     email_id: result.email_id,
                     first_name: result.first_name,
                     last_name: result.last_name,
