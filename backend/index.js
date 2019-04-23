@@ -16,7 +16,7 @@ require('./auth/passport')(passport);
 
 var login = require('./routes/loginRoutes/login')
 var register = require('./routes/loginRoutes/register')
-var Addquestion=require('./routes/loginRoutes/Question')
+var Addquestion=require('./routes/Question')
 
 
 //use cors to allow cross origin resource sharing
