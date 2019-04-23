@@ -19,7 +19,7 @@ newquestion.save(function(err,result){
     if(err){res.send(err).status(400);}
     else{
         console.log(result);
-        res.send(result);
+        res.sendStatus(200).end(result);
     }
 })
 
