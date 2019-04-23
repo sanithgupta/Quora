@@ -2,9 +2,9 @@ var mongoose = require('mongoose')
 
 const questions = new mongoose.Schema({
 
-question_id:{
-    type:String
-},
+// question_id:{
+//     type:String
+// },
 count:{
     type:String
 },
@@ -23,9 +23,9 @@ topics:{
 followers:{
     type:Array
 },
-answers:{
-    type:Array
-},
+// answers:{
+//     type:Array
+// },
 date_time:{
     type:String
 }

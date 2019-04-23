@@ -2,9 +2,9 @@ var mongoose = require('mongoose')
 
 const userDetail = new mongoose.Schema({
 
-user_id:{
-    type:String
-},
+// user_id:{
+//     type:String
+// },
 email_id:{
     type:String
 },
