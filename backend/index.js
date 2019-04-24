@@ -17,6 +17,7 @@ require('./auth/passport')(passport);
 var login = require('./routes/loginRoutes/login')
 var register = require('./routes/loginRoutes/register')
 var Addquestion=require('./routes/Question')
+var add_answer=require('./routes/add_answer')
 
 
 //use cors to allow cross origin resource sharing
@@ -51,6 +52,7 @@ app.use(function (req, res, next) {
     app.use('/', login);
     app.use('/', register);
     app.use('/',Addquestion);
+    app.use('/',add_answer);
 
 //start your server on port 3001
 app.listen(3001);

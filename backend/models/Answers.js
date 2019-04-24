@@ -19,6 +19,9 @@ const answers = new mongoose.Schema({
     user_name:{
         type:String
     },
+    profile_credential:{
+        type:String
+    },
     owner_status:{
         type:String
     },

@@ -1,26 +1,26 @@
-var Questions = require('../models/Questions');
+var Answers = require('../models/Answers');
 var routerr = require('express').Router();
 
-routerr.post('/Addquestion', function (req, res) {
-console.log('=========================Inside Backend - AddQuestion module =========================');
+routerr.post('/add_answer', function (req, res) {
+console.log('=========================Inside Backend - Add Answer module =========================');
 console.log("Object received ", req);
 var date = new Date().toISOString();
-var new_question=new Questions({
-count:0,
-question:req.body.question,
+var new_answer=new Answers({
+question_id:req.body.question_id,
+answer:req.body.answer,
 user_id:req.body.user_id,
+user_name:req.body.user_name,
+profile_credential:req.body.profile_credential,
 owner_status:"Active",
-topics:req.body.topics,
-followers:req.body.user_id,
-answers:[],
+is_anonymous: req.body.is_anonymous,
 date_time:date
 })
-new_question.save(function(err,result){
+new_answer.save(function(err,result){
     if(err){
         res.writeHead(400, {
             'Content-type': 'application/json'
         });
-        res.end('Error in adding question');
+        res.end('Error in adding Answer');
     }
     else{
         console.log(result);
