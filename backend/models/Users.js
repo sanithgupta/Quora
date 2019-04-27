@@ -50,9 +50,9 @@ activity:{
 messages:{
     type:Array
 },
-questions:{
-    type:Array
-},
+// questions:{
+//     type:Array
+// },
 questions_followed:{
     type:Array
 },
@@ -71,9 +71,9 @@ following:{
 profile_views:{
     type:Array
 },
-questions_answered:{
-    type:Array
-},
+// questions_answered:{
+//     type:Array
+// },
 
 })
 var Users = mongoose.model('Users',userDetail);
