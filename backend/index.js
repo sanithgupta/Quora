@@ -24,6 +24,9 @@ var upvote=require('./routes/upvote_downvote')
 var userProfileupdate=require('./routes/userprofileupdate');
 var displayUser=require('./routes/userprofileupdate');
 var followquestion=require('./routes/followquestion');
+var get_answers=require('./routes/get_answers')
+var answers_bookmarked=require('./routes/answers_bookmarked')
+var add_comment_to_answer=require('./routes/add_comment_to_answer')
 
 
 //use cors to allow cross origin resource sharing
@@ -62,6 +65,9 @@ app.use(function (req, res, next) {
     app.use('/',followquestion);
 
     
+    app.use('/',get_answers);
+    app.use('/',answers_bookmarked);
+    app.use('/',add_comment_to_answer);
 
 //start your server on port 3001
 app.listen(3001);
