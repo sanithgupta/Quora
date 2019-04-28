@@ -32,10 +32,10 @@ const answers = new mongoose.Schema({
         type:Boolean
     },
     upvotes:{
-        type:Array
+        type:Number
     },
 downvotes:{
-    type:Array
+    type:Number
 },
 comments:{
     type:Array

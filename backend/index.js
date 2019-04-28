@@ -16,7 +16,7 @@ require('./auth/passport')(passport);
 
 var login = require('./routes/loginRoutes/login')
 var register = require('./routes/loginRoutes/register')
-var Addquestion=require('./routes/Question')
+var Addquestion=require('./routes/add_question')
 var add_answer=require('./routes/add_answer')
 
 
@@ -43,11 +43,6 @@ app.use(function (req, res, next) {
     res.setHeader('Cache-Control', 'no-cache');
     next();
 });
-
-
-
-
-
 
     app.use('/', login);
     app.use('/', register);
