@@ -2,9 +2,9 @@ var mongoose = require('mongoose')
 
 const userDetail = new mongoose.Schema({
 
-user_id:{
-    type:String
-},
+// user_id:{
+//     type:String
+// },
 email_id:{
     type:String
 },
@@ -30,7 +30,7 @@ zip_code:{
 type:String,
 },
 profile_image:{
-    type:BigInt64Array
+    type:String
 },
 education:{
     type:String
@@ -50,9 +50,9 @@ activity:{
 messages:{
     type:Array
 },
-questions:{
-    type:Array
-},
+// questions:{
+//     type:Array
+// },
 questions_followed:{
     type:Array
 },

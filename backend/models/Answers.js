@@ -4,19 +4,25 @@ const answers = new mongoose.Schema({
     question_id:{
         type:String
     },
-    question:{
-        type:String
-    },
-    answer_id:{
-        type:String
-    },
+    // question:{
+    //     type:String
+    // },
+    // answer_id:{
+    //     type:String
+    // },
     answer:{
         type:String
     },
     user_id:{
         type:String
     },
+    user_id_upvoted:{
+        type:Array
+    },
     user_name:{
+        type:String
+    },
+    profile_credential:{
         type:String
     },
     owner_status:{
@@ -29,10 +35,10 @@ const answers = new mongoose.Schema({
         type:Boolean
     },
     upvotes:{
-        type:Array
+        type:Number
     },
 downvotes:{
-    type:Array
+    type:Number
 },
 comments:{
     type:Array

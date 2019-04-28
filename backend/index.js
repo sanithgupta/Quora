@@ -16,6 +16,17 @@ require('./auth/passport')(passport);
 
 var login = require('./routes/loginRoutes/login')
 var register = require('./routes/loginRoutes/register')
+var Addquestion=require('./routes/add_question')
+var add_answer=require('./routes/add_answer')
+var deleteUser=require('./routes/deleteUser')
+var userDeactivate=require('./routes/userDeactivate')
+var upvote=require('./routes/upvote_downvote')
+var userProfileupdate=require('./routes/userprofileupdate');
+var displayUser=require('./routes/userprofileupdate');
+var followquestion=require('./routes/followquestion');
+var get_answers=require('./routes/get_answers')
+var answers_bookmarked=require('./routes/answers_bookmarked')
+var add_comment_to_answer=require('./routes/add_comment_to_answer')
 
 
 //use cors to allow cross origin resource sharing
@@ -42,13 +53,21 @@ app.use(function (req, res, next) {
     next();
 });
 
-
-
-
-
-
     app.use('/', login);
     app.use('/', register);
+    app.use('/',Addquestion);
+    app.use('/',add_answer);
+    app.use('/',deleteUser);
+    app.use('/',userDeactivate);
+    app.use('/',upvote);
+    app.use('/',userProfileupdate);
+    app.use('/',displayUser);
+    app.use('/',followquestion);
+
+    
+    app.use('/',get_answers);
+    app.use('/',answers_bookmarked);
+    app.use('/',add_comment_to_answer);
 
 //start your server on port 3001
 app.listen(3001);
