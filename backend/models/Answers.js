@@ -16,6 +16,9 @@ const answers = new mongoose.Schema({
     user_id:{
         type:String
     },
+    user_id_upvoted:{
+        type:Array
+    },
     user_name:{
         type:String
     },
