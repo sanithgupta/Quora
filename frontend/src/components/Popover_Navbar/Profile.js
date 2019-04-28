@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Navbar from '../dashboard/navbar'
 import './profile.css'
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter, Tooltip, Popover, PopoverHeader, PopoverBody, UncontrolledPopover, Input } from 'reactstrap';
+import { Button, Form, FormGroup, Label, Col, Modal, ModalHeader, ModalBody, ModalFooter, Tooltip, Popover, PopoverHeader, PopoverBody, UncontrolledPopover, Input } from 'reactstrap';
 import { Alert } from 'reactstrap';
 
 
@@ -29,6 +29,7 @@ export class Profile extends Component {
             addCredentialModal: false,
             employementCredentialModal: false,
             popoverOpen: false,
+            educationCredentialModal: false,
             val: <Profile_det />
         };
         this.toggle = this.toggle.bind(this);
@@ -37,6 +38,7 @@ export class Profile extends Component {
         this.addcredential = this.addcredential.bind(this);
         this.addCredentialPopover = this.addCredentialPopover.bind(this);
         this.employementCredential = this.employementCredential.bind(this);
+        this.educationCredential = this.educationCredential.bind(this);
     }
     tool() {
         this.setState({
@@ -58,13 +60,27 @@ export class Profile extends Component {
     onDismiss() {
         this.setState({ visible: false });
     }
-      employementCredential() {
+
+
+    employementCredential() {
         console.log("In Employement Credrntial", this.state.employementCredentialModal)
-        
-         this.setState(employePrevious => ({
+
+        this.setState(employePrevious => ({
             employementCredentialModal: !employePrevious.employementCredentialModal,
         }))
+        this.addcredential();
     }
+
+    educationCredential() {
+        console.log("In Education Crediential", this.state.educationCredentialModal)
+        this.setState(eduPrevious => ({
+            educationCredentialModal: !eduPrevious.educationCredentialModal,
+        }))
+        this.addcredential();
+
+    }
+
+
     addcredential() {
         console.log("In Add Credential", this.state.addCredentialModal)
         this.setState(prev => ({
@@ -129,7 +145,7 @@ export class Profile extends Component {
                                 </div>
                             </ModalBody>
                             <ModalFooter>
-                                <Button onClick={this.toggle}>Cancel</Button>{' '}
+                                <a href="#" style={{ color: "#AAAAAA" }} onClick={this.toggle}>Cancel</a>{' '}
                                 <Button color="primary" onClick={this.toggle}>Save</Button>
                             </ModalFooter>
                         </Modal>
@@ -139,19 +155,19 @@ export class Profile extends Component {
                         {/* --------------------------------------------------Model Crediential and Highlights --------------------------------------------------- */}
                         {/* id="PopoverClick" type="button"onClick={this.addCredentialPopover} */}
                         <Modal isOpen={this.state.addCredentialModal} toggle={this.addcredential}   >
-                            <ModalHeader toggle={this.addcredential}><p class="font-weight-bold">Edit credentials<p class="font-weight-light">Credentials also appear on answers you write.</p></p></ModalHeader>
+                            <ModalHeader toggle={this.addcredential}><p class="font-weight-bold inputModalHead">Edit credentials<p class="font-weight-light inputcred">Credentials also appear on answers you write.</p></p></ModalHeader>
                             <ModalBody>
                                 <div class="container">
                                     <div class="row">
                                         <p class="font-weight-light addcred1 ml-1" id="UncontrolledPopover" style={{ color: "blue" }}> <i class="fal fa-plus-circle"></i>Add a Profile Crediential</p>
                                     </div>
 
-                                    <UncontrolledPopover placement="bottom" target="UncontrolledPopover">
+                                    <UncontrolledPopover placement="bottom" target="UncontrolledPopover" >
                                         <PopoverHeader></PopoverHeader>
-                                        <PopoverBody style={{zIndex:"0"}}>
+                                        <PopoverBody>
                                             <i class="fal fa-briefcase addcred1" onClick={this.employementCredential} >Employement</i>
                                             <hr></hr>
-                                            <i class="fal fa-graduation-cap addcred1">Education</i>
+                                            <i class="fal fa-graduation-cap addcred1" onClick={this.educationCredential}>Education</i>
                                             <hr></hr>
                                             <i class="fal fa-map-marker-alt addcred1">Location</i>
                                             <hr></hr>
@@ -161,26 +177,139 @@ export class Profile extends Component {
                                         </PopoverBody>
                                     </UncontrolledPopover>
 
-                                    <Modal isOpen={this.state.employementCredentialModal} toggle={this.employementCredential} className={this.props.className} style={{zIndex:"1",overflow:true}}>
-                                    <ModalHeader toggle={this.employementCredential}>Modal title</ModalHeader>
-                                    <ModalBody>
-                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-                                            </ModalBody>
-                                    <ModalFooter>
-                                        <Button color="primary" onClick={this.employementCredential}>Do Something</Button>{' '}
-                                        <Button color="secondary" onClick={this.employementCredential}>Cancel</Button>
-                                    </ModalFooter>
-                                </Modal>
 
 
-                                </div>                           
+                                </div>
                             </ModalBody>
                             <ModalFooter>
-                                <Button onClick={this.addcredential}>Cancel</Button>{' '}
+                                <a href="#" style={{ color: "#AAAAAA" }} onClick={this.addcredential}>Cancel</a>{' '}
                                 <Button color="primary" onClick={this.addcredential}>Save</Button>
                             </ModalFooter>
                         </Modal>
 
+                        <Modal isOpen={this.state.employementCredentialModal} toggle={this.employementCredential} >
+                            <ModalHeader toggle={this.employementCredential}><p class="font-weight-bold inputModalHead">Edit credentials<p class="font-weight-light inputcred ">Credentials also appear on answers you write.</p></p></ModalHeader>
+                            <ModalBody>
+                                <div class="">
+                                    <div class=" container row inputcred">
+                                        <i class="fal fa-briefcase"></i>&nbsp;
+                                <p>Add employment credential</p>
+                                    </div>
+                                    <Form>
+                                        <div class=" row inputc">
+                                            <div class="col-md-5">
+                                                <Label for="position">Position</Label>
+                                            </div>
+                                            <div class="col-md-7 inputinModal">
+                                                <Input class="inputc" id="position" placeholder="Accountant"></Input>
+                                            </div>
+
+                                        </div>
+                                        <div class="row inputc">
+                                            <div class="col-md-5">
+                                                <Label for="company">Company Organization</Label>
+                                            </div>
+                                            <div class="col-md-7 inputc">
+                                                <Input class="" id="company" placeholder="Toyota"></Input>
+                                            </div>
+                                        </div>
+                                        <div class="row inputc">
+                                            <div class="col-md-5">
+                                                <Label for="syear">Start Year</Label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <Input class="inputc" type="date" id="syear" placeholder="Year"></Input>
+                                            </div>
+                                        </div>
+                                        <div class="row inputc">
+                                            <div class="col-md-5">
+                                                <Label for="eyear">End Year</Label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <Input class="inputc" type="date" id="eyear" placeholder="Year"></Input>
+                                            </div>
+                                        </div>
+                                        <div class="row inputc">
+                                            <div class="col-md-5">
+                                                <p>I currently work here</p>
+                                            </div>
+                                            <div class="col-md-1">
+
+                                            </div>
+                                            <div class="col-md-5">
+                                                <Input type="checkbox"></Input>
+                                            </div>
+                                        </div>
+                                    </Form>
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <a href="#" style={{ color: "#AAAAAA" }} onClick={this.employementCredential}>Cancel</a>{' '}
+                                <Button color="primary" onClick={this.employementCredential}>Save</Button>
+                            </ModalFooter>
+                        </Modal>
+
+                        <Modal isOpen={this.state.educationCredentialModal} toggle={this.educationCredential} >
+                            <ModalHeader toggle={this.educationCredential}><p class="font-weight-bold inputModalHead">Edit credentials<p class="font-weight-light inputcred">Credentials also appear on answers you write.</p></p></ModalHeader>
+                            <ModalBody>
+                                <div class="">
+                                    <div class=" container row inputcred">
+                                    <i class="fal fa-graduation-cap"></i>&nbsp;
+                                <p>Add Education credential</p>
+                                    </div>
+                                    <Form>
+                                        <div class=" row inputc">
+                                            <div class="col-md-5">
+                                                <Label  for="school">School</Label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <Input class="inputc" id="school" placeholder="Stanford University"></Input>
+                                            </div>
+
+                                        </div>
+                                        <div class="row inputc">
+                                            <div class="col-md-5">
+                                                <Label for="concentration"> Concentration</Label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <Input class="inputc" id="concentration" placeholder="Computer Science"></Input>
+                                            </div>
+                                        </div>
+                                        <div class="row inputc">
+                                            <div class="col-md-5">
+                                                <Label for="sconcentration">Secondary Concentration</Label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <Input class="inputc"  id="sconcentration" placeholder="Mathematics"></Input>
+                                            </div>
+                                        </div>
+                                        <div class="row inputc">
+                                            <div class="col-md-5">
+                                                <Label for="degree">Degree</Label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <Input class="inputc"  id="degree" placeholder="M. S."></Input>
+                                            </div>
+                                        </div>
+                                        <div class="row inputc">
+                                            <div class="col-md-5">
+                                                <p>I currently work here</p>
+                                            </div>
+                                            <div class="col-md-1">
+
+                                            </div>
+                                            <div class="col-md-5">
+                                                <Input type="checkbox"></Input>
+                                            </div>
+                                        </div>
+                                    </Form>
+                                </div>
+                            </ModalBody>
+                            <ModalFooter>
+                                <a href="#" style={{ color: "#AAAAAA" }} onClick={this.educationCredential}>Cancel</a>{' '}
+                                <Button color="primary" onClick={this.educationCredential}>Save</Button>
+                            </ModalFooter>
+                        </Modal>
 
                     </div>
                     <div class="col-md-8">

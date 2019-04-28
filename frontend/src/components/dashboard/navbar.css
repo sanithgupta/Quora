@@ -5,3 +5,57 @@
 .buttonRound{
     border-radius: 50%;
 }
+
+.block {
+    display: block;
+    width:110%;
+  
+    border: li;
+    /* background-color: #F7F7F7;
+    color:#92B3D2; */
+    padding: 14px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    
+  }
+.less{
+    border-top:1px solid #e2e2e2;
+    padding: 8px, 16px;
+
+}
+.hrClass{
+margin-top:6px
+}
+.liStyle{
+margin-top:-10px
+}
+/* .widthHeight{
+    width:100px;
+    height:250px;
+} */
+
+.aclass{
+    color: #9c9c9c;
+}
+
+.font1{
+    font-family:'Times New Roman', Times, serif;
+  
+}
+
+.modalClass{
+    width:100%
+}
+
+.textareaclass{
+    overflow: hidden;
+    overflow-wrap: break-word;
+    width: 1000px;
+    height: 31px;
+    border: none;
+    background-color: transparent;
+    resize: none;
+    outline: none;
+   font-family: Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+   
+}
