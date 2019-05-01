@@ -4,8 +4,11 @@ export class Questions extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      questions: ["What is the best trade in a website for a laptop, and why?"]
+      questions: []
     }
+  }
+  componentDidMount=()=>{
+    
   }
   render() {
     const dataSize = this.state.questions.length;

@@ -3,6 +3,8 @@ import { Button, Popover, PopoverHeader, PopoverBody, Modal, ModalHeader, ModalB
 import '../dashboard/navbar.css'
 import '../../fontawesome/css/all.css';
 import { Redirect } from 'react-router';
+import axios from 'axios';
+
 
 export default class navbar extends Component {
   constructor(props) {
@@ -12,9 +14,24 @@ export default class navbar extends Component {
     this.state = {
       popoverOpen: false,
       redirectVar: "",
+      question: "",
       modal: false,
     };
   }
+
+  componentDidMount = () => {
+    let data = {
+      email_id : localStorage.getItem('email_id')
+    }
+    console.log("In getting user details", data)
+    axios.post("http://localhost:3000/getUserDetails", data)
+    .then((response) => {
+      console.log("Status Code : ", response.status);
+      console.log(response.data)
+      // localStorage.setItem('_id')
+    })
+  }
+
   toggle() {
     this.setState({
       popoverOpen: !this.state.popoverOpen
@@ -34,6 +51,22 @@ export default class navbar extends Component {
     this.setState(prevState => ({
       modal: !prevState.modal
     }));
+  }
+  handleChange = async (e) => {
+    console.log("In handle change")
+    await this.setState({
+
+      ...this.state,
+      [e.target.name]: e.target.value,
+
+    });
+  }
+  postQuestion = (e) => {
+    e.preventDefault();
+    console.log("This is posted question:", this.state.question)
+    let question = this.state.question;
+    let user_id = localStorage.getItem('')
+    axios.get("http://localhost:3000/add_question")
   }
 
 
@@ -77,13 +110,13 @@ export default class navbar extends Component {
                 <ModalBody>
                   <div class=" container row">
                     <img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img>
-                    <p class="font-weight-light" style={{marginTop:"1.5%"}}>User Asked</p>
+                    <p class="font-weight-light" style={{ marginTop: "1.5%" }}>User Asked</p>
                   </div>
-                  <textarea  class="textareaclass font-weight-bold" placeholder='start your question with "What", "How", "Why", etc.'></textarea>
+                  <textarea class="textareaclass font-weight-bold" onChange={this.handleChange} name="question" placeholder='start your question with "What", "How", "Why", etc.'></textarea>
                 </ModalBody>
                 <ModalFooter>
                   <a href="#" style={{ color: "#AAAAAA" }} onClick={this.addQuestionModal}>Cancel</a>
-                  <Button color="primary" onClick={this.addQuestionModal}>Add Question</Button>{' '}
+                  <Button color="primary" onClick={this.postQuestion}>Add Question</Button>{' '}
 
                 </ModalFooter>
               </Modal>

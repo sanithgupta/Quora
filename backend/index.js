@@ -27,6 +27,7 @@ var followquestion=require('./routes/followquestion');
 var get_answers=require('./routes/get_answers')
 var answers_bookmarked=require('./routes/answers_bookmarked')
 var add_comment_to_answer=require('./routes/add_comment_to_answer')
+var getUserDeatils = require('./routes/Get_User_Details/getUserDetails')
 
 
 //use cors to allow cross origin resource sharing
@@ -64,10 +65,12 @@ app.use(function (req, res, next) {
     app.use('/',displayUser);
     app.use('/',followquestion);
 
-    
+
     app.use('/',get_answers);
     app.use('/',answers_bookmarked);
     app.use('/',add_comment_to_answer);
+
+    app.use('/',getUserDeatils)
 
 //start your server on port 3001
 app.listen(3001);
