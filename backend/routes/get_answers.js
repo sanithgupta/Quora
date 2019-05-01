@@ -6,6 +6,7 @@ console.log('=========================Inside Backend - Get Answers module ======
 console.log("Object received ", req);
 
 Answers.find({question_id:req.body.question_id},function(err,result){
+    
     if(err){
         res.writeHead(400, {
             'Content-type': 'application/json'
