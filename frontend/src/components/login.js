@@ -174,7 +174,7 @@ class login extends Component {
                             </p>
                         </div>
                         <div style = {{textAlign:'right', marginBottom:'5%'}}>
-                            <a style={{ color: '#999999'}} onClick={this.cancel}>Cancel</a>&nbsp;&nbsp;
+                            <a style={{cursor:'pointer', color: '#999999'}} onClick={this.cancel}>Cancel</a>&nbsp;&nbsp;
                             <button onClick = {this.new_submit} class = 'btn btn-primary'>Sign Up</button>
                         </div>
                     </form>
