@@ -16,7 +16,7 @@ export default class navbar extends Component {
       question: "",
       addQuestionModal: false,
       nestedModal: false,
-      topics:[],
+      topics: [],
     };
     this.toggle = this.toggle.bind(this);
     this.modal = this.modal.bind(this);
@@ -36,7 +36,7 @@ export default class navbar extends Component {
         console.log(response.data)
         console.log(response.data[0]._id)
         localStorage.setItem('user_id', response.data[0]._id)
-        let full_name = response.data[0].first_name +" "+ response.data[0].last_name;
+        let full_name = response.data[0].first_name + " " + response.data[0].last_name;
         console.log(full_name)
         localStorage.setItem('Full_Name', full_name)
       })
@@ -106,14 +106,23 @@ export default class navbar extends Component {
   }
 
   handleChange1 = async (e) => {
-    await this.setState({
-      topics: {
-        ...this.state.topics,
-        [e.target.name]: e.target.value,
+    let var1 = {
+      'topic': e.target.name,
+      'response': e.target.value
+    }
+    let present = 0
+    await this.state.topics.map((responses, index) => {
+      if (responses.topic == var1.topic) {
+        this.state.topics.splice(index, 1)
+        present =1
       }
-    });
+    })
+    if(present == 0){
+    await this.state.topics.push(var1)
+    }
     console.log(this.state.topics)
   }
+
 
   render() {
     return (
@@ -169,23 +178,23 @@ export default class navbar extends Component {
                       <div class="container">
                         <div class="col-sm-5">
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Technology" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_1" value="Technology" onChange={this.handleChange1}></Input>
                             <p>Technology</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Movies" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_2" value="Movies" onChange={this.handleChange1}></Input>
                             <p>Movies</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Cooking" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_3" value="Cooking" onChange={this.handleChange1}></Input>
                             <p>Cooking</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Photography" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_4" value="Photography" onChange={this.handleChange1}></Input>
                             <p>Photography</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Health" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_5" value="Health" onChange={this.handleChange1}></Input>
                             <p>Health</p>
                           </div>
 
