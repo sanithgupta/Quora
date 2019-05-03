@@ -1,5 +1,5 @@
-var Answers = require('../models/Answers');
-var Questions = require('../models/Questions');
+var Answers = require('../../models/Answers');
+var Questions = require('../../models/Questions');
 var routerr = require('express').Router();
 
 routerr.post('/get_user_answers', function (req, res) {

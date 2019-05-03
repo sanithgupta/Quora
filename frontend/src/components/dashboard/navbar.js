@@ -115,14 +115,23 @@ export default class navbar extends Component {
   }
 
   handleChange1 = async (e) => {
-    await this.setState({
-      topics: {
-        ...this.state.topics,
-        [e.target.name]: e.target.value,
+    let var1 = {
+      'topic': e.target.name,
+      'response': e.target.value
+    }
+    let present = 0
+    await this.state.topics.map((responses, index) => {
+      if (responses.topic == var1.topic) {
+        this.state.topics.splice(index, 1)
+        present =1
       }
-    });
+    })
+    if(present == 0){
+    await this.state.topics.push(var1)
+    }
     console.log(this.state.topics)
   }
+
 
   render() {
     return (
@@ -178,23 +187,23 @@ export default class navbar extends Component {
                       <div class="container">
                         <div class="col-sm-5">
                           <div class="row">
-                            <Input type="checkbox" name="Techonology" value="Technology" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_1" value="Technology" onChange={this.handleChange1}></Input>
                             <p>Technology</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name="Movies" value="Movies" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_2" value="Movies" onChange={this.handleChange1}></Input>
                             <p>Movies</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name="Cooking" value="Cooking" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_3" value="Cooking" onChange={this.handleChange1}></Input>
                             <p>Cooking</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name="Photography" value="Photography" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_4" value="Photography" onChange={this.handleChange1}></Input>
                             <p>Photography</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name="Health" value="Health" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_5" value="Health" onChange={this.handleChange1}></Input>
                             <p>Health</p>
                           </div>
 
