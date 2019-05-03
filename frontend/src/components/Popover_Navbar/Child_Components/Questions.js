@@ -16,27 +16,35 @@ export class Questions extends Component {
     axios.post("http://localhost:3001/getUserQuestions", data)
       .then((response) => {
         console.log("Status Code : ", response.status);
-        console.log(response.data[0].questions)
-        this.state.questions = response.data[0].questions
+        if (response.data.length > 0) {
+          console.log(response.data)
+          // var len = response.data.length;
+          // var i = 0;
+          // for (i = 0; i < len; i++) {
+          //   alert(i)
+            this.state.questions = response.data
+            console.log("questions",this.state.questions)
+          // }
+        }
       })
 
   }
   render() {
     if (this.state.question != undefined)
       var dataSize = this.state.questions.length;
-    // if (dataSize > 0) {
-    //   let view = <div></div>
-    //   view = this.state.questions.map(did => {
-    //     return (
-    //       { did }
-    //     )
-    //   })
-    // }
-    // else {
-    //   return (
-    //     this.state.did = <div></div>
-    //   )
-    // }
+    if (dataSize > 0) {
+      let view = <div></div>
+      view = this.state.questions.map(did => {
+        return (
+          { did }
+        )
+      })
+    }
+    else {
+      return (
+        this.state.did = <div></div>
+      )
+    }
     return (
       <div>
         <p>Questions</p>

@@ -1,17 +1,17 @@
 var Questions = require('../models/Questions');
 var routerr = require('express').Router();
 
-routerr.post('/Addquestion', function (req, res) {
+routerr.get('/Addquestion', function (req, res) {
     console.log('=========================Inside Backend - AddQuestion module =========================');
-    console.log("Object received ", req);
+    console.log("Object received ", req.query);
     var date = new Date().toISOString();
     var new_question = new Questions({
         count: 0,
-        question: req.body.question,
-        user_id: req.body.user_id,
+        question: req.query.question,
+        user_id: req.query.user_id,
         owner_status: "Active",
-        topics: req.body.topics,
-        followers: req.body.user_id,
+        topics: req.query.topics,
+        followers: req.query.user_id,
         answers: [],
         date_time: date
     })

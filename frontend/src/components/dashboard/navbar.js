@@ -16,7 +16,8 @@ export default class navbar extends Component {
       question: "",
       addQuestionModal: false,
       nestedModal: false,
-      topics:[],
+      closeAll:false,
+      topics: [],
     };
     this.toggle = this.toggle.bind(this);
     this.modal = this.modal.bind(this);
@@ -36,7 +37,7 @@ export default class navbar extends Component {
         console.log(response.data)
         console.log(response.data[0]._id)
         localStorage.setItem('user_id', response.data[0]._id)
-        let full_name = response.data[0].first_name +" "+ response.data[0].last_name;
+        let full_name = response.data[0].first_name + " " + response.data[0].last_name;
         console.log(full_name)
         localStorage.setItem('Full_Name', full_name)
       })
@@ -69,8 +70,8 @@ export default class navbar extends Component {
 
   }
 
-  async modal(e) {
-    e.preventDefault();
+  async modal() {
+    // e.preventDefault();
     console.log("In Modal function")
     // alert(this.state.addQuestionModal)
     console.log("state", this.state.addQuestionModal)
@@ -93,15 +94,23 @@ export default class navbar extends Component {
   postQuestion = (e) => {
     e.preventDefault();
     console.log("This is posted question:", this.state.question)
-    let data = {
+    let questiondata = {
       question: this.state.question,
-      user_id: localStorage.getItem('user_id')
+      user_id: localStorage.getItem('user_id'),
+      topics: this.state.topics,
     }
-    console.log("Inserting Question for userid", data)
-    axios.get("http://localhost:3001/Addquestion", data)
+    console.log("Inserting Question for userid", questiondata)
+    axios.get("http://localhost:3001/Addquestion", {
+      params:
+      {
+        question: this.state.question,
+        user_id: localStorage.getItem('user_id'),
+        topics: this.state.topics,
+      }
+    })
       .then(response => {
         console.log("Status Code : ", response.status);
-
+        this.toggleAll();
       })
   }
 
@@ -163,29 +172,29 @@ export default class navbar extends Component {
                   <a href="#" style={{ color: "#AAAAAA" }} onClick={this.modal}>Cancel</a>
                   <Button color="primary" onClick={this.toggleNested}>Select Topics</Button>{' '}
 
-                  <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.toggle : undefined}>
+                  <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.modal : undefined}>
                     <ModalHeader>{this.state.question}</ModalHeader>
                     <ModalBody>
                       <div class="container">
                         <div class="col-sm-5">
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Technology" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Techonology" value="Technology" onChange={this.handleChange1}></Input>
                             <p>Technology</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Movies" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Movies" value="Movies" onChange={this.handleChange1}></Input>
                             <p>Movies</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Cooking" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Cooking" value="Cooking" onChange={this.handleChange1}></Input>
                             <p>Cooking</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Photography" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Photography" value="Photography" onChange={this.handleChange1}></Input>
                             <p>Photography</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Health" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Health" value="Health" onChange={this.handleChange1}></Input>
                             <p>Health</p>
                           </div>
 
