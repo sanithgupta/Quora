@@ -1,11 +1,11 @@
 var routerr = require('express').Router();
 var Users = require('../../models/Users');
 
-routerr.post('/getUserDetails', function (req, res) {
-    console.log("========================In Getting User Details=================================")
+routerr.post('/getUserQuestions', function (req, res) {
+    console.log("========================In Getting User Questions=================================")
     console.log("got These details from the fronend",req.body)
     Users.find({
-        email_id: req.body.email_id
+        _id: req.body.user_id
     },
         function (err, result) {
             if (err) {

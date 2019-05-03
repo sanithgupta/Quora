@@ -214,7 +214,7 @@ export class Profile extends Component {
                                 <Button color="primary" onClick={this.addcredential}>Save</Button>
                             </ModalFooter>
                         </Modal>
-                        {/* ------------------------------------------------------------------------------Modal employementCredential----------------------------------------------------------------------------------------- */}
+                        {/* ------------------------------------------------------------------------------Modal employement Credential----------------------------------------------------------------------------------------- */}
                         <Modal isOpen={this.state.employementCredentialModal} toggle={this.employementCredential} >
                             <ModalHeader toggle={this.employementCredential}><p class="font-weight-bold inputModalHead">Edit credentials<p class="font-weight-light inputcred ">Credentials also appear on answers you write.</p></p></ModalHeader>
                             <ModalBody>

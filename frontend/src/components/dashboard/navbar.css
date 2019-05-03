@@ -48,8 +48,8 @@ margin-top:-10px
 }
 
 .textareaclass{
-    overflow: hidden;
-    overflow-wrap: break-word;
+    overflow: auto;
+    /* overflow-wrap: break-word; */
     width: 1000px;
     height: 31px;
     border: none;

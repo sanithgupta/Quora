@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Popover, PopoverHeader, PopoverBody, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Button, Popover, PopoverHeader, PopoverBody, Modal, ModalHeader, ModalBody, ModalFooter, Input } from 'reactstrap';
 import '../dashboard/navbar.css'
 import '../../fontawesome/css/all.css';
 import { Redirect } from 'react-router';
@@ -10,31 +10,53 @@ export default class navbar extends Component {
   constructor(props) {
     super(props);
 
-    this.toggle = this.toggle.bind(this);
     this.state = {
       popoverOpen: false,
       redirectVar: "",
       question: "",
-      modal: false,
+      addQuestionModal: false,
+      nestedModal: false,
+      topics:[],
     };
+    this.toggle = this.toggle.bind(this);
+    this.modal = this.modal.bind(this);
+    this.toggleNested = this.toggleNested.bind(this);
+    this.toggleAll = this.toggleAll.bind(this);
+
   }
 
   componentDidMount = () => {
     let data = {
-      email_id : localStorage.getItem('email_id')
+      email_id: localStorage.getItem('email_id')
     }
     console.log("In getting user details", data)
-    axios.post("http://localhost:3000/getUserDetails", data)
-    .then((response) => {
-      console.log("Status Code : ", response.status);
-      console.log(response.data)
-      // localStorage.setItem('_id')
-    })
+    axios.post("http://localhost:3001/getUserDetails", data)
+      .then((response) => {
+        console.log("Status Code : ", response.status);
+        console.log(response.data)
+        console.log(response.data[0]._id)
+        localStorage.setItem('user_id', response.data[0]._id)
+        let full_name = response.data[0].first_name +" "+ response.data[0].last_name;
+        console.log(full_name)
+        localStorage.setItem('Full_Name', full_name)
+      })
   }
 
   toggle() {
     this.setState({
       popoverOpen: !this.state.popoverOpen
+    });
+  }
+  toggleNested() {
+    this.setState({
+      nestedModal: !this.state.nestedModal,
+      closeAll: false
+    });
+  }
+  toggleAll() {
+    this.setState({
+      nestedModal: !this.state.nestedModal,
+      closeAll: true
     });
   }
   loggingout = (e) => {
@@ -47,11 +69,18 @@ export default class navbar extends Component {
 
   }
 
-  addQuestionModal = () => {
-    this.setState(prevState => ({
-      modal: !prevState.modal
+  async modal(e) {
+    e.preventDefault();
+    console.log("In Modal function")
+    // alert(this.state.addQuestionModal)
+    console.log("state", this.state.addQuestionModal)
+    await this.setState(prevState => ({
+      addQuestionModal: !prevState.addQuestionModal
     }));
+    // alert(this.state.addQuestionModal)
   }
+
+
   handleChange = async (e) => {
     console.log("In handle change")
     await this.setState({
@@ -64,11 +93,27 @@ export default class navbar extends Component {
   postQuestion = (e) => {
     e.preventDefault();
     console.log("This is posted question:", this.state.question)
-    let question = this.state.question;
-    let user_id = localStorage.getItem('')
-    axios.get("http://localhost:3000/add_question")
+    let data = {
+      question: this.state.question,
+      user_id: localStorage.getItem('user_id')
+    }
+    console.log("Inserting Question for userid", data)
+    axios.get("http://localhost:3001/Addquestion", data)
+      .then(response => {
+        console.log("Status Code : ", response.status);
+
+      })
   }
 
+  handleChange1 = async (e) => {
+    await this.setState({
+      topics: {
+        ...this.state.topics,
+        [e.target.name]: e.target.value,
+      }
+    });
+    console.log(this.state.topics)
+  }
 
   render() {
     return (
@@ -85,7 +130,7 @@ export default class navbar extends Component {
           <div class="collapse navbar-collapse" id="navbarSupportedContent" style={{ marginLeft: "-200px" }}>
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-book fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Home</span></a>
+                <a href="/" class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-book fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Home</span></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-pencil-square fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Answer</span></a>
@@ -103,10 +148,10 @@ export default class navbar extends Component {
               <input class="form-control mr-sm-2" style={{ height: "30px" }} type="search" placeholder="Search" aria-label="Search"></input>
               <a id="Popover1" href="#" style={{ marginLeft: "60px" }}><img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img></a>
 
-              <button onClick={this.addQuestionModal} class="btn btn-default" style={{ marginLeft: "10px", height: "35px", padding: "6px", backgroundColor: "#B92B27", color: "white" }}>Add Question or Link</button>
+              <button onClick={this.modal} class="btn btn-default" style={{ marginLeft: "10px", height: "35px", padding: "6px", backgroundColor: "#B92B27", color: "white" }}>Add Question or Link</button>
 
-              <Modal isOpen={this.state.modal} toggle={this.addQuestionModal} >
-                <ModalHeader toggle={this.addQuestionModal}>Add Question</ModalHeader>
+              <Modal isOpen={this.state.addQuestionModal} toggle={this.modal} >
+                <ModalHeader toggle={this.modal}>Add Question</ModalHeader>
                 <ModalBody>
                   <div class=" container row">
                     <img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img>
@@ -115,11 +160,53 @@ export default class navbar extends Component {
                   <textarea class="textareaclass font-weight-bold" onChange={this.handleChange} name="question" placeholder='start your question with "What", "How", "Why", etc.'></textarea>
                 </ModalBody>
                 <ModalFooter>
-                  <a href="#" style={{ color: "#AAAAAA" }} onClick={this.addQuestionModal}>Cancel</a>
-                  <Button color="primary" onClick={this.postQuestion}>Add Question</Button>{' '}
+                  <a href="#" style={{ color: "#AAAAAA" }} onClick={this.modal}>Cancel</a>
+                  <Button color="primary" onClick={this.toggleNested}>Select Topics</Button>{' '}
+
+                  <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.toggle : undefined}>
+                    <ModalHeader>{this.state.question}</ModalHeader>
+                    <ModalBody>
+                      <div class="container">
+                        <div class="col-sm-5">
+                          <div class="row">
+                            <Input type="checkbox" name = "Topic" value="Technology" onChange={this.handleChange1}></Input>
+                            <p>Technology</p>
+                          </div>
+                          <div class="row">
+                            <Input type="checkbox" name = "Topic" value="Movies" onChange={this.handleChange1}></Input>
+                            <p>Movies</p>
+                          </div>
+                          <div class="row">
+                            <Input type="checkbox" name = "Topic" value="Cooking" onChange={this.handleChange1}></Input>
+                            <p>Cooking</p>
+                          </div>
+                          <div class="row">
+                            <Input type="checkbox" name = "Topic" value="Photography" onChange={this.handleChange1}></Input>
+                            <p>Photography</p>
+                          </div>
+                          <div class="row">
+                            <Input type="checkbox" name = "Topic" value="Health" onChange={this.handleChange1}></Input>
+                            <p>Health</p>
+                          </div>
+
+                        </div>
+                        <div class="col-sm-5">
+                          <div class="row">
+
+                          </div>
+                        </div>
+                      </div>
+                    </ModalBody>
+                    <ModalFooter>
+                      <a href="#" style={{ color: "#AAAAAA" }} onClick={this.toggleAll}>Cancel</a>
+                      <Button color="primary" onClick={this.postQuestion}>Post Question</Button>{' '}
+
+                    </ModalFooter>
+                  </Modal>
 
                 </ModalFooter>
               </Modal>
+
             </form>
             <Popover placement="bottom" isOpen={this.state.popoverOpen} target="Popover1" toggle={this.toggle}>
               <PopoverHeader>
