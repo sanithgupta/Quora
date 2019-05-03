@@ -16,7 +16,6 @@ require('./auth/passport')(passport);
 
 var login = require('./routes/loginRoutes/login')
 var register = require('./routes/loginRoutes/register')
-<<<<<<< HEAD
 var Addquestion = require('./routes/add_question')
 var add_answer = require('./routes/add_answer')
 var deleteUser = require('./routes/deleteUser')
@@ -31,20 +30,18 @@ var add_comment_to_answer = require('./routes/add_comment_to_answer')
 
 var getUserDetails = require('./routes/Get_User_Details/getUserDetails')
 var getUserQuestions = require('./routes/Get_User_Details/getUserQuestions')
-=======
-var Addquestion=require('./routes/add_question')
-var add_answer=require('./routes/add_answer')
-var deleteUser=require('./routes/deleteUser')
-var userDeactivate=require('./routes/userDeactivate')
-var upvote=require('./routes/upvote_downvote')
-var userProfileupdate=require('./routes/userprofileupdate');
-var displayUser=require('./routes/userprofileupdate');
-var followquestion=require('./routes/followquestion');
-var get_answers=require('./routes/get_answers')
-var answers_bookmarked=require('./routes/answers_bookmarked')
-var add_comment_to_answer=require('./routes/add_comment_to_answer')
+// var Addquestion=require('./routes/add_question')
+// var add_answer=require('./routes/add_answer')
+// var deleteUser=require('./routes/deleteUser')
+// var userDeactivate=require('./routes/userDeactivate')
+// var upvote=require('./routes/upvote_downvote')
+// var userProfileupdate=require('./routes/userprofileupdate');
+// var displayUser=require('./routes/userprofileupdate');
+// var followquestion=require('./routes/followquestion');
+// var get_answers=require('./routes/get_answers')
+// var answers_bookmarked=require('./routes/answers_bookmarked')
+// var add_comment_to_answer=require('./routes/add_comment_to_answer')
 var get_user_answers=require('./routes/get_user_answers')
->>>>>>> ab163cbe6ac94b193cf7f01a23336875fd464288
 
 
 //use cors to allow cross origin resource sharing
@@ -71,7 +68,6 @@ app.use(function (req, res, next) {
     next();
 });
 
-<<<<<<< HEAD
 app.use('/', login);
 app.use('/', register);
 app.use('/', Addquestion);
@@ -83,32 +79,31 @@ app.use('/', userProfileupdate);
 app.use('/', displayUser);
 app.use('/', followquestion);
 
-
+app.use('/', getUserDetails)
+app.use('/', getUserQuestions)
 app.use('/', get_answers);
 app.use('/', answers_bookmarked);
 app.use('/', add_comment_to_answer);
+app.use('/',get_user_answers);
 
 
 //===========User Specfic=============
-app.use('/', getUserDetails)
-app.use('/', getUserQuestions)
-=======
-    app.use('/', login);
-    app.use('/', register);
-    app.use('/',Addquestion);
-    app.use('/',add_answer);
-    app.use('/',deleteUser);
-    app.use('/',userDeactivate);
-    app.use('/',upvote);
-    app.use('/',userProfileupdate);
-    app.use('/',displayUser);
-    app.use('/',followquestion);
-    app.use('/',get_answers);
-    app.use('/',answers_bookmarked);
-    app.use('/',add_comment_to_answer);
-    app.use('/',get_user_answers);
+
+    // app.use('/', login);
+    // app.use('/', register);
+    // app.use('/',Addquestion);
+    // app.use('/',add_answer);
+    // app.use('/',deleteUser);
+    // app.use('/',userDeactivate);
+    // app.use('/',upvote);
+    // app.use('/',userProfileupdate);
+    // app.use('/',displayUser);
+    // app.use('/',followquestion);
+    // app.use('/',get_answers);
+    // app.use('/',answers_bookmarked);
+    // app.use('/',add_comment_to_answer);
+    // app.use('/',get_user_answers);
     
->>>>>>> ab163cbe6ac94b193cf7f01a23336875fd464288
 
 //start your server on port 3001
 app.listen(3001);
