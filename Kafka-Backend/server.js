@@ -20,6 +20,7 @@ mdb.on('open',()=>{
 
 var Login = require('./services/login');
 var Register = require('./services/register');
+var Get_answers = require('./services/get_answers');
 
 
 function handleTopicRequest(topic_name, function_name){
@@ -55,3 +56,4 @@ function handleTopicRequest(topic_name, function_name){
 
 handleTopicRequest("login", Login);
 handleTopicRequest("register", Register);
+handleTopicRequest("get_answers", Get_answers);

@@ -1,12 +1,14 @@
 var Answers = require('../models/Answers');
+var Questions = require('../models/Questions');
 var routerr = require('express').Router();
+var kafka = require('../kafka/client');
+
 
 routerr.post('/get_answers', function (req, res) {
 console.log('=========================Inside Backend - Get Answers module =========================');
 console.log("Object received ", req);
 
-Answers.find({question_id:req.body.question_id},function(err,result){
-    
+    kafka.make_request("get_answers", req.body, function (err, result) {
     if(err){
         res.writeHead(400, {
             'Content-type': 'application/json'
@@ -20,8 +22,7 @@ Answers.find({question_id:req.body.question_id},function(err,result){
         });
         res.end(JSON.stringify(result));
     }
-})
-
+    })
 })
 
 module.exports=routerr
