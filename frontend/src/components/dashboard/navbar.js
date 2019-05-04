@@ -15,15 +15,24 @@ export default class navbar extends Component {
       redirectVar: "",
       question: "",
       addQuestionModal: false,
+      message_modal: false,
       nestedModal: false,
-      closeAll:false,
+      nestedModal_nest: false,
+      closeAll: false,
       topics: [],
+      message_to_name: '',
+      message_from: '',
+      message_content: '',
+      messages: [],
+      conversation_list: []
     };
     this.toggle = this.toggle.bind(this);
     this.modal = this.modal.bind(this);
+    this.message_modal = this.message_modal.bind(this)
     this.toggleNested = this.toggleNested.bind(this);
+    this.toggleNested_nest = this.toggleNested_nest.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
-
+    this.conversation_list = this.conversation_list.bind(this);
   }
 
   componentDidMount = () => {
@@ -54,6 +63,14 @@ export default class navbar extends Component {
       closeAll: false
     });
   }
+  toggleNested_nest() {
+    this.setState({
+      nestedModal_nest: !this.state.nestedModal_nest,
+      nestedModal: !this.state.nestedModal,
+      message_modal: !this.state.message_modal,
+      closeAll: false
+    });
+  }
   toggleAll() {
     this.setState({
       nestedModal: !this.state.nestedModal,
@@ -79,6 +96,104 @@ export default class navbar extends Component {
       addQuestionModal: !prevState.addQuestionModal
     }));
     // alert(this.state.addQuestionModal)
+  }
+
+  async message_modal() {
+    if (this.state.message_modal == false) {
+      this.toggle()
+    }
+    // e.preventDefault();
+    console.log("In Message Modal function")
+    console.log("state", this.state.message_modal)
+    await this.setState(prevState => ({
+      message_modal: !prevState.message_modal
+    }));
+    this.conversation_list()
+  }
+
+  conversation_list = async () => {
+    let data = {
+      message_from: localStorage.getItem('user_id')
+    }
+    axios.post("http://localhost:3001/conversation_list", data)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            conversation_list: response.data
+          })
+        }
+      })
+    console.log(this.state.conversation_list)
+  }
+
+  message_name_change_handler = (e) => {
+    this.setState({
+      message_to_name: e.target.value,
+      message_from: localStorage.getItem('user_id')
+    })
+  }
+
+  message_content_change_handler = (e) => {
+    this.setState({
+      message_content: e.target.value
+    })
+  }
+
+  get_conversation_messages = async (val1,val2,e) => {
+
+    let data = {
+      message_to: val1,
+      message_to_name:val2,
+      message_from: localStorage.getItem('user_id'),
+      message_from_name: localStorage.getItem('Full_Name')
+    }
+    await this.setState({
+      message_to:data.message_to,
+      message_to_name:data.message_to_name,
+      message_from:data.message_from,
+      message_from_name:data.message_from_name
+    })
+    axios.post("http://localhost:3001/get_conversation", data)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            messages: response.data
+          })
+          console.log(this.state.messages)
+        }
+      })
+    await this.toggleNested()
+    await this.setState({
+      nestedModal_nest: true
+    })
+
+
+  }
+
+  send_message = async (e) => {
+    let data = {
+      message_from_name: localStorage.getItem('Full_Name'),
+      message_to_name: this.state.message_to_name,
+      message_from: this.state.message_from,
+      message_content: this.state.message_content
+    }
+    axios.post("http://localhost:3001/send_message", data)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            messages: response.data.messages
+          })
+          console.log(this.state.messages)
+        }
+      })
+    await this.setState({
+      nestedModal_nest: true
+    })
+
+
   }
 
 
@@ -123,17 +238,68 @@ export default class navbar extends Component {
     await this.state.topics.map((responses, index) => {
       if (responses.topic == var1.topic) {
         this.state.topics.splice(index, 1)
-        present =1
+        present = 1
       }
     })
-    if(present == 0){
-    await this.state.topics.push(var1)
+    if (present == 0) {
+      await this.state.topics.push(var1)
     }
     console.log(this.state.topics)
   }
 
 
   render() {
+
+    var messages = this.state.messages.map(message => {
+
+      if (message.message_from == localStorage.getItem('user_id') && message.message_to_name == this.state.message_to_name) {
+        return (
+          <div style={{ textAlign: 'right' }}>
+            <div class="font_bold text_color"><a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "5%", width: "5%", marginLeft: "1%" }} alt="Quora LOGO"></img></a>
+              {localStorage.getItem('Full_Name')}</div>
+            <div class="font_bold text_color">{message.message_content}</div>
+          </div>
+
+        )
+      }
+      else if (message.message_from_name == this.state.message_to_name && message.message_to == localStorage.getItem('user_id')) {
+        return (
+          <div style={{ textAlign: 'left' }}>
+            <div class="font_bold text_color"><a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "5%", width: "5%", marginLeft: "1%" }} alt="Quora LOGO"></img></a>
+              {this.state.message_to_name}</div>
+            <div class="font_bold text_color">{message.message_content}</div>
+          </div>
+        )
+      }
+    })
+
+    var conversation_list = this.state.conversation_list.map(conversation => {
+
+      if (conversation.message_to_name != undefined) {
+        return (
+          <a href = 'javascript:void(0)' onClick = {this.get_conversation_messages.bind(this,conversation.message_to,conversation.message_to_name)}>
+            <div class="font_bold text_color"><a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "5%", width: "5%", marginLeft: "1%" }} alt="Quora LOGO"></img></a>
+              {conversation.message_to_name}
+            </div>
+            <hr></hr>
+          </a>
+        )
+      }
+      else{
+        return (
+          <a href = 'javascript:void(0)' onClick = {this.get_conversation_messages.bind(this,conversation.message_from,conversation.message_from_name)}>
+            <div class="font_bold text_color"><a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "5%", width: "5%", marginLeft: "1%" }} alt="Quora LOGO"></img></a>
+              {conversation.message_from_name}
+            </div>
+            <hr></hr>
+          </a>
+        )
+        
+      }
+
+    })
+
+
     return (
       <div>
         {this.state.redirectVar}
@@ -164,7 +330,7 @@ export default class navbar extends Component {
             <form class="form-inline my-2 my-lg-0">
 
               <input class="form-control mr-sm-2" style={{ height: "30px" }} type="search" placeholder="Search" aria-label="Search"></input>
-              <a id="Popover1" href="#" style={{ marginLeft: "60px" }}><img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img></a>
+              <a id="Popover1" href="javascript:void(0)" style={{ marginLeft: "60px" }}><img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img></a>
 
               <button onClick={this.modal} class="btn btn-default" style={{ marginLeft: "10px", height: "35px", padding: "6px", backgroundColor: "#B92B27", color: "white" }}>Add Question or Link</button>
 
@@ -225,6 +391,63 @@ export default class navbar extends Component {
                 </ModalFooter>
               </Modal>
 
+
+
+
+
+              <Modal isOpen={this.state.message_modal} toggle={this.message_modal}>
+                <ModalHeader toggle={this.message_modal}>Messages</ModalHeader>
+                <ModalBody>
+                  <div style={{ height: '60vh' }}>
+                    {conversation_list}
+                  </div>
+                </ModalBody>
+                <ModalFooter>
+                  <a href="#" style={{ color: "#AAAAAA" }} onClick={this.message_modal}>Cancel</a>
+                  <Button color="primary" onClick={this.toggleNested}>New Message</Button>{' '}
+
+                  <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.message_modal : undefined}>
+                    <ModalHeader>New Message</ModalHeader>
+                    <ModalBody>
+                      <div style={{ height: '60vh' }} class="container">
+                        <form>
+                          <div>
+                            <input style={{ height: '30px', marginBottom: '10px' }} type='text' name='to' class='form-control' onChange={this.message_name_change_handler} placeholder='Enter a name'></input>
+                            <textarea style={{ height: '150px' }} name='message' class='form-control' onChange={this.message_content_change_handler} placeholder='Type a Message...'></textarea>
+                          </div>
+                        </form>
+                      </div>
+                    </ModalBody>
+                    <ModalFooter>
+                      <a href="#" style={{ color: "#AAAAAA" }} onClick={this.toggleNested}>Back</a>
+                      <Button color="primary" onClick={this.send_message}>Send</Button>{' '}
+
+
+                      <Modal isOpen={this.state.nestedModal_nest} toggle={this.toggleAll}>
+                        <ModalHeader>Conversation with {this.state.message_to_name}
+                          <a style = {{marginLeft:'15%',position:'fixed'}} onClick={this.toggleNested_nest}><i class="fa fa-times" aria-hidden="true"></i></a>
+                        </ModalHeader>
+                        <ModalBody style={{ overflowY: 'auto' }}>
+                          <div style={{ height: '60vh' }} class="container">
+                            {messages}
+                          </div>
+                        </ModalBody>
+                        <ModalFooter>
+                          <input style={{ width: '80%', height: '75%' }} type='text' class='form-control' onChange={this.message_content_change_handler} placeholder='Type a message...'></input>
+                          <Button color="primary" onClick={this.send_message}>Send</Button>
+                        </ModalFooter>
+                      </Modal>
+
+
+                    </ModalFooter>
+                  </Modal>
+
+                </ModalFooter>
+              </Modal>
+
+
+
+
             </form>
             <Popover placement="bottom" isOpen={this.state.popoverOpen} target="Popover1" toggle={this.toggle}>
               <PopoverHeader>
@@ -233,7 +456,7 @@ export default class navbar extends Component {
                   <hr class="hrClass"></hr>
                   <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Blogs</li></a>
                   <hr class="hrClass"></hr>
-                  <a style={{ color: "#3775B1" }} class="less" href="#"> <li class="liStyle">Messages</li></a>
+                  <a style={{ color: "#3775B1" }} class="less" onClick={this.message_modal} href="javascript:void(0)"> <li class="liStyle">Messages</li></a>
                   <hr class="hrClass"></hr>
                   <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Your Content</li></a>
                   <hr class="hrClass"></hr>
