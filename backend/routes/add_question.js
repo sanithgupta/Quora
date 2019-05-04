@@ -1,4 +1,5 @@
 var Questions = require('../models/Questions');
+var Topics = require('../models/topics')
 var routerr = require('express').Router();
 
 routerr.post('/Addquestion', function (req, res) {
@@ -15,6 +16,7 @@ routerr.post('/Addquestion', function (req, res) {
         answers: [],
         date_time: date
     })
+
     new_question.save(function (err, result) {
         if (err) {
             res.writeHead(400, {
@@ -23,7 +25,12 @@ routerr.post('/Addquestion', function (req, res) {
             res.end('Error in adding question');
         }
         else {
-            console.log(result);
+            console.log("Result",result);
+            // var topics = req.body.topics
+            // topics.forEach(topic => {
+            //     Topics.findOneAndUpdate({topic_name:topic},{$push:{questions:{question_id:result.}}},{upsert:true},function(err,result){
+
+            // });
             res.writeHead(200, {
                 'Content-type': 'application/json'
             });

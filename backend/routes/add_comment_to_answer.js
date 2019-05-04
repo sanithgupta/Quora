@@ -6,7 +6,7 @@ console.log('=========================Inside Backend - Add comment module ======
 console.log("Object received ", req);
 var date = new Date().toISOString();
 
-Answers.findOneAndUpdate({_id:req.body.answer_id},{$push:{comments:{user_id:req.body.user_id,comment:req.body.comment,date_time:date}}},function(err,result){
+Answers.findOneAndUpdate({_id:req.body.answer_id},{$push:{comments:{user_id:req.body.user_id,user_name:req.body.user_name,comment:req.body.comment,date_time:date}}},function(err,result){
     if(err){
         res.writeHead(400, {
             'Content-type': 'application/json'

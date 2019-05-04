@@ -32,6 +32,9 @@ export default class navbar extends Component {
     console.log("In getting user details", data)
     axios.post("http://localhost:3001/getUserDetails", data)
       .then((response) => {
+        if(response.data.length>0){
+
+        
         console.log("Status Code : ", response.status);
         console.log(response.data)
         console.log(response.data[0]._id)
@@ -39,6 +42,7 @@ export default class navbar extends Component {
         let full_name = response.data[0].first_name +" "+ response.data[0].last_name;
         console.log(full_name)
         localStorage.setItem('Full_Name', full_name)
+        }
       })
   }
 
@@ -97,6 +101,7 @@ export default class navbar extends Component {
       question: this.state.question,
       user_id: localStorage.getItem('user_id')
     }
+    alert("adding question")
     console.log("Inserting Question for userid", data)
     axios.get("http://localhost:3001/Addquestion", data)
       .then(response => {

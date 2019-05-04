@@ -8,6 +8,9 @@ const questions = new mongoose.Schema({
 count:{
     type:String
 },
+views:{
+    type:Array
+},
 question:{
     type:String
 },
@@ -30,6 +33,6 @@ date_time:{
     type:String
 }
 
-},{strict:"false"})
+})
 var Questions = mongoose.model('Questions',questions);
 module.exports = Questions;

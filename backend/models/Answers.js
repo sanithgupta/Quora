@@ -37,6 +37,7 @@ const answers = new mongoose.Schema({
     upvotes:{
         type:Number
     },
+    
 downvotes:{
     type:Number
 },
