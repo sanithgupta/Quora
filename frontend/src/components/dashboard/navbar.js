@@ -27,8 +27,8 @@ export default class navbar extends Component {
       conversation_list: []
     };
     this.toggle = this.toggle.bind(this);
-    this.modal = this.modal.bind(this);
     this.message_modal = this.message_modal.bind(this)
+    // this.modal = this.modal.bind(this);
     this.toggleNested = this.toggleNested.bind(this);
     this.toggleNested_nest = this.toggleNested_nest.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
@@ -87,12 +87,12 @@ export default class navbar extends Component {
 
   }
 
-  async modal() {
-    // e.preventDefault();
+  modal = (e) => {
+    e.preventDefault();
     console.log("In Modal function")
     // alert(this.state.addQuestionModal)
     console.log("state", this.state.addQuestionModal)
-    await this.setState(prevState => ({
+    this.setState(prevState => ({
       addQuestionModal: !prevState.addQuestionModal
     }));
     // alert(this.state.addQuestionModal)
