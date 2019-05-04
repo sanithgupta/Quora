@@ -16,11 +16,11 @@ export default class navbar extends Component {
       question: "",
       addQuestionModal: false,
       nestedModal: false,
-      closeAll:false,
+      closeAll: false,
       topics: [],
     };
     this.toggle = this.toggle.bind(this);
-    this.modal = this.modal.bind(this);
+    // this.modal = this.modal.bind(this);
     this.toggleNested = this.toggleNested.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
 
@@ -70,12 +70,12 @@ export default class navbar extends Component {
 
   }
 
-  async modal() {
-    // e.preventDefault();
+  modal = (e) => {
+    e.preventDefault();
     console.log("In Modal function")
     // alert(this.state.addQuestionModal)
     console.log("state", this.state.addQuestionModal)
-    await this.setState(prevState => ({
+    this.setState(prevState => ({
       addQuestionModal: !prevState.addQuestionModal
     }));
     // alert(this.state.addQuestionModal)
@@ -123,11 +123,11 @@ export default class navbar extends Component {
     await this.state.topics.map((responses, index) => {
       if (responses.topic == var1.topic) {
         this.state.topics.splice(index, 1)
-        present =1
+        present = 1
       }
     })
-    if(present == 0){
-    await this.state.topics.push(var1)
+    if (present == 0) {
+      await this.state.topics.push(var1)
     }
     console.log(this.state.topics)
   }
