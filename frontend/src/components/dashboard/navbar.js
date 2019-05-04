@@ -6,7 +6,13 @@ import { Redirect } from 'react-router';
 import axios from 'axios';
 
 
-export default class navbar extends Component {
+/* REDUX IMPORTS BEGIN */
+import { connect } from 'react-redux';
+import { stat } from 'fs';
+/* REDUX IMPORTS END */
+
+
+class navbar extends Component {
   constructor(props) {
     super(props);
 
@@ -36,12 +42,21 @@ export default class navbar extends Component {
   }
 
   componentDidMount = () => {
+    // alert(this.props.redirectVar)
+    if (this.props.redirectVar == false) {
+      // alert('here')
+      this.setState({
+        redirectVar: <Redirect to='/login' />
+      })
+    }
+
     let data = {
       email_id: localStorage.getItem('email_id')
     }
     console.log("In getting user details", data)
     axios.post("http://localhost:3001/getUserDetails", data)
       .then((response) => {
+        if(response.status == 200){
         console.log("Status Code : ", response.status);
         console.log(response.data)
         console.log(response.data[0]._id)
@@ -49,6 +64,7 @@ export default class navbar extends Component {
         let full_name = response.data[0].first_name + " " + response.data[0].last_name;
         console.log(full_name)
         localStorage.setItem('Full_Name', full_name)
+        }
       })
   }
 
@@ -140,19 +156,19 @@ export default class navbar extends Component {
     })
   }
 
-  get_conversation_messages = async (val1,val2,e) => {
+  get_conversation_messages = async (val1, val2, e) => {
 
     let data = {
       message_to: val1,
-      message_to_name:val2,
+      message_to_name: val2,
       message_from: localStorage.getItem('user_id'),
       message_from_name: localStorage.getItem('Full_Name')
     }
     await this.setState({
-      message_to:data.message_to,
-      message_to_name:data.message_to_name,
-      message_from:data.message_from,
-      message_from_name:data.message_from_name
+      message_to: data.message_to,
+      message_to_name: data.message_to_name,
+      message_from: data.message_from,
+      message_from_name: data.message_from_name
     })
     axios.post("http://localhost:3001/get_conversation", data)
       .then((response) => {
@@ -277,7 +293,7 @@ export default class navbar extends Component {
 
       if (conversation.message_to_name != undefined) {
         return (
-          <a href = 'javascript:void(0)' onClick = {this.get_conversation_messages.bind(this,conversation.message_to,conversation.message_to_name)}>
+          <a href='javascript:void(0)' onClick={this.get_conversation_messages.bind(this, conversation.message_to, conversation.message_to_name)}>
             <div class="font_bold text_color"><a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "5%", width: "5%", marginLeft: "1%" }} alt="Quora LOGO"></img></a>
               {conversation.message_to_name}
             </div>
@@ -285,16 +301,16 @@ export default class navbar extends Component {
           </a>
         )
       }
-      else{
+      else {
         return (
-          <a href = 'javascript:void(0)' onClick = {this.get_conversation_messages.bind(this,conversation.message_from,conversation.message_from_name)}>
+          <a href='javascript:void(0)' onClick={this.get_conversation_messages.bind(this, conversation.message_from, conversation.message_from_name)}>
             <div class="font_bold text_color"><a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "5%", width: "5%", marginLeft: "1%" }} alt="Quora LOGO"></img></a>
               {conversation.message_from_name}
             </div>
             <hr></hr>
           </a>
         )
-        
+
       }
 
     })
@@ -425,7 +441,7 @@ export default class navbar extends Component {
 
                       <Modal isOpen={this.state.nestedModal_nest} toggle={this.toggleAll}>
                         <ModalHeader>Conversation with {this.state.message_to_name}
-                          <a style = {{marginLeft:'15%',position:'fixed'}} onClick={this.toggleNested_nest}><i class="fa fa-times" aria-hidden="true"></i></a>
+                          <a style={{ marginLeft: '15%', position: 'fixed' }} onClick={this.toggleNested_nest}><i class="fa fa-times" aria-hidden="true"></i></a>
                         </ModalHeader>
                         <ModalBody style={{ overflowY: 'auto' }}>
                           <div style={{ height: '60vh' }} class="container">
@@ -574,5 +590,16 @@ export default class navbar extends Component {
       // </div>
 
     )
+
+
   }
 }
+
+//subscribe to Redux store updates.
+const mapStateToProps = (state) => ({
+  // variables below are subscribed to changes in loginState variables (redirectVar,Response) and can be used with props.
+  redirectVar: state.loginState.redirectVar,
+  response: state.loginState.response
+})
+
+export default connect(mapStateToProps)(navbar);
