@@ -7,11 +7,9 @@ var kafka = require('../kafka/client');
 routerr.post('/get_answers', function (req, res) {
 console.log('=========================Inside Backend - Get Answers module =========================');
 // console.log("Object received ", req);
-Questions.findOne({"views.user_id":req.body.user_id},{_id:0,views:1},function(err,result_que){
+Questions.findOne({_id:req.body.question_id,"views.user_id":req.body.user_id},{_id:0,views:1},function(err,result_que){
     console.log("result",result_que)
     if(!result_que){
-
- 
 Questions.findOneAndUpdate({_id:req.body.question_id},{$push:{views:{user_id:req.body.user_id}}},{upsert:true},function(err,result){
     if(err){
         console.log(err)

@@ -180,7 +180,7 @@ export default class viewanswers extends Component {
         })
     }
     async componentDidMount(){
-    
+    // alert(localStorage.getItem('questionclicked'))
         axios.defaults.withCredentials = true;
         const data = {
             question_id:localStorage.getItem('questionclicked'),
@@ -215,7 +215,7 @@ export default class viewanswers extends Component {
 
       }
     render() {
-
+// alert(localStorage.getItem('questionclicked'))
         let answerDivBlock = null;
       
         answerDivBlock = this.state.answerBlock1.map(block=>{

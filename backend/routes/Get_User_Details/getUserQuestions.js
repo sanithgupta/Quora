@@ -1,11 +1,12 @@
 var routerr = require('express').Router();
 var Users = require('../../models/Users');
+var Questions = require('../../models/Questions')
 
 routerr.post('/getUserQuestions', function (req, res) {
     console.log("========================In Getting User Questions=================================")
     console.log("got These details from the fronend",req.body)
-    Users.find({
-        _id: req.body.user_id
+    Questions.find({
+        user_id: req.body.user_id
     },
         function (err, result) {
             if (err) {

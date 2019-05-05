@@ -11,9 +11,10 @@ export default class home extends Component {
             topic_id:"0",
             topic_name:"Madhusudhan Shagam",
             topic_icon:"fa fa-user",
-          topics:[{topic_id:"10",topic_name:"Techonology",topic_icon:"fal fa-book"},{topic_id:"11",topic_name:"Movies",topic_icon:"fal fa-film"},{topic_id:"12",topic_name:"Cooking",topic_icon:"fal fa-utensils"},{topic_id:"13",topic_name:"Photography",topic_icon:"fal fa-camera"},{topic_id:"14",topic_name:"Health",topic_icon:"fal fa-medkit"},{topic_id:"15",topic_name:"Techonology",topic_icon:"fal fa-book"},{topic_id:"16",topic_name:"Movies",topic_icon:"fal fa-film"},{topic_id:"17",topic_name:"Cooking",topic_icon:"fal fa-utensils"},{topic_id:"18",topic_name:"Photography",topic_icon:"fal fa-camera"},{topic_id:"19",topic_name:"Health",topic_icon:"fal fa-medkit"}],
+          topics:[{topic_id:"10",topic_name:"Technology",topic_icon:"fal fa-book"},{topic_id:"11",topic_name:"Movies",topic_icon:"fal fa-film"},{topic_id:"12",topic_name:"Cooking",topic_icon:"fal fa-utensils"},{topic_id:"13",topic_name:"Photography",topic_icon:"fal fa-camera"},{topic_id:"14",topic_name:"Health",topic_icon:"fal fa-medkit"},{topic_id:"15",topic_name:"Techonology",topic_icon:"fal fa-book"},{topic_id:"16",topic_name:"Movies",topic_icon:"fal fa-film"},{topic_id:"17",topic_name:"Cooking",topic_icon:"fal fa-utensils"},{topic_id:"18",topic_name:"Photography",topic_icon:"fal fa-camera"},{topic_id:"19",topic_name:"Health",topic_icon:"fal fa-medkit"}],
     
         }
+        
     }
     topic_click=(val,e)=>{
         // alert("hi")
@@ -22,6 +23,7 @@ export default class home extends Component {
             topic_name:val.topic_name,
             topic_icon:val.topic_icon
         })
+        localStorage.setItem('topicclicked',val.topic_name)
     }
   render() {
     

@@ -16,10 +16,11 @@ export default class navbar extends Component {
       question: "",
       addQuestionModal: false,
       nestedModal: false,
-      topics:[],
+      closeAll: false,
+      topics: [],
     };
     this.toggle = this.toggle.bind(this);
-    this.modal = this.modal.bind(this);
+    // this.modal = this.modal.bind(this);
     this.toggleNested = this.toggleNested.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
 
@@ -39,7 +40,7 @@ export default class navbar extends Component {
         console.log(response.data)
         console.log(response.data[0]._id)
         localStorage.setItem('user_id', response.data[0]._id)
-        let full_name = response.data[0].first_name +" "+ response.data[0].last_name;
+        let full_name = response.data[0].first_name + " " + response.data[0].last_name;
         console.log(full_name)
         localStorage.setItem('Full_Name', full_name)
         }
@@ -58,10 +59,13 @@ export default class navbar extends Component {
     });
   }
   toggleAll() {
+  
     this.setState({
       nestedModal: !this.state.nestedModal,
       closeAll: true
     });
+
+    window.location.reload();
   }
   loggingout = (e) => {
     console.log("In logout method")
@@ -73,12 +77,12 @@ export default class navbar extends Component {
 
   }
 
-  async modal(e) {
+  modal = (e) => {
     e.preventDefault();
     console.log("In Modal function")
     // alert(this.state.addQuestionModal)
     console.log("state", this.state.addQuestionModal)
-    await this.setState(prevState => ({
+    this.setState(prevState => ({
       addQuestionModal: !prevState.addQuestionModal
     }));
     // alert(this.state.addQuestionModal)
@@ -86,6 +90,9 @@ export default class navbar extends Component {
 
 
   handleChange = async (e) => {
+    // alert("hi")
+    e.preventDefault();
+
     console.log("In handle change")
     await this.setState({
 
@@ -95,30 +102,48 @@ export default class navbar extends Component {
     });
   }
   postQuestion = (e) => {
-    e.preventDefault();
+    // alert("hi")
+    // e.preventDefault();
     console.log("This is posted question:", this.state.question)
-    let data = {
+    let questiondata = {
       question: this.state.question,
-      user_id: localStorage.getItem('user_id')
+      user_id: localStorage.getItem('user_id'),
+      topics: JSON.stringify(this.state.topics),
     }
-    alert("adding question")
-    console.log("Inserting Question for userid", data)
-    axios.get("http://localhost:3001/Addquestion", data)
+    console.log("Inserting Question for userid", questiondata)
+    axios.get("http://localhost:3001/Addquestion", {
+      params:
+      {
+        question: this.state.question,
+        user_id: localStorage.getItem('user_id'),
+        topics: this.state.topics,
+      }
+    })
       .then(response => {
         console.log("Status Code : ", response.status);
-
+        this.toggleAll();
       })
   }
 
   handleChange1 = async (e) => {
-    await this.setState({
-      topics: {
-        ...this.state.topics,
-        [e.target.name]: e.target.value,
+    const value = e.target.value || ""
+    const var1 = {
+      "topic": e.target.name,
+      "response": e.target.value
+    }
+    let present = 0
+    await this.state.topics.map((responses, index) => {
+      if (responses.topic == var1.topic) {
+        this.state.topics.splice(index, 1)
+        present = 1
       }
-    });
+    })
+    if (present == 0) {
+      await this.state.topics.push(value)
+    }
     console.log(this.state.topics)
   }
+
 
   render() {
     return (
@@ -168,29 +193,29 @@ export default class navbar extends Component {
                   <a href="#" style={{ color: "#AAAAAA" }} onClick={this.modal}>Cancel</a>
                   <Button color="primary" onClick={this.toggleNested}>Select Topics</Button>{' '}
 
-                  <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.toggle : undefined}>
+                  <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.modal : undefined}>
                     <ModalHeader>{this.state.question}</ModalHeader>
                     <ModalBody>
                       <div class="container">
                         <div class="col-sm-5">
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Technology" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_1" value="Technology" onChange={this.handleChange1}></Input>
                             <p>Technology</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Movies" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_2" value="Movies" onChange={this.handleChange1}></Input>
                             <p>Movies</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Cooking" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_3" value="Cooking" onChange={this.handleChange1}></Input>
                             <p>Cooking</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Photography" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_4" value="Photography" onChange={this.handleChange1}></Input>
                             <p>Photography</p>
                           </div>
                           <div class="row">
-                            <Input type="checkbox" name = "Topic" value="Health" onChange={this.handleChange1}></Input>
+                            <Input type="checkbox" name="Topic_5" value="Health" onChange={this.handleChange1}></Input>
                             <p>Health</p>
                           </div>
 

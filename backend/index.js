@@ -30,6 +30,7 @@ var add_comment_to_answer=require('./routes/add_comment_to_answer')
 var get_user_answers=require('./routes/Get_User_Details/get_user_answers')
 var getUserDetails = require('./routes/Get_User_Details/getUserDetails')
 var getUserQuestions = require('./routes/Get_User_Details/getUserQuestions')
+var getFeedList = require('./routes/get_feed')
 
 
 //use cors to allow cross origin resource sharing
@@ -73,6 +74,7 @@ app.use(function (req, res, next) {
     //===========User Specfic=============
     app.use('/', getUserDetails)
     app.use('/', getUserQuestions)
+    app.use('/',getFeedList)
     
 
 //start your server on port 3001
