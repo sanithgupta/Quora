@@ -1,9 +1,23 @@
 var mongoose = require('mongoose')
 
-const topics = new mongoose.Schema({topic_id:{
-    type:String
-},
+const topics = new mongoose.Schema(
+    
+    {
+//         topic_id:{
+//     type:String
+// },
+
+
+    topic:[ 
+        {
+            topic_name:{ type:String},
+            topic_image: {type:String}
+        }
+    ],
     topic_name:{
+        type:String
+    },
+    topic_image:{
         type:String
     },
     questions:{

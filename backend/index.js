@@ -27,6 +27,7 @@ var followquestion=require('./routes/followquestion');
 var get_answers=require('./routes/get_answers')
 var answers_bookmarked=require('./routes/answers_bookmarked')
 var add_comment_to_answer=require('./routes/add_comment_to_answer')
+var topics=require('./routes/topics');
 
 
 //use cors to allow cross origin resource sharing
@@ -63,6 +64,8 @@ app.use(function (req, res, next) {
     app.use('/',userProfileupdate);
     app.use('/',displayUser);
     app.use('/',followquestion);
+    app.use('/',topics);
+    // app.use('/',gra)
 
     
     app.use('/',get_answers);

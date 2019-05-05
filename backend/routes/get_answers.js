@@ -1,6 +1,8 @@
 var Answers = require('../models/Answers');
 var Questions = require('../models/Questions');
 var routerr = require('express').Router();
+const fetch = require("node-fetch");
+const redis = require('redis');
 
 routerr.post('/get_answers', function (req, res) {
 console.log('=========================Inside Backend - Get Answers module =========================');
