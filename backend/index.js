@@ -28,6 +28,9 @@ var get_answers=require('./routes/get_answers')
 var answers_bookmarked=require('./routes/answers_bookmarked')
 var add_comment_to_answer=require('./routes/add_comment_to_answer')
 var get_user_answers=require('./routes/Get_User_Details/get_user_answers')
+var send_message = require('./routes/Messages/send_message')
+var conversation_list = require('./routes/Messages/conversation_list')
+var get_conversation = require('./routes/Messages/get_conversation')
 var getUserDetails = require('./routes/Get_User_Details/getUserDetails')
 var getUserQuestions = require('./routes/Get_User_Details/getUserQuestions')
 var getFeedList = require('./routes/get_feed')
@@ -71,6 +74,9 @@ app.use(function (req, res, next) {
     app.use('/',answers_bookmarked);
     app.use('/',add_comment_to_answer);
     app.use('/',get_user_answers);
+    app.use('/',send_message);
+    app.use('/',conversation_list); 
+    app.use('/',get_conversation); 
     //===========User Specfic=============
     app.use('/', getUserDetails)
     app.use('/', getUserQuestions)
