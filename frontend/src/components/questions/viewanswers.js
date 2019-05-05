@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import Navbar from '../dashboard/navbar'
 import axios from 'axios';
 import {Editor, EditorState} from 'draft-js';
+import { transcode } from 'buffer';
 
 export default class viewanswers extends Component {
     constructor() {
@@ -17,7 +18,9 @@ export default class viewanswers extends Component {
     answers_bookmarked:[],
     answerBlock:"0px",
     answerBlock1:["a"],
-    answertext:""
+    answertext:"",
+    ansvis:"visible",
+    anonymous:false
 
     
     // bookmark_check:"checked"
@@ -137,7 +140,7 @@ export default class viewanswers extends Component {
                 user_id:localStorage.getItem('user_id'),
                 user_name:localStorage.getItem('Full_Name'),
                 profile_credential:"",
-                is_anonymous:false
+                is_anonymous:this.state.anonymous
             }
             
              axios.post('http://localhost:3001/add_answer',answer_data)
@@ -153,7 +156,10 @@ export default class viewanswers extends Component {
                 //   console.log("answers",this.state.commentStatus)
             })
     }
-    followQuestion=(e)=>{
+    anonymous=(e)=>{
+        this.setState({anonymous: !this.state.anonymous});
+    }
+    followQuestion=async(e)=>{
         e.preventDefault();
         //  alert(val)
             const follow_data={
@@ -161,14 +167,21 @@ export default class viewanswers extends Component {
                 user_id:localStorage.getItem('user_id')
             }
             
-             axios.post('http://localhost:3001/followquestion',follow_data)
+             await axios.post('http://localhost:3001/followquestion',follow_data)
             .then(response => {
+                console.log(response.status)
+                if(response.status=="201"){
+                    alert("unfollowed successfully")
+                }
+                else{
+                    alert("followed")
+
+                }
                 // alert("after response")
                 // console.log("response",response.data)
                 //   this.setState({
                 //     commentStatus:"updated"
                 //   })
-                alert("followed")
              
                   window.location.reload();
                 //   console.log("answers",this.state.commentStatus)
@@ -233,12 +246,13 @@ export default class viewanswers extends Component {
                <i style={{fontWeight:"700"}} class="fal fa-bold"></i>&nbsp;&nbsp;&nbsp;&nbsp;
                <i style={{fontWeight:"700"}} class="fal fa-italic"></i>&nbsp;&nbsp;&nbsp;&nbsp;
                <i style={{fontWeight:"700"}} class="fal fa-list-ol"></i>&nbsp;&nbsp;&nbsp;&nbsp;
-               <i  style={{fontWeight:"700"}} class="fal fa-list-ul"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+               <i  style={{fontWeight:"700"}} class="fal fa-list-ul"></i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
            
                <i  style={{fontWeight:"500"}} class="fal fa-video"></i>&nbsp;&nbsp;&nbsp;&nbsp;
                <i style={{fontWeight:"500"}} class="fal fa-images"></i>&nbsp;&nbsp;&nbsp;&nbsp;
                <i style={{fontWeight:"500"}} class="fal fa-link"></i>&nbsp;&nbsp;&nbsp;&nbsp;
                <i style={{fontWeight:"500"}} class="fal fa-ellipsis-h-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+               <input type="checkbox" onChange={this.anonymous} defaultChecked={this.state.anonymous}></input>Anonymous
 
                </div>
                    <textarea onChange={this.textanswer} rows="9" cols="70"></textarea>
@@ -255,7 +269,16 @@ console.log(this.state.commentStatus)
         if(this.state.answers){
             question_val = this.state.answers.question_details[0].question
          answerdiv = this.state.answers.answer_details.map(answer => {
+             var user_name = answer.user_name
+          
+             if(answer.is_anonymous=="true"){
+                user_name = "Guest"
+             }
+            
           var bookmark_check = "Bookmark"
+          if(answer.user_id==localStorage.getItem('user_id')){
+              this.state.ansvis="hidden"
+          }
             this.state.answers_bookmarked.map(booked=>{
                 console.log("booked",booked)
                 // alert(answer._id)
@@ -290,7 +313,7 @@ console.log(this.state.commentStatus)
                    <div class="row" >
                    <div class="col col-sm-1" style={{marginLeft:"-20px"}}>
                <span class="font_bold" style={{color:"#333D46"}} ><a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "80%", width: "150%" }} alt="Quora LOGO"></img></a></span></div>
-               <div class="col col-sm-6" style={{marginLeft:"-15px"}}>{answer.user_name}
+               <div class="col col-sm-6" style={{marginLeft:"-15px"}}>{user_name}
                 <br></br>
                  <div style={{marginTop:"-10px"}}><label class="date_size text_color" >Answered {answer.date_time.substring(0,10)}</label><br></br></div>
                  </div>
@@ -340,7 +363,7 @@ console.log(this.state.commentStatus)
                     
                     </div>
                 <div>
-                    <a onClick={this.answerBlock}><i class="fal fa-edit"></i>&nbsp;Answer</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a style={{visibility:this.state.ansvis}} onClick={this.answerBlock}><i class="fal fa-edit"></i>&nbsp;Answer</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                    
                     <a onClick={this.followQuestion} style={{cursor:"pointer"}}><i class="fal fa-rss"></i>&nbsp;Follow</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span><i class="fal fa-user"></i>&nbsp;Request</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

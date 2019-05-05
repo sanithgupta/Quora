@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from 'axios';
 
 export class Answers extends Component {
   constructor() {
@@ -10,10 +11,59 @@ export class Answers extends Component {
       ]
     }
   }
-  componentDidMount = () => {
+  componentDidMount = async() => {
+    let data = {
+      user_id: localStorage.getItem("user_id")
+    }
+    console.log("for ", data, " we are getting answers")
+    await axios.post("http://localhost:3001/get_user_answers", data)
+      .then((response) => {
+        console.log("Status Code : ", response.status);
 
+        if (response.data.length > 0) {
+          console.log(response.data)
+          // var len = response.data.length;
+          // var i = 0;
+          // for (i = 0; i < len; i++) {
+          //   alert(i)
+          this.setState({
+            answers:response.data
+          })
+           
+          console.log("questions", this.state.answers)
+          // }
+        }
+      })
   }
   render() {
+
+
+
+
+let feedlist = null;
+if(this.state.answers.length>0){
+       feedlist = this.state.answers.map(answer => {
+   
+        return (
+         <div class="font_style">
+                 <div class="font_white border" style={{marginTop:"10px"}}>
+                 <label class="question_size"><a onClick ={()=>{localStorage.setItem('questionclicked',answer.question_details[0]._id)}} href="/viewanswers"  style={{color:"black"}}>{answer.question_details[0].question}</a></label><br></br>
+                 <div class="font_bold" style={{color:"#333D46"}} ><a href="#" ><img src={require('../../../images/profile.JPG')} style={{ height: "5%", width: "5%",marginLeft:"1%" }} alt="Quora LOGO"></img></a>
+            {answer.answer_details.user_name}</div>
+                 
+                 <label class="date_size text_color">Answered {answer.answer_details.date_time.substring(0,10)}</label><br></br>
+                <span  style={{fontWeight:"400",color:"#333D46"}}>{answer.answer_details.answer}</span><br></br>
+
+        
+        </div>
+            
+         </div>
+        )
+      });
+    }
+
+
+
     // let answerdiv = null;
     // answerdiv = this.state.answers.map(answer => {
     //   let commentdiv = null
@@ -72,15 +122,9 @@ export class Answers extends Component {
     //   )
     // });
     return (
-      <div>
-        <p>Answers</p>
-        <hr></hr>
-        <div class="col ">
-          <div >
-            {/* {answerdiv} */}
-          </div>
-        </div>
-
+      <div style={{width:"600px"}}>
+      Answers
+      {feedlist}
 
       </div>
     )
