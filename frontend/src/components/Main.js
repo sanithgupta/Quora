@@ -1,15 +1,9 @@
 import React, {Component} from 'react';
-import {Route, Switch} from 'react-router-dom';
+import {Route} from 'react-router-dom';
 import navbar from './dashboard/navbar';
 import Home from './dashboard/home';
 import login from './login'
 import viewanswers from './questions/viewanswers';
-import Interests from './Intrests/interests';
-import Answer_views from './graphs/Answer_views';
-import Answer_upvotes from './graphs/Answer_upvotes'
-import Doughnut_graph from './graphs/downvotes_donut'
-import bookmarkedanswers from './graphs/bookmarkedanswers'
-import ConsolidatedGraphs from './graphs/graphconsolidated'
 
 import Profile from './Popover_Navbar/Profile';
 
@@ -18,19 +12,12 @@ class Main extends Component {
     render(){
         return(
             <div>
-                <Switch>
                 <Route path="/" exact component={Home}/>
                 <Route path="/login" component={login}/>
                 <Route path="/viewanswers" component={viewanswers}/>
-                <Route path="/Interests" component={Interests}/>
-                <Route path="/Answer_views"  component={Answer_views} />
-                <Route path="/Answer_upvotes" component={Answer_upvotes}/>
-                <Route path="/Doughnut_graph" component ={Doughnut_graph}/>
-                <Route path="/bookmarkedanswers" component={bookmarkedanswers}/>
-                <Route path="/profile" component={Profile}/>
-                <Route path ="/ConsolidatedGraphs" component ={ConsolidatedGraphs}/>
-                {/*Render Different Component based on Route*/}    
-                </Switch>   
+
+                <Route path="/profile" component={Profile}></Route>
+                {/*Render Different Component based on Route*/}       
             </div>
         )
     }

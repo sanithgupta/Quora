@@ -1,8 +1,6 @@
 var Answers = require('../models/Answers');
 var Questions = require('../models/Questions');
 var routerr = require('express').Router();
-const fetch = require("node-fetch");
-const redis = require('redis');
 var kafka = require('../kafka/client');
 
 

@@ -6,7 +6,3 @@ export const SUBMIT_LOGOUT = 'SUBMIT_LOGOUT';
 export const SUBMIT_SIGNUP = 'SUBMIT_SIGNUP';
 /******************** SIGNUP **************************/
 export const PROFILE = 'PROFILE';
-
-export const ERRORS ='ERRORS';
-
-export const LOGIN_USER = 'LOGIN_USER' 
