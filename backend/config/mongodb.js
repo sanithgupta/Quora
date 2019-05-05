@@ -4,7 +4,8 @@ var config = require("./../config/settings");
 var mongoose = require('mongoose');
 mongoose.Promise = global.Promise;
 
-mongoose.connect(config.dbURL, { useNewUrlParser: true });
+// mongoose.connect(config.dbURL, { useNewUrlParser: true });
+mongoose.connect(config.dbURL, { useNewUrlParser: true,poolSize:0 });
 var mdb=mongoose.connection;
 
 mdb.on('error',console.error.bind(console,'Connection error'))

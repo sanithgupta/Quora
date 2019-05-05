@@ -193,15 +193,15 @@ export class Profile extends Component {
                                     <UncontrolledPopover placement="bottom" target="UncontrolledPopover" >
                                         <PopoverHeader></PopoverHeader>
                                         <PopoverBody>
-                                            <i class="fal fa-briefcase addcred1" onClick={this.employementCredential} >Employement</i>
+                                            <i class="fal fa-briefcase addcred1"  onClick={this.employementCredential} >Employement</i>
                                             <hr></hr>
-                                            <i class="fal fa-graduation-cap addcred1" onClick={this.educationCredential}>Education</i>
+                                            <i class="fal fa-graduation-cap  addcred1" onClick={this.educationCredential}>Education</i>
                                             <hr></hr>
                                             <i class="fal fa-map-marker-alt addcred1" onClick={this.locationCredential}>Location</i>
                                             <hr></hr>
-                                            <i class="fal fa-mountains addcred1" onClick={this.topicCredential}>Topics</i>
+                                            <i class="fal fa-mountains addcred1"  onClick={this.topicCredential}>Topics</i>
                                             <hr></hr>
-                                            <i class="fal fa-globe addcred1" onClick={this.languageCredential} >Language</i>
+                                            <i class="fal fa-globe addcred1"  onClick={this.languageCredential} >Language</i>
                                         </PopoverBody>
                                     </UncontrolledPopover>
 
@@ -214,7 +214,7 @@ export class Profile extends Component {
                                 <Button color="primary" onClick={this.addcredential}>Save</Button>
                             </ModalFooter>
                         </Modal>
-                        {/* ------------------------------------------------------------------------------Modal employementCredential----------------------------------------------------------------------------------------- */}
+                        {/* ------------------------------------------------------------------------------Modal employement Credential----------------------------------------------------------------------------------------- */}
                         <Modal isOpen={this.state.employementCredentialModal} toggle={this.employementCredential} >
                             <ModalHeader toggle={this.employementCredential}><p class="font-weight-bold inputModalHead">Edit credentials<p class="font-weight-light inputcred ">Credentials also appear on answers you write.</p></p></ModalHeader>
                             <ModalBody>
@@ -225,46 +225,44 @@ export class Profile extends Component {
                                     </div>
                                     <Form>
                                         <div class=" row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="position">Position</Label>
                                             </div>
-                                            <div class="col-md-7 inputinModal">
-                                                <Input class="inputc" id="position" placeholder="Accountant"></Input>
+                                            <div class="col-md-8 inputinModal">
+                                                <Input class="inputc form-control" id="position" placeholder="Accountant"></Input>
                                             </div>
 
                                         </div>
                                         <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="company">Company Organization</Label>
                                             </div>
-                                            <div class="col-md-7 inputc">
+                                            <div class="col-md-8 inputc">
                                                 <Input class="" id="company" placeholder="Toyota"></Input>
                                             </div>
                                         </div>
                                         <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="syear">Start Year</Label>
                                             </div>
-                                            <div class="col-md-7">
-                                                <Input class="inputc" type="date" id="syear" placeholder="Year"></Input>
+                                            <div class="col-md-4">
+                                                <Input class="inputc" type="month" id="syear" placeholder="Year"></Input>
                                             </div>
                                         </div>
                                         <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="eyear">End Year</Label>
                                             </div>
-                                            <div class="col-md-7">
-                                                <Input class="inputc" type="date" id="eyear" placeholder="Year"></Input>
+                                            <div class="col-md-4">
+                                                <Input class="inputc" type="month" id="eyear" placeholder="Year"></Input>
                                             </div>
                                         </div>
                                         <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <p>I currently work here</p>
-                                            </div>
+                                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            
                                             <div class="col-md-1">
-
-                                            </div>
-                                            <div class="col-md-5">
                                                 <Input type="checkbox"></Input>
                                             </div>
                                         </div>
@@ -287,46 +285,44 @@ export class Profile extends Component {
                                     </div>
                                     <Form>
                                         <div class=" row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="school">School</Label>
                                             </div>
-                                            <div class="col-md-7">
+                                            <div class="col-md-8">
                                                 <Input class="inputc" id="school" placeholder="Stanford University"></Input>
                                             </div>
 
                                         </div>
                                         <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="concentration"> Concentration</Label>
                                             </div>
-                                            <div class="col-md-7">
+                                            <div class="col-md-8">
                                                 <Input class="inputc" id="concentration" placeholder="Computer Science"></Input>
                                             </div>
                                         </div>
                                         <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="sconcentration">Secondary Concentration</Label>
                                             </div>
-                                            <div class="col-md-7">
+                                            <div class="col-md-8">
                                                 <Input class="inputc" id="sconcentration" placeholder="Mathematics"></Input>
                                             </div>
                                         </div>
                                         <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="degree">Degree</Label>
                                             </div>
-                                            <div class="col-md-7">
+                                            <div class="col-md-8">
                                                 <Input class="inputc" id="degree" placeholder="M. S."></Input>
                                             </div>
                                         </div>
                                         <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <p>I currently Study here</p>
-                                            </div>
-                                            <div class="col-md-1">
-
-                                            </div>
-                                            <div class="col-md-5">
+                                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                            
+                                            <div class="col-md-2">
                                                 <Input type="checkbox"></Input>
                                             </div>
                                         </div>
@@ -362,24 +358,22 @@ export class Profile extends Component {
                                                 <Label for="eyear">Start Year</Label>
                                             </div>
                                             <div class="col-md-7">
-                                                <Input class="inputc" type="date" id="eyear" placeholder="Year"></Input>
+                                                <Input class="inputc" type="month" id="eyear" placeholder="Year"></Input>
                                             </div>
                                         </div> <div class="row inputc">
                                             <div class="col-md-5">
                                                 <Label for="eyear">End Year</Label>
                                             </div>
                                             <div class="col-md-7">
-                                                <Input class="inputc" type="date" id="eyear" placeholder="Year"></Input>
+                                                <Input class="inputc" type="month" id="eyear" placeholder="Year"></Input>
                                             </div>
                                         </div>
                                         <div class="row inputc">
                                             <div class="col-md-5">
                                                 <p>I currently Live here</p>
-                                            </div>
+                                            </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                           
                                             <div class="col-md-1">
-
-                                            </div>
-                                            <div class="col-md-5">
                                                 <Input type="checkbox"></Input>
                                             </div>
                                         </div>
@@ -419,27 +413,27 @@ export class Profile extends Component {
                                     </div>
                                     <Form>
                                         <div class=" row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="school">Select a topic</Label>
                                             </div>
-                                            <div class="col-md-7">
+                                            <div class="col-md-8">
                                                 <Input class="inputc" id="school" placeholder="Visiting and Travel"></Input>
                                             </div>
 
                                         </div>
                                         <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
                                                 <Label for="eyear">Describe an experience</Label>
                                             </div>
-                                            <div class="col-md-7">
+                                            <div class="col-md-8">
                                                 <Input class="inputc" id="eyear" placeholder="traveled through Europe"></Input>
                                             </div>
                                         </div> <div class="row inputc">
-                                            <div class="col-md-5">
+                                            <div class="col-md-4">
 
                                             </div>
-                                            <div class="col-md-7 pcred">
-                                                <p>More examples: travel blogger</p>
+                                            <div class="col-md-8 ">
+                                                <p style={{color:"#A8A8A8"}}>More examples: travel blogger</p>
                                             </div>
                                         </div>
                                     </Form>
@@ -462,7 +456,7 @@ export class Profile extends Component {
                                     <div>
                                         <Input placeholder="Search for a language"></Input>
                                         {/* <div class="pcred"> */}
-                                        <p  >Adding a language credential will add you to Quora in that language, when supported.</p>
+                                        <p style={{color:"#A8A8A8"}} class="font-weight-light" >Adding a language credential will add you to Quora in that language, when supported.</p>
                                         {/* </div> */}
                                     </div>
                                 </div>
