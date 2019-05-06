@@ -11,7 +11,7 @@ routerr.post('/followers', function (req, res) {
             $push: {
                 followers: {
                     followers_id: req.body.user_id,
-                    name: req.body.name,
+                    name: req.body.first_name,
 
                 }
             }

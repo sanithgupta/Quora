@@ -39,6 +39,7 @@ export class Profile extends Component {
             fullname: localStorage.getItem('Full_Name'),
             hidebtn: "",
             btnhide: "",
+            someone_id: localStorage.getItem('friend_id')
         };
         this.toggle = this.toggle.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
@@ -51,23 +52,36 @@ export class Profile extends Component {
         this.topicCredential = this.topicCredential.bind(this);
         this.languageCredential = this.languageCredential.bind(this);
     }
-    componentDidMount = () => {
-        let friend = localStorage.getItem('friend')
+    componentDidMount = async() => {
+        let friend = localStorage.getItem('friend_id')
+        let user = localStorage.getItem('user_id')
+        let data
         console.log("friend : ", friend)
-        let data = {
-            friend: localStorage.getItem('friend')
+        if (friend) {
+            data = {
+                friend: localStorage.getItem('friend_id')
+            }
+
         }
-        axios.post("http://localhost:3001/getUserDetails", data)
+        else {
+            data = {
+                friend: localStorage.getItem('user_id')
+            }
+
+        }
+        await axios.post("http://localhost:3001/getUserDetails", data)
             .then((response) => {
                 if (response.status == 200) {
                     console.log("friends details", response.data)
+                    let first_name = response.data[0].first_name
+                    localStorage.setItem('first_name', first_name)
                     let full_name = response.data[0].first_name + " " + response.data[0].last_name;
                     console.log("Friend full name", full_name)
-                    localStorage.setItem('Friend_Full_Name', full_name)
+                    localStorage.setItem('Full_Name', full_name)
                 }
             })
 
-        if (friend) {
+        if (friend !== user) {
 
             this.setState({
                 hidebtn: "hidden",
@@ -82,6 +96,7 @@ export class Profile extends Component {
             })
             console.log("In else", this.state.hidebtn)
         }
+        // alert(localStorage.getItem('Full_Name'))
 
     }
 
@@ -175,8 +190,8 @@ export class Profile extends Component {
         let data = {
             friend: localStorage.getItem('friend'),
             user_id: localStorage.getItem('user_id'),
-            friend_name: localStorage.getItem('Friend_Full_Name'),
-            name:localStorage.getItem('Full_Name')
+            friend_first_name: localStorage.getItem('friend_first_name'),
+            first_name: localStorage.getItem('first_name')
         }
         console.log("adding to our following ", data)
         axios.post("http://localhost:3001/following", data)
@@ -208,7 +223,7 @@ export class Profile extends Component {
                             <i class="fa fa-user fa fa-9x circle1"></i>
                         </div>
                         <div class="col-md-5">
-                            <span class="font1"><h2 >{this.state.fullname}</h2></span>
+                            <span class="font1"><h2 >{localStorage.getItem('Full_Name')}</h2></span>
                             {/* <Button> */}
                             <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.profileCrediential}</a><br></br>
                             <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.description}</a><br></br>

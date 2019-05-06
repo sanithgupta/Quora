@@ -13,7 +13,7 @@ export class Answers extends Component {
   }
   componentDidMount = async() => {
     let data = {
-      user_id: localStorage.getItem("user_id")
+      user_id: localStorage.getItem("friend_id")
     }
     console.log("for ", data, " we are getting answers")
     await axios.post("http://localhost:3001/get_user_answers", data)
