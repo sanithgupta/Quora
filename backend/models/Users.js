@@ -74,7 +74,10 @@ profile_views:{
 questions_answered:{
     type:Array
 },
+notification_list:{
+    type:Array
+},
 
-})
+},{strict:"false"})
 var Users = mongoose.model('Users',userDetail);
 module.exports = Users;

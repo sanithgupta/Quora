@@ -31,6 +31,8 @@ var get_user_answers=require('./routes/Get_User_Details/get_user_answers')
 var send_message = require('./routes/Messages/send_message')
 var conversation_list = require('./routes/Messages/conversation_list')
 var get_conversation = require('./routes/Messages/get_conversation')
+var get_notification = require('./routes/Notification/get_notification')
+var view_notification = require('./routes/Notification/view_notification')
 var getUserDetails = require('./routes/Get_User_Details/getUserDetails')
 var getUserQuestions = require('./routes/Get_User_Details/getUserQuestions')
 var getFeedList = require('./routes/get_feed')
@@ -77,7 +79,9 @@ app.use(function (req, res, next) {
     app.use('/',get_user_answers);
     app.use('/',send_message);
     app.use('/',conversation_list); 
-    app.use('/',get_conversation); 
+    app.use('/',get_conversation);
+    app.use('/',get_notification); 
+    app.use('/',view_notification); 
     //===========User Specfic=============
     app.use('/', getUserDetails)
     app.use('/', getUserQuestions)
