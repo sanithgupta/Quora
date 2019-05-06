@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Navbar from '../dashboard/navbar'
 import axios from 'axios';
-import {Editor, EditorState} from 'draft-js';
+// import {Editor, EditorState} from 'draft-js';
 import { transcode } from 'buffer';
 
 export default class viewanswers extends Component {

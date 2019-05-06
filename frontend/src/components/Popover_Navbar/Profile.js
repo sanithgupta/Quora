@@ -15,8 +15,10 @@ import { Blogs } from '../Popover_Navbar/Child_Components/Blogs'
 import { Followers } from '../Popover_Navbar/Child_Components/Followers'
 import { Edits } from '../Popover_Navbar/Child_Components/Edits'
 import { Activity } from '../Popover_Navbar/Child_Components/Activity'
+import { Following } from '../Popover_Navbar/Child_Components/Following'
 
 import './profile.css'
+import axios from 'axios';
 export class Profile extends Component {
     constructor(props) {
         super(props);
@@ -33,7 +35,10 @@ export class Profile extends Component {
             locationCredentialModal: false,
             topicCredentialModal: false,
             languageCredentialModal: false,
-            val: <Profile_det />
+            val: <Profile_det />,
+            fullname: localStorage.getItem('Full_Name'),
+            hidebtn: "",
+            btnhide: "",
         };
         this.toggle = this.toggle.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
@@ -46,6 +51,40 @@ export class Profile extends Component {
         this.topicCredential = this.topicCredential.bind(this);
         this.languageCredential = this.languageCredential.bind(this);
     }
+    componentDidMount = () => {
+        let friend = localStorage.getItem('friend')
+        console.log("friend : ", friend)
+        let data = {
+            friend: localStorage.getItem('friend')
+        }
+        axios.post("http://localhost:3001/getUserDetails", data)
+            .then((response) => {
+                if (response.status == 200) {
+                    console.log("friends details",response.data)
+                    let full_name = response.data[0].first_name + " " + response.data[0].last_name;
+                    console.log("Friend full name",full_name)
+                    localStorage.setItem('Friend_Full_Name', full_name)
+                }
+            })
+
+        if (friend) {
+
+            this.setState({
+                hidebtn: "hidden",
+                btnhide: "",
+            })
+            console.log("in if part ", this.state.hidebtn)
+        }
+        else {
+            this.setState({
+                hidebtn: "",
+                btnhide: "hidden",
+            })
+            console.log("In else", this.state.hidebtn)
+        }
+
+    }
+
     tool() {
         this.setState({
             tooltipOpen: !this.state.tooltipOpen
@@ -129,6 +168,25 @@ export class Profile extends Component {
             val: e
         })
     }
+
+    addToFollowing = (e) => {
+        e.preventDefault()
+        console.log("In adding to following")
+        let data = {
+            friend: localStorage.getItem('friend'),
+            user_id: localStorage.getItem('user_id'),
+            friend_name : localStorage.getItem('Friend_Full_Name')
+        }
+        console.log("adding to our following ", data)
+        axios.post("http://localhost:3001/following", data)
+            .then((response) => {
+                if (response.status == 200) {
+                    console.log(response.data)
+
+                }
+            })
+
+    }
     render() {
         return (
             <div>
@@ -142,10 +200,11 @@ export class Profile extends Component {
                             <i class="fa fa-user fa fa-9x circle1"></i>
                         </div>
                         <div class="col-md-5">
-                            <span class="font1"><h2 >Sai Krishna Reddy Jali</h2></span>
+                            <span class="font1"><h2 >{this.state.fullname}</h2></span>
                             {/* <Button> */}
-                            <a style={{ color: "gray" }} href="#" onClick={this.toggle}>{this.state.profileCrediential}</a><br></br>
-                            <a style={{ color: "gray" }} href="#" onClick={this.toggle}>{this.state.description}</a>
+                            <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.profileCrediential}</a><br></br>
+                            <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.description}</a><br></br>
+                            <button style={{ visibility: this.state.btnhide }} onClick={this.addToFollowing}><i class="fas fa-portrait"></i>Follow</button>
                             {/* </Button> */}
                         </div>
                         <div class="">
@@ -193,15 +252,15 @@ export class Profile extends Component {
                                     <UncontrolledPopover placement="bottom" target="UncontrolledPopover" >
                                         <PopoverHeader></PopoverHeader>
                                         <PopoverBody>
-                                            <i class="fal fa-briefcase addcred1"  onClick={this.employementCredential} >Employement</i>
+                                            <i class="fal fa-briefcase addcred1" onClick={this.employementCredential} >Employement</i>
                                             <hr></hr>
                                             <i class="fal fa-graduation-cap  addcred1" onClick={this.educationCredential}>Education</i>
                                             <hr></hr>
                                             <i class="fal fa-map-marker-alt addcred1" onClick={this.locationCredential}>Location</i>
                                             <hr></hr>
-                                            <i class="fal fa-mountains addcred1"  onClick={this.topicCredential}>Topics</i>
+                                            <i class="fal fa-mountains addcred1" onClick={this.topicCredential}>Topics</i>
                                             <hr></hr>
-                                            <i class="fal fa-globe addcred1"  onClick={this.languageCredential} >Language</i>
+                                            <i class="fal fa-globe addcred1" onClick={this.languageCredential} >Language</i>
                                         </PopoverBody>
                                     </UncontrolledPopover>
 
@@ -261,7 +320,7 @@ export class Profile extends Component {
                                             <div class="col-md-4">
                                                 <p>I currently work here</p>
                                             </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            
+
                                             <div class="col-md-1">
                                                 <Input type="checkbox"></Input>
                                             </div>
@@ -321,7 +380,7 @@ export class Profile extends Component {
                                             <div class="col-md-4">
                                                 <p>I currently Study here</p>
                                             </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            
+
                                             <div class="col-md-2">
                                                 <Input type="checkbox"></Input>
                                             </div>
@@ -372,7 +431,7 @@ export class Profile extends Component {
                                             <div class="col-md-5">
                                                 <p>I currently Live here</p>
                                             </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                           
+
                                             <div class="col-md-1">
                                                 <Input type="checkbox"></Input>
                                             </div>
@@ -433,7 +492,7 @@ export class Profile extends Component {
 
                                             </div>
                                             <div class="col-md-8 ">
-                                                <p style={{color:"#A8A8A8"}}>More examples: travel blogger</p>
+                                                <p style={{ color: "#A8A8A8" }}>More examples: travel blogger</p>
                                             </div>
                                         </div>
                                     </Form>
@@ -456,7 +515,7 @@ export class Profile extends Component {
                                     <div>
                                         <Input placeholder="Search for a language"></Input>
                                         {/* <div class="pcred"> */}
-                                        <p style={{color:"#A8A8A8"}} class="font-weight-light" >Adding a language credential will add you to Quora in that language, when supported.</p>
+                                        <p style={{ color: "#A8A8A8" }} class="font-weight-light" >Adding a language credential will add you to Quora in that language, when supported.</p>
                                         {/* </div> */}
                                     </div>
                                 </div>
@@ -498,7 +557,7 @@ export class Profile extends Component {
                                     <li class="pointer1" onClick={this.child.bind(this, <Post />)}>Posts</li>
                                     <li class="pointer1" onClick={this.child.bind(this, <Blogs />)}>Blogs</li>
                                     <li class="pointer1" onClick={this.child.bind(this, <Followers />)}>Followers</li>
-                                    <li class="pointer1" onClick={this.child.bind(this, <Followers />)}>Following</li>
+                                    <li class="pointer1" onClick={this.child.bind(this, <Following />)}>Following</li>
                                     <li class="pointer1" onClick={this.child.bind(this, <Edits />)}>Edits</li>
                                     <li class="pointer1" onClick={this.child.bind(this, <Activity />)}>Activity</li>
                                 </ul>
