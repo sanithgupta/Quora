@@ -67,14 +67,39 @@ class navbar extends Component {
           console.log(response.data)
           console.log(response.data[0]._id)
           localStorage.setItem('user_id', response.data[0]._id)
+          localStorage.setItem('user_status',response.data[0].status)
           let full_name = response.data[0].first_name + " " + response.data[0].last_name;
           console.log(full_name)
           localStorage.setItem('Full_Name', full_name)
         }
       })
-
       this.timer = setInterval(()=> this.get_notification(), 10000);
+  }
 
+  user_deactivate = async(val,e)=>{
+
+    let data = {
+      'change_user_status' : val,
+      'user_id' : localStorage.getItem('user_id')
+    }
+    await axios.post("http://localhost:3001/userDeactivate", data)
+    .then((response) => {
+      if (response.status == 200) {
+        console.log(response.data)
+      }
+    })
+
+    let data1 = {
+      email_id: localStorage.getItem('email_id')
+    }
+
+    await axios.post("http://localhost:3001/getUserDetails", data1)
+    .then((response) => {
+      if (response.status == 200) {
+        console.log("Status Code : ", response.status);
+        localStorage.setItem('user_status',response.data[0].status)
+      }
+    })
   }
 
   get_notification=async()=>{
@@ -360,7 +385,12 @@ class navbar extends Component {
 
   render() {
 
-    // var count = <div>{this.state.notification_count}</div>
+    if(localStorage.getItem('user_status') == 'Active'){
+      var change_status_to = 'Deactivate'
+    }
+    else{
+      var change_status_to = 'Activate'
+    }
 
     if (this.state.notification_list.length != 0) {
       var notifications = this.state.notification_list.map(notification => {
@@ -602,7 +632,11 @@ class navbar extends Component {
               </PopoverHeader>
               <PopoverBody>
                 <ul style={{ marginLeft: "-20%", marginTop: "-10px" }}>
-                  <li ><a class="aclass" href="#">Help</a><span> . </span></li>
+                  <li >
+                    <a class="aclass" href="#">Help</a>
+                    <span> . </span>
+                    <a class="aclass" onClick = {this.user_deactivate.bind(this,change_status_to)} href="javascript:void(0)">{change_status_to}</a>
+                  </li>
                   <hr class="hrClass"></hr>
                   <li class="liStyle">
                     <a class="aclass" href="#">About</a>
