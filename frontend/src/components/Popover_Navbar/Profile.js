@@ -60,9 +60,9 @@ export class Profile extends Component {
         axios.post("http://localhost:3001/getUserDetails", data)
             .then((response) => {
                 if (response.status == 200) {
-                    console.log("friends details",response.data)
+                    console.log("friends details", response.data)
                     let full_name = response.data[0].first_name + " " + response.data[0].last_name;
-                    console.log("Friend full name",full_name)
+                    console.log("Friend full name", full_name)
                     localStorage.setItem('Friend_Full_Name', full_name)
                 }
             })
@@ -175,7 +175,8 @@ export class Profile extends Component {
         let data = {
             friend: localStorage.getItem('friend'),
             user_id: localStorage.getItem('user_id'),
-            friend_name : localStorage.getItem('Friend_Full_Name')
+            friend_name: localStorage.getItem('Friend_Full_Name'),
+            name:localStorage.getItem('Full_Name')
         }
         console.log("adding to our following ", data)
         axios.post("http://localhost:3001/following", data)
@@ -186,6 +187,13 @@ export class Profile extends Component {
                 }
             })
 
+        axios.post("http://localhost:3001/followers", data)
+            .then((response) => {
+                if (response.status == 200) {
+                    console.log(response.data)
+
+                }
+            })
     }
     render() {
         return (

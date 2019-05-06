@@ -36,6 +36,7 @@ var getUserQuestions = require('./routes/Get_User_Details/getUserQuestions')
 var getFeedList = require('./routes/get_feed')
 var following = require('./routes/Following/following')
 var get_following = require('./routes/Following/getFollowing')
+var followers= require('./routes/Following/followers')
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -86,6 +87,7 @@ app.use(function (req, res, next) {
 
     app.use('/', following)
     app.use('/', get_following)
+    app.use('/', followers)
 
 //start your server on port 3001
 app.listen(3001);
