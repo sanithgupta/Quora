@@ -5,7 +5,6 @@ import '../../fontawesome/css/all.css';
 import { Redirect } from 'react-router';
 import axios from 'axios';
 
-
 /* REDUX IMPORTS BEGIN */
 import { connect } from 'react-redux';
 import { stat } from 'fs';
@@ -18,6 +17,7 @@ class navbar extends Component {
 
     this.state = {
       popoverOpen: false,
+      notify_popover: false,
       redirectVar: "",
       question: "",
       addQuestionModal: false,
@@ -30,7 +30,10 @@ class navbar extends Component {
       message_from: '',
       message_content: '',
       messages: [],
-      conversation_list: []
+      conversation_list: [],
+      notification_list: [],
+      notification_count: 0,
+      notification_number:true
     };
     this.toggle = this.toggle.bind(this);
     this.message_modal = this.message_modal.bind(this)
@@ -41,7 +44,7 @@ class navbar extends Component {
     this.conversation_list = this.conversation_list.bind(this);
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     // alert(this.props.redirectVar)
     if (this.props.redirectVar == false) {
       // alert('here')
@@ -54,18 +57,42 @@ class navbar extends Component {
       email_id: localStorage.getItem('email_id')
     }
     console.log("In getting user details", data)
-    axios.post("http://localhost:3001/getUserDetails", data)
+    await axios.post("http://localhost:3001/getUserDetails", data)
       .then((response) => {
-        if(response.status == 200){
-        console.log("Status Code : ", response.status);
-        console.log(response.data)
-        console.log(response.data[0]._id)
-        localStorage.setItem('user_id', response.data[0]._id)
-        let full_name = response.data[0].first_name + " " + response.data[0].last_name;
-        console.log(full_name)
-        localStorage.setItem('Full_Name', full_name)
+        if (response.status == 200) {
+          console.log("Status Code : ", response.status);
+          console.log(response.data)
+          console.log(response.data[0]._id)
+          localStorage.setItem('user_id', response.data[0]._id)
+          let full_name = response.data[0].first_name + " " + response.data[0].last_name;
+          console.log(full_name)
+          localStorage.setItem('Full_Name', full_name)
         }
       })
+
+    let data1 = {
+      'user_id': localStorage.getItem('user_id')
+    }
+    await axios.post("http://localhost:3001/get_notification", data1)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            notification_list: response.data
+          })
+          console.log(this.state.notification_list)
+        }
+      })
+    var count = 0
+    for (let i = 0; i < this.state.notification_list.length; i++) {
+      if (this.state.notification_list[i].notification_content.flag == true) {
+        count += 1
+      }
+    }
+    this.setState({
+      notification_count: count
+    })
+    console.log(this.state.notification_count)
   }
 
   toggle() {
@@ -73,6 +100,26 @@ class navbar extends Component {
       popoverOpen: !this.state.popoverOpen
     });
   }
+
+  toggle_notify_popover = async () => {
+    await this.setState({
+      notify_popover: !this.state.notify_popover
+    });
+    let data1 = {
+      'user_id': localStorage.getItem('user_id')
+    }
+    await axios.post("http://localhost:3001/view_notification", data1)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            notification_list: response.data
+          })
+          console.log(this.state.notification_list)
+        }
+      })
+  }
+
   toggleNested() {
     this.setState({
       nestedModal: !this.state.nestedModal,
@@ -87,8 +134,9 @@ class navbar extends Component {
       closeAll: false
     });
   }
+
   toggleAll() {
-  
+
     this.setState({
       nestedModal: !this.state.nestedModal,
       closeAll: true
@@ -96,6 +144,7 @@ class navbar extends Component {
 
     window.location.reload();
   }
+
   loggingout = (e) => {
     console.log("In logout method")
     this.setState({
@@ -271,8 +320,30 @@ class navbar extends Component {
     console.log(this.state.topics)
   }
 
+  question_view = (val, e) => {
+    localStorage.setItem('questionclicked')
+  }
+
 
   render() {
+
+    var count = <div>{this.state.notification_count}</div>
+
+    if (this.state.notification_list.length !=0 ) {
+      var notifications = this.state.notification_list.map(notification => {
+        return (
+          <div style={{ borderBottom: '1px solid b}lack', cursor: 'pointer', backgroundColor: '#EAF4FF' }}>
+            <a href='javascript:void(0)'>
+              <div class="font_bold text_color">{notification.notification_content.answered_by_name}</div>
+            </a>
+            answered:&nbsp;&nbsp;
+            <a href='/viewanswers' onClick={this.question_view.bind(this, notification.notification_content.question_id)}>
+              {notification.notification_content.question}
+            </a>
+          </div>
+        )
+      })
+    }
 
     var messages = this.state.messages.map(message => {
 
@@ -348,7 +419,7 @@ class navbar extends Component {
                 <a class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-users fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Spaces</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-bell fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Notifications</span></a>
+                <a id='notify_popover' class="nav-link" href="javascript:void(0)" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-bell fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Notifications{count}</span></a>
               </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
@@ -519,6 +590,23 @@ class navbar extends Component {
                     <a class="aclass" onClick={this.loggingout} href="#">Logout</a>
                   </li>
                 </ul>
+              </PopoverBody>
+            </Popover>
+            <Popover style={{ height: '80vh', maxWidth: '500px', overflow: 'auto' }} placement="bottom" isOpen={this.state.notify_popover} target="notify_popover" toggle={this.toggle_notify_popover}>
+              <PopoverHeader>
+                <div class='row' style={{ backgroundColor: '#F7F7F7' }}>
+                  <div class='col-sm-7' style={{ textAlign: 'left' }}>
+                    <a style={{ cursor: 'pointer' }}>See All Notification ></a>
+                  </div>
+                  <div class='col-sm-5'>
+                    <a style={{ cursor: 'pointer' }}>Mark these as Read</a>
+                  </div>
+                </div>
+              </PopoverHeader>
+              <PopoverBody>
+                <div>
+                  {notifications}
+                </div>
               </PopoverBody>
             </Popover>
           </div>
