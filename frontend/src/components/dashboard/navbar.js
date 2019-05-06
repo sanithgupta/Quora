@@ -5,6 +5,8 @@ import '../../fontawesome/css/all.css';
 import { Redirect } from 'react-router';
 import axios from 'axios';
 
+// import { Badge } from 'antd';
+import NotificationBadge from 'react-notification-badge'
 
 /* REDUX IMPORTS BEGIN */
 import { connect } from 'react-redux';
@@ -18,6 +20,7 @@ class navbar extends Component {
 
     this.state = {
       popoverOpen: false,
+      notify_popover: false,
       redirectVar: "",
       question: "",
       addQuestionModal: false,
@@ -30,7 +33,10 @@ class navbar extends Component {
       message_from: '',
       message_content: '',
       messages: [],
-      conversation_list: []
+      conversation_list: [],
+      notification_list: [],
+      notification_count: 0,
+      notification_number: true
     };
     this.toggle = this.toggle.bind(this);
     this.message_modal = this.message_modal.bind(this)
@@ -41,7 +47,7 @@ class navbar extends Component {
     this.conversation_list = this.conversation_list.bind(this);
   }
 
-  componentDidMount = () => {
+  componentDidMount = async () => {
     // alert(this.props.redirectVar)
     if (this.props.redirectVar == false) {
       // alert('here')
@@ -54,7 +60,7 @@ class navbar extends Component {
       email_id: localStorage.getItem('email_id')
     }
     console.log("In getting user details", data)
-    axios.post("http://localhost:3001/getUserDetails", data)
+    await axios.post("http://localhost:3001/getUserDetails", data)
       .then((response) => {
         if (response.status == 200) {
           console.log("Status Code : ", response.status);
@@ -67,6 +73,36 @@ class navbar extends Component {
           localStorage.setItem('friend', "5ccbf0a2076f4e23189abc07")
         }
       })
+
+      this.timer = setInterval(()=> this.get_notification(), 10000);
+
+  }
+
+  get_notification=async()=>{
+    
+    let data1 = {
+      'user_id': localStorage.getItem('user_id')
+    }
+    await axios.post("http://localhost:3001/get_notification", data1)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            notification_list: response.data
+          })
+          console.log(this.state.notification_list)
+        }
+      })
+    var count = 0
+    for (let i = 0; i < this.state.notification_list.length; i++) {
+      if (this.state.notification_list[i].notification_content.flag == true) {
+        count += 1
+      }
+    }
+    this.setState({
+      notification_count: count
+    })
+    console.log(this.state.notification_count)
   }
 
   toggle() {
@@ -74,6 +110,50 @@ class navbar extends Component {
       popoverOpen: !this.state.popoverOpen
     });
   }
+
+  toggle_notify_popover = async () => {
+    await this.setState({
+      notify_popover: !this.state.notify_popover
+    });
+    let data1 = {
+      'user_id': localStorage.getItem('user_id')
+    }
+    await axios.post("http://localhost:3001/view_notification", data1)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            notification_list: response.data
+          })
+          console.log(this.state.notification_list)
+        }
+      })
+
+    let data = {
+      'user_id': localStorage.getItem('user_id')
+    }
+    await axios.post("http://localhost:3001/get_notification", data)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            notification_list: response.data
+          })
+          console.log(this.state.notification_list)
+        }
+      })
+    var count = 0
+    for (let i = 0; i < this.state.notification_list.length; i++) {
+      if (this.state.notification_list[i].notification_content.flag == true) {
+        count += 1
+      }
+    }
+    this.setState({
+      notification_count: count
+    })
+    console.log(this.state.notification_count)
+  }
+
   toggleNested() {
     this.setState({
       nestedModal: !this.state.nestedModal,
@@ -88,6 +168,7 @@ class navbar extends Component {
       closeAll: false
     });
   }
+
   toggleAll() {
 
     this.setState({
@@ -97,6 +178,7 @@ class navbar extends Component {
 
     window.location.reload();
   }
+
   loggingout = (e) => {
     console.log("In logout method")
     this.setState({
@@ -283,10 +365,32 @@ handleChange1 = async (e) => {
   console.log(this.state.topics)
 }
 
+  question_view = (val, e) => {
+    localStorage.setItem('questionclicked')
+  }
+
 
 render() {
 
-  var messages = this.state.messages.map(message => {
+    // var count = <div>{this.state.notification_count}</div>
+
+    if (this.state.notification_list.length != 0) {
+      var notifications = this.state.notification_list.map(notification => {
+        return (
+          <div style={{ borderBottom: '1px solid b}lack', cursor: 'pointer', backgroundColor: '#EAF4FF' }}>
+            <a href='javascript:void(0)'>
+              <div class="font_bold text_color">{notification.notification_content.answered_by_name}</div>
+            </a>
+            answered:&nbsp;&nbsp;
+            <a href='/viewanswers' onClick={this.question_view.bind(this, notification.notification_content.question_id)}>
+              {notification.notification_content.question}
+            </a>
+          </div>
+        )
+      })
+    }
+
+    var messages = this.state.messages.map(message => {
 
     if (message.message_from == localStorage.getItem('user_id') && message.message_to_name == this.state.message_to_name) {
       return (
@@ -370,7 +474,7 @@ render() {
 
             <button onClick={this.modal} class="btn btn-default" style={{ marginLeft: "10px", height: "35px", padding: "6px", backgroundColor: "#B92B27", color: "white" }}>Add Question or Link</button>
 
-            <Modal isOpen={this.state.addQuestionModal} toggle={this.modal} >
+            {/* <Modal isOpen={this.state.addQuestionModal} toggle={this.modal} >
               <ModalHeader toggle={this.modal}>Add Question</ModalHeader>
               <ModalBody>
                 <div class=" container row">
@@ -381,16 +485,83 @@ render() {
               </ModalBody>
               <ModalFooter>
                 <a href="#" style={{ color: "#AAAAAA" }} onClick={this.modal}>Cancel</a>
-                <Button color="primary" onClick={this.toggleNested}>Select Topics</Button>{' '}
+                <Button color="primary" onClick={this.toggleNested}>Select Topics</Button>{' '} */}
 
-                <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.modal : undefined}>
+                {/* <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.modal : undefined}>
                   <ModalHeader>{this.state.question}</ModalHeader>
                   <ModalBody>
                     <div class="container">
                       <div class="col-sm-5">
                         <div class="row">
                           <Input type="checkbox" name="Topic_1" value="Technology" onChange={this.handleChange1}></Input>
-                          <p>Technology</p>
+                          <p>Technology</p> */}
+          <div class="collapse navbar-collapse" id="navbarSupportedContent" style={{ marginLeft: "-200px" }}>
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <a href="/" class="nav-link" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-book fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Home</span></a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-pencil-square fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Answer</span></a>
+              </li>
+              
+              <li class="nav-item ">
+                <a class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-users fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Spaces</span></a>
+              </li>
+              <li class="nav-item">
+              
+                <a id='notify_popover' class="nav-link" href="javascript:void(0)" style={{ fontSize: "13px", marginLeft: "0px" }}>
+                <NotificationBadge count={this.state.notification_count}></NotificationBadge><i class="fal fa-bell fa-2x"></i>
+                 <span style={{ fontSize: "15px", padding: "4px" }}>Notifications
+                
+                 </span></a>
+              </li>
+            </ul>
+            <form class="form-inline my-2 my-lg-0">
+
+              <input class="form-control mr-sm-2" style={{ height: "30px" }} type="search" placeholder="Search" aria-label="Search"></input>
+              <a id="Popover1" href="javascript:void(0)" style={{ marginLeft: "60px" }}><img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img></a>
+
+              <button onClick={this.modal} class="btn btn-default" style={{ marginLeft: "10px", height: "35px", padding: "6px", backgroundColor: "#B92B27", color: "white" }}>Add Question or Link</button>
+
+              <Modal isOpen={this.state.addQuestionModal} toggle={this.modal} >
+                <ModalHeader toggle={this.modal}>Add Question</ModalHeader>
+                <ModalBody>
+                  <div class=" container row">
+                    <img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img>
+                    <p class="font-weight-light" style={{ marginTop: "1.5%" }}>User Asked</p>
+                  </div>
+                  <textarea class="textareaclass font-weight-bold" onChange={this.handleChange} name="question" placeholder='start your question with "What", "How", "Why", etc.'></textarea>
+                </ModalBody>
+                <ModalFooter>
+                  <a href="#" style={{ color: "#AAAAAA" }} onClick={this.modal}>Cancel</a>
+                  <Button color="primary" onClick={this.toggleNested}>Select Topics</Button>{' '}
+
+                  <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.modal : undefined}>
+                    <ModalHeader>{this.state.question}</ModalHeader>
+                    <ModalBody>
+                      <div class="container">
+                        <div class="col-sm-5">
+                          <div class="row">
+                            <Input type="checkbox" name="Topic_1" value="Technology" onChange={this.handleChange1}></Input>
+                            <p>Technology</p>
+                          </div>
+                          <div class="row">
+                            <Input type="checkbox" name="Topic_2" value="Movies" onChange={this.handleChange1}></Input>
+                            <p>Movies</p>
+                          </div>
+                          <div class="row">
+                            <Input type="checkbox" name="Topic_3" value="Cooking" onChange={this.handleChange1}></Input>
+                            <p>Cooking</p>
+                          </div>
+                          <div class="row">
+                            <Input type="checkbox" name="Topic_4" value="Photography" onChange={this.handleChange1}></Input>
+                            <p>Photography</p>
+                          </div>
+                          <div class="row">
+                            <Input type="checkbox" name="Topic_5" value="Health" onChange={this.handleChange1}></Input>
+                            <p>Health</p>
+                          </div>
+
                         </div>
                         <div class="row">
                           <Input type="checkbox" name="Topic_2" value="Movies" onChange={this.handleChange1}></Input>
@@ -408,9 +579,145 @@ render() {
                           <Input type="checkbox" name="Topic_5" value="Health" onChange={this.handleChange1}></Input>
                           <p>Health</p>
                         </div>
-
                       </div>
-                      <div class="col-sm-5">
+                    </ModalBody>
+                    <ModalFooter>
+                      <a href="#" style={{ color: "#AAAAAA" }} onClick={this.toggleAll}>Cancel</a>
+                      <Button color="primary" onClick={this.postQuestion}>Post Question</Button>{' '}
+
+                    </ModalFooter>
+                  </Modal>
+
+                </ModalFooter>
+              </Modal>
+
+
+
+
+
+              <Modal isOpen={this.state.message_modal} toggle={this.message_modal}>
+                <ModalHeader toggle={this.message_modal}>Messages</ModalHeader>
+                <ModalBody>
+                  <div style={{ height: '60vh' }}>
+                    {conversation_list}
+                  </div>
+                </ModalBody>
+                <ModalFooter>
+                  <a href="#" style={{ color: "#AAAAAA" }} onClick={this.message_modal}>Cancel</a>
+                  <Button color="primary" onClick={this.toggleNested}>New Message</Button>{' '}
+
+                  <Modal isOpen={this.state.nestedModal} toggle={this.toggleNested} onClosed={this.state.closeAll ? this.message_modal : undefined}>
+                    <ModalHeader>New Message</ModalHeader>
+                    <ModalBody>
+                      <div style={{ height: '60vh' }} class="container">
+                        <form>
+                          <div>
+                            <input style={{ height: '30px', marginBottom: '10px' }} type='text' name='to' class='form-control' onChange={this.message_name_change_handler} placeholder='Enter a name'></input>
+                            <textarea style={{ height: '150px' }} name='message' class='form-control' onChange={this.message_content_change_handler} placeholder='Type a Message...'></textarea>
+                          </div>
+                        </form>
+                      </div>
+                    </ModalBody>
+                    <ModalFooter>
+                      <a href="#" style={{ color: "#AAAAAA" }} onClick={this.toggleNested}>Back</a>
+                      <Button color="primary" onClick={this.send_message}>Send</Button>{' '}
+
+
+                      <Modal isOpen={this.state.nestedModal_nest} toggle={this.toggleAll}>
+                        <ModalHeader>Conversation with {this.state.message_to_name}
+                          <a style={{ marginLeft: '15%', position: 'fixed' }} onClick={this.toggleNested_nest}><i class="fa fa-times" aria-hidden="true"></i></a>
+                        </ModalHeader>
+                        <ModalBody style={{ overflowY: 'auto' }}>
+                          <div style={{ height: '60vh' }} class="container">
+                            {messages}
+                          </div>
+                        </ModalBody>
+                        <ModalFooter>
+                          <input style={{ width: '80%', height: '75%' }} type='text' class='form-control' onChange={this.message_content_change_handler} placeholder='Type a message...'></input>
+                          <Button color="primary" onClick={this.send_message}>Send</Button>
+                        </ModalFooter>
+                      </Modal>
+
+
+                    </ModalFooter>
+                  </Modal>
+
+                </ModalFooter>
+              </Modal>
+
+
+
+
+            </form>
+            <Popover placement="bottom" isOpen={this.state.popoverOpen} target="Popover1" toggle={this.toggle}>
+              <PopoverHeader>
+                <ul class="widthHeight" style={{ marginLeft: "-20%" }}>
+                  <a style={{ color: "#3775B1", marginTop: "-6px" }} class="less" href="/profile"> <li >Profile</li></a>
+                  <hr class="hrClass"></hr>
+                  <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Blogs</li></a>
+                  <hr class="hrClass"></hr>
+                  <a style={{ color: "#3775B1" }} class="less" onClick={this.message_modal} href="javascript:void(0)"> <li class="liStyle">Messages</li></a>
+                  <hr class="hrClass"></hr>
+                  <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Your Content</li></a>
+                  <hr class="hrClass"></hr>
+                  <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Stats</li></a>
+                  <hr class="hrClass"></hr>
+                  <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Ads Manager</li></a>
+                  <hr class="hrClass"></hr>
+                  <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Settings</li></a>
+                </ul>
+              </PopoverHeader>
+              <PopoverBody>
+                <ul style={{ marginLeft: "-20%", marginTop: "-10px" }}>
+                  <li ><a class="aclass" href="#">Help</a><span> . </span></li>
+                  <hr class="hrClass"></hr>
+                  <li class="liStyle">
+                    <a class="aclass" href="#">About</a>
+                    <span> . </span>
+                    <a class="aclass" href="#">Carrers</a>
+                    <span> . </span>
+                    <a class="aclass" href="#">Terms</a>
+                    <span> . </span>
+                  </li>
+                  <li>
+                    <a class="aclass" href="#">Privacy</a>
+                    <span> . </span>
+                    <a class="aclass" href="#">Accetable Use</a>
+                    <span> . </span>
+                  </li>
+                  <li>
+                    <a class="aclass" href="#">Businesses</a>
+                    <span> . </span>
+                    <a class="aclass" href="#">Languages</a>
+                    <span> . </span>
+                  </li>
+                  <li>
+                    <a class="aclass" onClick={this.loggingout} href="#">Logout</a>
+                  </li>
+                </ul>
+              </PopoverBody>
+            </Popover>
+            <Popover style={{ height: '80vh', maxWidth: '500px', overflow: 'auto' }} placement="bottom" isOpen={this.state.notify_popover} target="notify_popover" toggle={this.toggle_notify_popover}>
+              <PopoverHeader>
+                <div class='row' style={{ backgroundColor: '#F7F7F7' }}>
+                  <div class='col-sm-7' style={{ textAlign: 'left' }}>
+                    <a style={{ cursor: 'pointer' }}>See All Notification ></a>
+                  </div>
+                  <div class='col-sm-5'>
+                    <a style={{ cursor: 'pointer' }}>Mark these as Read</a>
+                  </div>
+                </div>
+              </PopoverHeader>
+              <PopoverBody>
+                <div>
+                  {notifications}
+                </div>
+              </PopoverBody>
+            </Popover>
+          </div>
+        {/* </nav>
+</div> */}
+                      {/* <div class="col-sm-5">
                         <div class="row">
 
                         </div>
@@ -425,7 +732,7 @@ render() {
                 </Modal>
 
               </ModalFooter>
-            </Modal>
+            </Modal> */}
 
             <Modal isOpen={this.state.message_modal} toggle={this.message_modal}>
               <ModalHeader toggle={this.message_modal}>Messages</ModalHeader>
