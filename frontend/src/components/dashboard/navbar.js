@@ -5,6 +5,9 @@ import '../../fontawesome/css/all.css';
 import { Redirect } from 'react-router';
 import axios from 'axios';
 
+// import { Badge } from 'antd';
+import NotificationBadge from 'react-notification-badge'
+
 /* REDUX IMPORTS BEGIN */
 import { connect } from 'react-redux';
 import { stat } from 'fs';
@@ -33,7 +36,7 @@ class navbar extends Component {
       conversation_list: [],
       notification_list: [],
       notification_count: 0,
-      notification_number:true
+      notification_number: true
     };
     this.toggle = this.toggle.bind(this);
     this.message_modal = this.message_modal.bind(this)
@@ -70,6 +73,12 @@ class navbar extends Component {
         }
       })
 
+      this.timer = setInterval(()=> this.get_notification(), 10000);
+
+  }
+
+  get_notification=async()=>{
+    
     let data1 = {
       'user_id': localStorage.getItem('user_id')
     }
@@ -118,6 +127,30 @@ class navbar extends Component {
           console.log(this.state.notification_list)
         }
       })
+
+    let data = {
+      'user_id': localStorage.getItem('user_id')
+    }
+    await axios.post("http://localhost:3001/get_notification", data)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            notification_list: response.data
+          })
+          console.log(this.state.notification_list)
+        }
+      })
+    var count = 0
+    for (let i = 0; i < this.state.notification_list.length; i++) {
+      if (this.state.notification_list[i].notification_content.flag == true) {
+        count += 1
+      }
+    }
+    this.setState({
+      notification_count: count
+    })
+    console.log(this.state.notification_count)
   }
 
   toggleNested() {
@@ -327,9 +360,9 @@ class navbar extends Component {
 
   render() {
 
-    var count = <div>{this.state.notification_count}</div>
+    // var count = <div>{this.state.notification_count}</div>
 
-    if (this.state.notification_list.length !=0 ) {
+    if (this.state.notification_list.length != 0) {
       var notifications = this.state.notification_list.map(notification => {
         return (
           <div style={{ borderBottom: '1px solid b}lack', cursor: 'pointer', backgroundColor: '#EAF4FF' }}>
@@ -414,12 +447,17 @@ class navbar extends Component {
               <li class="nav-item">
                 <a class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-pencil-square fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Answer</span></a>
               </li>
-
+              
               <li class="nav-item ">
                 <a class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-users fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Spaces</span></a>
               </li>
               <li class="nav-item">
-                <a id='notify_popover' class="nav-link" href="javascript:void(0)" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-bell fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Notifications{count}</span></a>
+              
+                <a id='notify_popover' class="nav-link" href="javascript:void(0)" style={{ fontSize: "13px", marginLeft: "0px" }}>
+                <NotificationBadge count={this.state.notification_count}></NotificationBadge><i class="fal fa-bell fa-2x"></i>
+                 <span style={{ fontSize: "15px", padding: "4px" }}>Notifications
+                
+                 </span></a>
               </li>
             </ul>
             <form class="form-inline my-2 my-lg-0">
