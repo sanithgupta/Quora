@@ -19,8 +19,9 @@ export default class viewanswers extends Component {
     answerBlock:"0px",
     answerBlock1:["a"],
     answertext:"",
-    ansvis:"visible",
-    anonymous:false
+    ansvis:"Answer",
+    anonymous:false,
+    question_val:""
 
     
     // bookmark_check:"checked"
@@ -140,7 +141,8 @@ export default class viewanswers extends Component {
                 user_id:localStorage.getItem('user_id'),
                 user_name:localStorage.getItem('Full_Name'),
                 profile_credential:"",
-                is_anonymous:this.state.anonymous
+                is_anonymous:this.state.anonymous,
+                question: this.state.question_val
             }
             
              axios.post('http://localhost:3001/add_answer',answer_data)
@@ -268,6 +270,7 @@ console.log(this.state.commentStatus)
         let answerdiv = null;
         if(this.state.answers){
             question_val = this.state.answers.question_details[0].question
+            this.state.question_val = question_val
          answerdiv = this.state.answers.answer_details.map(answer => {
              var user_name = answer.user_name
           
@@ -277,7 +280,7 @@ console.log(this.state.commentStatus)
             
           var bookmark_check = "Bookmark"
           if(answer.user_id==localStorage.getItem('user_id')){
-              this.state.ansvis="hidden"
+              this.state.ansvis="Edit"
           }
             this.state.answers_bookmarked.map(booked=>{
                 console.log("booked",booked)
@@ -363,7 +366,7 @@ console.log(this.state.commentStatus)
                     
                     </div>
                 <div>
-                    <a style={{visibility:this.state.ansvis}} onClick={this.answerBlock}><i class="fal fa-edit"></i>&nbsp;Answer</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a  onClick={this.answerBlock}><i class="fal fa-edit"></i>&nbsp;{this.state.ansvis}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                    
                     <a onClick={this.followQuestion} style={{cursor:"pointer"}}><i class="fal fa-rss"></i>&nbsp;Follow</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span><i class="fal fa-user"></i>&nbsp;Request</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

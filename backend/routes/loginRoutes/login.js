@@ -54,7 +54,8 @@ routerr.post('/login', function (req, res) {
                     email_id: result.email_id,
                     first_name: result.first_name,
                     last_name: result.last_name,
-                    Avatar: result.Avatar
+                    Avatar: result.Avatar,
+                    user_id:result._id
                 }
                 res.end(JSON.stringify(Result));    
             }

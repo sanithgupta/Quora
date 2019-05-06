@@ -91,10 +91,10 @@ export class Questions extends Component {
         })
 }
 textanswer=(e)=>{
-  this.setState({
-      answertext:e.target.value
-  })
-}
+        this.setState({
+            answertext:e.target.value
+        })
+    }
   answerBlock=async(val,e)=>{
     e.preventDefault();
 

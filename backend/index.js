@@ -34,7 +34,8 @@ var get_conversation = require('./routes/Messages/get_conversation')
 var getUserDetails = require('./routes/Get_User_Details/getUserDetails')
 var getUserQuestions = require('./routes/Get_User_Details/getUserQuestions')
 var getFeedList = require('./routes/get_feed')
-
+var Activity = require('./routes/activity')
+var FollowTopic = require('./routes/followTopic')
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -81,7 +82,8 @@ app.use(function (req, res, next) {
     app.use('/', getUserDetails)
     app.use('/', getUserQuestions)
     app.use('/',getFeedList)
-    
+    app.use ('/',Activity)
+    app.use('/',FollowTopic)
 
 //start your server on port 3001
 app.listen(3001);

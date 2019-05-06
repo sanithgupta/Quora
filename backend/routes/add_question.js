@@ -1,6 +1,7 @@
 var Questions = require('../models/Questions');
 var Topics = require('../models/topics')
 var routerr = require('express').Router();
+const mongoClient = require('mongodb').MongoClient;
 
 routerr.get('/Addquestion', function (req, res) {
     console.log('=========================Inside Backend - AddQuestion module =========================');
@@ -40,6 +41,28 @@ routerr.get('/Addquestion', function (req, res) {
                 }
             });
         })
+
+        
+        const query = "mongodb://Admin:Admin@cluster0273-shard-00-00-5jsyb.mongodb.net:27017,cluster0273-shard-00-01-5jsyb.mongodb.net:27017,cluster0273-shard-00-02-5jsyb.mongodb.net:27017/quoraDB?ssl=true&replicaSet=Cluster0273-shard-0&authSource=admin&retryWrites=true"
+    mongoClient.connect(query,async(err, client) => {
+if(err){
+    console.log("error connecting mongo client")
+}
+else{
+    console.log("mongo client succesfully connected")
+    const db = client.db('quoraDB');
+    await db.collection('activity').insertOne({user_id:req.query.user_id,type:"QuestionsAsked",date_time:date,question:req.query.question,question_id:result._id})
+    .toArray()
+    .then((result) => {
+       
+            console.log("fetched activity")
+            console.log(result)
+            res.end(JSON.stringify(result))
+    })
+    client.close();
+}
+    
+})
             res.writeHead(200, {
                 'Content-type': 'application/json'
             });

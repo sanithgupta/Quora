@@ -338,7 +338,7 @@ class navbar extends Component {
           <div class="collapse navbar-collapse" id="navbarSupportedContent" style={{ marginLeft: "-200px" }}>
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a href="/" class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-book fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Home</span></a>
+                <a href="/" class="nav-link" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-book fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Home</span></a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="#" style={{ fontSize: "13px", marginLeft: "0px" }}><i class="fal fa-pencil-square fa-2x"></i><span style={{ fontSize: "15px", padding: "4px" }}>Answer</span></a>
