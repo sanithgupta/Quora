@@ -251,8 +251,9 @@ export default class viewanswers extends Component {
                <i  style={{fontWeight:"500"}} class="fal fa-video"></i>&nbsp;&nbsp;&nbsp;&nbsp;
                <i style={{fontWeight:"500"}} class="fal fa-images"></i>&nbsp;&nbsp;&nbsp;&nbsp;
                <i style={{fontWeight:"500"}} class="fal fa-link"></i>&nbsp;&nbsp;&nbsp;&nbsp;
-               <i style={{fontWeight:"500"}} class="fal fa-ellipsis-h-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;
-               <input type="checkbox" onChange={this.anonymous} defaultChecked={this.state.anonymous}></input>Anonymous
+               <i style={{fontWeight:"500"}} class="fal fa-ellipsis-h-alt"></i>&nbsp;&nbsp;&nbsp;
+              
+               <input type="radio" onChange={this.anonymous} defaultChecked={this.state.anonymous}></input>Anonymous
 
                </div>
                    <textarea onChange={this.textanswer} rows="9" cols="70"></textarea>
