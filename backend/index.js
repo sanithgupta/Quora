@@ -38,6 +38,7 @@ var getUserQuestions = require('./routes/Get_User_Details/getUserQuestions')
 var getFeedList = require('./routes/get_feed')
 var Activity = require('./routes/activity')
 var FollowTopic = require('./routes/followTopic')
+var Get_bookmark_answers = require('./routes/get_bookmark_answers')
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -89,6 +90,7 @@ app.use(function (req, res, next) {
     app.use ('/',Activity)
     app.use('/',FollowTopic)
 
+    app.use('/',Get_bookmark_answers)
 //start your server on port 3001
 app.listen(3001);
 console.log("Server Listening on port 3001");

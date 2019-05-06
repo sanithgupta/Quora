@@ -44,9 +44,43 @@ async  componentDidUpdate(){
               answerslist:response.data,
               temp:1
             })
+          }
+            else{
+              this.state.temp=0
+
+            }
             // alert("fetched")
             console.log("answers",this.state.answerslist)
+          
+      })
+
+  }
+  else if(this.props.data.topics[0].topic_id=="a"){
+    // alert(localStorage.getItem('user_id'))
+
+      const data = {
+          user_id:localStorage.getItem('user_id'),
+          limit:this.state.limit
+      }
+      // console.log("data",data)
+    
+      await axios.post('http://localhost:3001/get_bookmark_answers_list',data)
+      .then(response => {
+          // alert("after response")
+          console.log("response",response.data)
+          // alert(this.state.temp)
+          if(this.state.temp==0){
+            this.setState({
+              answerslist:response.data,
+              temp:1
+            })
           }
+            else{
+              this.state.temp=0
+            }
+            // alert("fetched")
+            console.log("answers",this.state.answerslist)
+          
       })
 
   }
@@ -61,11 +95,12 @@ async  componentDidUpdate(){
     
       // alert(this.props.topics[0].topic_name)
       await axios.post('http://localhost:3001/get_feed_topic',data)
-      .then(response => {
+      .then(async response => {
           // alert("after response")
+          // alert(this.state.temp)
           if(this.state.temp==0){
           console.log("response",response.data)
-            this.setState({
+            await this.setState({
               answerslist:response.data,
               temp:1
             })
@@ -74,6 +109,7 @@ async  componentDidUpdate(){
           else{
             this.state.temp=0
           }
+          
       })
 
   }
@@ -104,6 +140,7 @@ await axios.post('http://localhost:3001/followTopic',data)
 })
 
 }
+
   async componentDidMount(){
     // alert("worked")
     axios.defaults.withCredentials = true;
@@ -158,7 +195,7 @@ status:"initial",tempvar:1
 
   }
   render() {    
-
+   
     if(this.state.answerslist.length==0){
       feedlist = (<div>....Loading</div>)
     }
@@ -174,6 +211,19 @@ status:"initial",tempvar:1
               </div>
                 )    
    }
+   else if(val.topic_id=="a"){
+    return (
+        <div class="font_white pad border">
+                <div class="font_bold text_color" style={{fontSize:"20px"}}>Bookmarks</div> 
+                <br></br>
+                {/* <div class="font_more_bold text_color font_size" style={{opacity:"0.8"}}>What is your question or link?</div> */}
+                <a onClick={this.topicFollow.bind(this,val.topic_name)} href="#" style={{fontWeight:"700"}}><i class="fal fa-check-square">&nbsp;&nbsp;Status</i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+                <a href="#" style={{fontWeight:"700"}}><i class="fal fa-bookmark">&nbsp;&nbsp;Bookmark</i></a>
+                
+              </div>
+                )    
+   }
+
    else{    
      
             return (

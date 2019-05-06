@@ -58,6 +58,12 @@ export default class home extends Component {
              
              </li>
         {topic_list}
+        <li class="pad"  >
+             <a onClick={this.topic_click.bind(this,{topic_id:"a"})}><i style={{cursor:"pointer",color:"#BE3C38"}} class="fal fa-rss-square"></i>&nbsp;&nbsp;&nbsp;
+             
+             <label style={{cursor:"pointer"}} class="font_bold text_color">Bookmark Answers</label></a> 
+             
+             </li>
         </ul>
         </div>
         
