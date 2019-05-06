@@ -73,6 +73,7 @@ class navbar extends Component {
           let full_name = response.data[0].first_name + " " + response.data[0].last_name;
           console.log(full_name)
           localStorage.setItem('Full_Name', full_name)
+          localStorage.setItem('duplicate_name',full_name )
           // localStorage.setItem('friend',"5ccbf0a2076f4e23189abc07")
         }
 

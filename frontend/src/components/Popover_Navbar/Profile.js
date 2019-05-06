@@ -188,10 +188,10 @@ export class Profile extends Component {
         e.preventDefault()
         console.log("In adding to following")
         let data = {
-            friend: localStorage.getItem('friend'),
+            friend: localStorage.getItem('friend_id'),
             user_id: localStorage.getItem('user_id'),
-            friend_first_name: localStorage.getItem('friend_first_name'),
-            first_name: localStorage.getItem('first_name')
+            friend_first_name: localStorage.getItem('Full_Name'),
+            first_name: localStorage.getItem('duplicate_name')
         }
         console.log("adding to our following ", data)
         axios.post("http://localhost:3001/following", data)
@@ -223,7 +223,7 @@ export class Profile extends Component {
                             <i class="fa fa-user fa fa-9x circle1"></i>
                         </div>
                         <div class="col-md-5">
-                            <span class="font1"><h2 >{localStorage.getItem('Full_Name')}</h2></span>
+                            <span class="font1"><h2 onClick={this.setName} >{localStorage.getItem('Full_Name')}</h2></span>
                             {/* <Button> */}
                             <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.profileCrediential}</a><br></br>
                             <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.description}</a><br></br>
