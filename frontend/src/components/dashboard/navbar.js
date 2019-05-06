@@ -505,6 +505,7 @@ class navbar extends Component {
                             <Input type="checkbox" name="Topic_5" value="Health" onChange={this.handleChange1}></Input>
                             <p>Health</p>
                           </div>
+                        
 
                         </div>
                         <div class="col-sm-5">
