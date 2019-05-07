@@ -18,31 +18,31 @@ class login extends Component {
             temp: true,
             email_id: '',
             password: '',
-            redirectVar:'',
-            first_name:'',
-            last_name:''
+            redirectVar: '',
+            first_name: '',
+            last_name: '',
         }
     }
 
-    email_id_changehandler =(e) =>{
+    email_id_changehandler = (e) => {
         this.setState({
             email_id: e.target.value,
         })
     }
 
-    password_changehandler =(e) =>{
+    password_changehandler = (e) => {
         this.setState({
             password: e.target.value,
         })
     }
 
-    first_name_changehandler =(e) =>{
+    first_name_changehandler = (e) => {
         this.setState({
             first_name: e.target.value,
         })
     }
 
-    last_name_changehandler =(e) =>{
+    last_name_changehandler = (e) => {
         this.setState({
             last_name: e.target.value,
         })
@@ -63,12 +63,12 @@ class login extends Component {
     renderRedirect = () => {
         if (this.props.redirectVar) {
             localStorage.setItem('email_id', this.state.email_id)
-            if(localStorage.getItem('topic_count')>0){
+            if (localStorage.getItem('topic_count') > 0) {
                 this.setState({
                     redirectVar: <Redirect to='/' />
                 })
             }
-            else{
+            else {
                 this.setState({
                     redirectVar: <Redirect to='/Interests' />
                 })
@@ -77,42 +77,72 @@ class login extends Component {
         }
     }
 
-        //submit Login handler to send a request to the node backend
-        submitLogin = async (e) => {
-            var headers = new Headers();
-            //prevent page from refresh
-            e.preventDefault();
-            let { email_id, password } = this.state;
-    
-            //set the with credentials to true
-            axios.defaults.withCredentials = true;
-            await this.props.submit_login(email_id, password)
-    
-            setTimeout(() => {
-                if (this.props.response === 400) {
-                    alert('Error in login -- User not found');
-                }
-                else if (this.props.response === 401) {
-                    alert('Invalid Credentials');
-                }
-            }, 500);
-    
-            setTimeout(() => {
-                if(this.props.response == 200){
-                    alert('200 status in login')
-                }   
-                this.renderRedirect();
-            }, 500);
-    
+    //submit Login handler to send a request to the node backend
+    submitLogin = async (e) => {
+        var headers = new Headers();
+        //prevent page from refresh
+        e.preventDefault();
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        var { email_id, password } = this.state;
+        if (re.test(email_id)) {
+
+        //set the with credentials to true
+        axios.defaults.withCredentials = true;
+        await this.props.submit_login(email_id, password)
+
+        setTimeout(() => {
+            if (this.props.response === 400) {
+                alert('Error in login -- User not found');
+            }
+            else if (this.props.response === 401) {
+                alert('Invalid Credentials');
+            }
+        }, 500);
+
+        setTimeout(() => {
+            if (this.props.response == 200) {
+                alert('200 status in login')
+            }
+            this.renderRedirect();
+        }, 500);
+        
+        }
+        else{
+            alert("Wrong email format")
         }
 
-        new_submit = async (e) => {
-            var headers = new Headers();
-            //prevent page from refresh
-            e.preventDefault();
+    }
+
+    new_submit = async (e) => {
+        var headers = new Headers();
+        //prevent page from refresh
+        e.preventDefault();
+
+        let re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+ 
+        axios.defaults.withCredentials = true;
+        if (this.state.first_name == "") {
+            alert("Please enter your first name")
+            
+        } else if (this.state.last_name == "") {
+            alert("Please enter your last name")
+           
+        } else if (this.state.email_id == "") {
+            alert("Please enter your email")
+            
+        } else if (this.state.password == "") {
+            alert("Please enter your password")
+            
+        } else if (this.state.password.length < 6) {
+            alert("Password must be 6 characters or more")
+            
+        } else if (!re.test(this.state.email_id)) {
+            alert("Email not in correct format")
+            
+        }
+
+        else {
             let { email_id, password, first_name, last_name } = this.state;
-    
-    
             //set the with credentials to true
             axios.defaults.withCredentials = true;
             await this.props.submit_signup(email_id, password, first_name, last_name)
@@ -121,20 +151,22 @@ class login extends Component {
                     alert('Signed Up Successfully');
                 }
             }, 500)
-    
+
             setTimeout(() => {
                 if (this.props.response === 400) {
                     alert('Error creating user');
                 }
-                else if(this.props.response ===210){
+                else if (this.props.response === 210) {
                     alert('Email Id already exists')
                 }
             }, 500)
+
         }
+    }
 
     render() {
         if (this.state.temp) {
-            var  toggle_block =
+            var toggle_block =
                 <div>
                     <div>
                         <button class="btn google-btn social-btn " type="button"><span><i class="fab fa-google-plus-g"></i> Sign in with Google+</span> </button>
@@ -144,7 +176,7 @@ class login extends Component {
                     </div>
                     <div style={{ textAlign: 'left', color: '#999999' }}>
                         <p>
-                            <a style = {{cursor:'pointer',color:'#007BFF'}} onClick={this.signin}>Sign up with Email.</a>
+                            <a style={{ cursor: 'pointer', color: '#007BFF' }} onClick={this.signin}>Sign up with Email.</a>
                             &nbsp;By signing up you <br></br>indicate that you have read and agree to <br></br> Quora's&nbsp;
                         <a href='#'>Terms of Service</a>
                             &nbsp;and&nbsp;
@@ -155,35 +187,35 @@ class login extends Component {
         }
         else {
             var toggle_block =
-                <div class = 'container'>
+                <div class='container'>
                     <form>
                         <label style={{ color: '#999999' }}><strong>Sign Up</strong></label><br></br>
-                        <div class = 'row'>
-                            <label style={{ color: '#999999' }} class = 'col' for ='first_name'> <strong>First Name</strong></label>
-                            <label style={{ color: '#999999' }} class = 'col' for ='last_name'><strong>Last Name</strong></label>
+                        <div class='row'>
+                            <label style={{ color: '#999999' }} class='col' for='first_name'> <strong>First Name</strong></label>
+                            <label style={{ color: '#999999' }} class='col' for='last_name'><strong>Last Name</strong></label>
                         </div>
-                        <div class = 'row'>
-                            <input onChange = {this.first_name_changehandler} class = 'col col-md-5 form-control'  type='text' id = 'first_name'></input>
-                            <input onChange = {this.last_name_changehandler} class = 'col col-md-5 offset-1 form-control'  type='text' id = 'last_name'></input>
+                        <div class='row'>
+                            <input onChange={this.first_name_changehandler} class='col col-md-5 form-control' type='text' id='first_name'></input>
+                            <input onChange={this.last_name_changehandler} class='col col-md-5 offset-1 form-control' type='text' id='last_name'></input>
                         </div>
-                        <div class = 'row'>
+                        <div class='row'>
                             <label style={{ color: '#999999' }} for='email'><strong>Email</strong></label>
-                            <input onChange = {this.email_id_changehandler} class='form-control' type='text' id = 'email'></input>
+                            <input onChange={this.email_id_changehandler} class='form-control' type='text' id='email'></input>
                         </div>
-                        <div class = 'row'>
+                        <div class='row'>
                             <label style={{ color: '#999999' }} for='password'><strong>Password</strong></label>
-                            <input onChange = {this.password_changehandler} class='form-control' type='password' id = 'password'></input>
+                            <input onChange={this.password_changehandler} class='form-control' type='password' id='password'></input>
                         </div>
                         <div>
-                            <p style={{ color: '#999999'}}>
-                            By clicking "Sign Up" you indicate that you &nbsp;
-                            have read and agree to Quora's<a href = '#'>Terms of Service</a> and&nbsp;
-                            <a href = '#'>Privacy Policy</a>
+                            <p style={{ color: '#999999' }}>
+                                By clicking "Sign Up" you indicate that you &nbsp;
+                            have read and agree to Quora's<a href='#'>Terms of Service</a> and&nbsp;
+                            <a href='#'>Privacy Policy</a>
                             </p>
                         </div>
-                        <div style = {{textAlign:'right', marginBottom:'5%'}}>
-                            <a style={{cursor:'pointer', color: '#999999'}} onClick={this.cancel}>Cancel</a>&nbsp;&nbsp;
-                            <button onClick = {this.new_submit} class = 'btn btn-primary'>Sign Up</button>
+                        <div style={{ textAlign: 'right', marginBottom: '5%' }}>
+                            <a style={{ cursor: 'pointer', color: '#999999' }} onClick={this.cancel}>Cancel</a>&nbsp;&nbsp;
+                            <button onClick={this.new_submit} class='btn btn-primary'>Sign Up</button>
                         </div>
                     </form>
                 </div>
@@ -209,10 +241,10 @@ class login extends Component {
                                 <div style={{ textAlign: 'left', marginBottom: '10%' }}>
                                     <form>
                                         <label style={{ color: '#999999' }}><strong>Login</strong></label><br></br>
-                                        <input class="form-control" onChange ={this.email_id_changehandler} style={{ width: '100%', marginBottom: '5%' }} type='text' placeholder='Email'></input>
-                                        <input class="form-control" onChange = {this.password_changehandler} style={{ width: '100%', marginBottom: '3%' }} type='password' placeholder='Password'></input>
+                                        <input class="form-control" onChange={this.email_id_changehandler} style={{ width: '100%', marginBottom: '5%' }} type='text' placeholder='Email'></input>
+                                        <input class="form-control" onChange={this.password_changehandler} style={{ width: '100%', marginBottom: '3%' }} type='password' placeholder='Password'></input>
                                         <a style={{ marginRight: '35%', color: '#999999' }} href='#'>Forgot Password?</a>
-                                        <button onClick = {this.submitLogin} class='btn btn-primary' type='submit'>Login</button>
+                                        <button onClick={this.submitLogin} class='btn btn-primary' type='submit'>Login</button>
                                     </form>
                                 </div>
                                 <p style={{ color: '#999999' }}>
