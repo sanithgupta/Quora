@@ -65,6 +65,7 @@ export class EditUserDetails extends Component {
               <p class="accountComponents">First Name : <input onChange={this.handleChange} name="first_name" value={this.state.first_name} type="text"></input> </p>
               <p class="accountComponents">Last Name : <input onChange={this.handleChange} name="last_name" value={this.state.last_name} type="text"></input> </p>
               <p class="accountComponents">City : <input onChange={this.handleChange} name="city" value={this.state.city} type="text"></input></p>
+         
               <p class="accountComponents">State : <input onChange={this.handleChange} name="state" value={this.state.state1} type="text"></input></p>
               <p class="accountComponents">Zipcode : <input onChange={this.handleChange} name="zipcode" value={this.state.zipcode} type="text"></input></p>
               <p class="accountComponents">Education : <input onChange={this.handleChange} name="education" value={this.state.education} type="text"></input></p>

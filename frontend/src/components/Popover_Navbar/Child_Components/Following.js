@@ -13,17 +13,19 @@ export class Following extends Component {
     }
     componentDidMount = () => {
         let data = {
-            user_id: localStorage.getItem('friend_id')
+            user_id: localStorage.getItem('friend')
         }
         axios.post("http://localhost:3001/get_following", data)
             .then((response) => {
                 if (response.status == 200) {
+                    if (response.data.length!=0) {
+
                     console.log(response.data[0].following)
                     this.setState({
                         following: response.data[0].following
                     })
                     // alert(this.state.following)
-                }
+                }}
                 else {
                     alert("Not Followed any one")
                 }
@@ -63,7 +65,7 @@ export class Following extends Component {
             })
         }
         else {
-            view = <div></div>
+            view = "Not Following"
         }
         return (
             <div>

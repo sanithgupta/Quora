@@ -13,16 +13,20 @@ export class Followers extends Component {
   }
   componentDidMount = () => {
     let data = {
-      user_id: localStorage.getItem('friend_id')
+      user_id: localStorage.getItem('friend')
     }
     axios.post("http://localhost:3001/get_followers", data)
       .then((response) => {
         if (response.status == 200) {
           console.log(response.data)
-          this.setState({
-            followers: response.data[0].followers,
-          })
-          // alert(this.state.following)
+          // console.log(response.data[0].followers.length)
+          if (response.data.length!=0) {
+
+            this.setState({
+              followers: response.data[0].followers,
+            })
+            // alert(this.state.following)
+          }
         }
         else {
           alert("Not Followed any one")
@@ -79,7 +83,7 @@ export class Followers extends Component {
           <div class="col-sm-6">
             <Card>
               <CardBody>
-                <CardTitle ><a  onClick={()=>{localStorage.setItem('friend_id',followers.followers_id)}} href="/profile">{followers.name}</a></CardTitle>
+                <CardTitle ><a onClick={() => { localStorage.setItem('friend_id', followers.followers_id) }} href="/profile">{followers.name}</a></CardTitle>
                 <CardSubtitle></CardSubtitle>
                 <CardText><br></br><br></br></CardText>
                 {/* <Button onClick={this.setFollow}>{this.state.follow ? "Follow" : "Following"}</Button> */}

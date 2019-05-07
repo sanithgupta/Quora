@@ -86,6 +86,7 @@ export class Profile extends Component {
                     let full_name = response.data[0].first_name + " " + response.data[0].last_name;
                     console.log("Friend full name", full_name)
                     localStorage.setItem('Full_Name', full_name)
+                    // localStorage.setItem('duplicate_name',full_name)
                 }
             })
 
@@ -292,7 +293,7 @@ export class Profile extends Component {
         e.preventDefault()
         console.log("In adding to following")
         let data = {
-            friend: localStorage.getItem('friend_id'),
+            friend: localStorage.getItem('friend'),
             user_id: localStorage.getItem('user_id'),
             friend_first_name: localStorage.getItem('Full_Name'),
             first_name: localStorage.getItem('duplicate_name')
