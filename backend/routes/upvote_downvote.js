@@ -50,8 +50,29 @@ else{
 routerr.post('/downvote', function (req, res) {
 
     console.log('=========================Inside Backend - upvote downvote module =========================');
-    console.log("Answerid  received ", req.body.answerId);
+    console.log("Answerid  received downvote ", req.body.answerId);
     console.log("user id upvoting ",req.body.user_id);
+    Answers.findOne({_id:req.body.answerId,"downvotes.user_id":req.body.user_id},{_id:0,downvotes:1},function(err,res){
+        if(err){
+            console.log(err)
+        }
+        else{
+            console.log(res)
+            if(!res){
+                console.log("downvoting")
+                Answers.findOneAndUpdate({_id:req.body.answerId},{$push:{downvotes:{user_id:req.body.user_id}}},function(err,result){
+                    if(err){
+                        console.log(err)
+                    }
+                    else{
+                        console.log("downvote added successfully")
+                    }
+                })
+            }
+            
+        }
+    })
+  
     Answers.findOne({_id:req.body.answerId},function(err,answer){
         var x=0;
         console.log(answer);

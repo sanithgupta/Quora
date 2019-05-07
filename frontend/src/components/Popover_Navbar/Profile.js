@@ -3,6 +3,9 @@ import Navbar from '../dashboard/navbar'
 import './profile.css'
 import { Button, Form, FormGroup, Label, Col, Modal, ModalHeader, ModalBody, ModalFooter, Tooltip, Popover, PopoverHeader, PopoverBody, UncontrolledPopover, Input } from 'reactstrap';
 import { Alert } from 'reactstrap';
+import axios from 'axios';
+import FormData from 'form-data'
+
 
 
 import { Profile_det } from '../Popover_Navbar/Child_Components/Profile_det'
@@ -28,6 +31,7 @@ export class Profile extends Component {
             tooltipOpen: false,
             addCredentialModal: false,
             employementCredentialModal: false,
+            profilePic: null,
             popoverOpen: false,
             educationCredentialModal: false,
             locationCredentialModal: false,
@@ -45,6 +49,8 @@ export class Profile extends Component {
         this.locationCredential = this.locationCredential.bind(this);
         this.topicCredential = this.topicCredential.bind(this);
         this.languageCredential = this.languageCredential.bind(this);
+        this.handleProfilePicChange = this.handleProfilePicChange.bind(this);
+        this.submitProfilePic = this.submitProfilePic.bind(this);
     }
     tool() {
         this.setState({
@@ -102,6 +108,102 @@ export class Profile extends Component {
         this.addcredential();
     }
 
+    handleProfilePicChange = (e) => {
+        if (e.target.name === 'profilePic') {
+            this.setState({
+                profilePic: e.target.files[0]
+            })
+        }
+    }
+
+    submitProfilePic = async (e) => {
+        e.preventDefault();
+        const h = {};
+
+        const desc = localStorage.getItem('email_id');
+
+        // const  data  = Object.assign({},this.state);
+
+        //const { files } = this.state;
+        let formData = new FormData();
+        console.log(desc);
+        // console.log(data.selectedFile);
+
+        await formData.append('email', desc);
+        await formData.append('profilePic', this.state.profilePic);
+        // h.Accept = 'application/json'; 
+        for (var key of formData.entries()) {
+            console.log(key[0] + ', ' + key[1]);
+        }
+
+        console.log(this.state.profilePic)
+        axios.post('http://localhost:3001/profilePicUpload', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then((result) => {
+                this.setState({ profilePic: '' });
+                //   this.componentDidMount();
+            });
+
+
+    }
+    componentDidMount(){
+        this.getProfilePic()
+    }
+
+
+    getProfilePic = async () => {
+        console.log("fetching user profile pic...");
+        var email = localStorage.getItem('friend')
+        await axios.get("http://localhost:3001/getProfilePic/?email=" + email)
+            .then((res) => {
+                console.log("base64 Image received");
+                //console.log("response from AWS S3 bucket... ", res.data);
+                this.setState({
+                    profilePic: res.data
+                })
+            })
+        console.log("profile pic", this.state.profilePic)
+    }
+    // submitProfilePic = async() => {
+    //     let extension = this.state.profilePic.name.slice(- 4);
+    //     console.log("in Submit ProfilePic", extension);
+    //     if (extension == ".jpg"||extension == ".JPG") {
+    //         await this.setState({ profilePic: "" });
+    //         let formData = new FormData();
+    //         var email= localStorage.getItem('email_id')
+    //         console.log(email)
+    //         await formData.append('email',email);
+    //         // console.log(this.state. );
+
+    //         await formData.append('profilePic', this.state.profilePic);
+    //         console.log("before setting profile pic")
+
+    //         console.log(formData)
+    //          await axios.post("http://localhost:3001/profilePicUpload",formData)
+    //             .then((response) => {
+    //                 console.log(response.data);
+    //             });
+    //         //this.getProfilePic();
+    //         console.log("after setting profile pic")
+    //         // setTimeout(() => this.getProfilePic(), 1500);
+    //     } else {
+    //         alert("only .jpg allowed for profile pic");
+    //     }
+    // }
+    // handleProfilePicChange = async(e) => {
+    //     if (e.target.name == 'profilePic') {
+    //     // alert("inside handleprofile pic")
+    //         console.log("files",e.target.files)
+    //         await this.setState({
+    //             profilePic: e.target.files[0]
+    //         })
+    //     }
+    //     console.log(this.state.profilePic)
+    // }
+
     languageCredential() {
         console.log("In language Credential", this.state.languageCredentialModal)
         this.setState(languagePrevious => ({
@@ -130,6 +232,15 @@ export class Profile extends Component {
         })
     }
     render() {
+        var profilePicDiv;
+        if (this.state.profilePic) {
+            console.log("data is present in this.state.profilePic");
+            profilePicDiv = (<div className="profilePic">
+                <img className="img-fluid" style={{borderRadius:"50%"}} onClick="{this.onProfileClick}" data-toggle="modal" src={'data:image/jpeg;base64,' + this.state.profilePic} data-target="#profilePicUpload" ></img>
+            </div>)
+        } else {
+            profilePicDiv = (<div><i class="fa fa-user fa fa-9x circle1"></i></div>)
+        }
         return (
             <div>
                 <Navbar />
@@ -139,13 +250,22 @@ export class Profile extends Component {
                 <div class="container">
                     <div class="row">
                         <div class="col-md-3 ">
-                            <i class="fa fa-user fa fa-9x circle1"></i>
+                            {/* <i class="fa fa-user fa fa-9x circle1"></i> */}
+                            {profilePicDiv}
                         </div>
+
                         <div class="col-md-5">
                             <span class="font1"><h2 >Sai Krishna Reddy Jali</h2></span>
                             {/* <Button> */}
                             <a style={{ color: "gray" }} href="#" onClick={this.toggle}>{this.state.profileCrediential}</a><br></br>
                             <a style={{ color: "gray" }} href="#" onClick={this.toggle}>{this.state.description}</a>
+                            <div>
+                                <input type="file" name="profilePic" onChange={this.handleProfilePicChange}></input>
+                                <button class="btn btn-default" onClick={this.submitProfilePic}>Upload</button>
+                                {/* <button class="btn btn-default" onClick={this.getProfilePic}>Download</button> */}
+
+
+                            </div>
                             {/* </Button> */}
                         </div>
                         <div class="">
@@ -193,15 +313,15 @@ export class Profile extends Component {
                                     <UncontrolledPopover placement="bottom" target="UncontrolledPopover" >
                                         <PopoverHeader></PopoverHeader>
                                         <PopoverBody>
-                                            <i class="fal fa-briefcase addcred1"  onClick={this.employementCredential} >Employement</i>
+                                            <i class="fal fa-briefcase addcred1" onClick={this.employementCredential} >Employement</i>
                                             <hr></hr>
                                             <i class="fal fa-graduation-cap  addcred1" onClick={this.educationCredential}>Education</i>
                                             <hr></hr>
                                             <i class="fal fa-map-marker-alt addcred1" onClick={this.locationCredential}>Location</i>
                                             <hr></hr>
-                                            <i class="fal fa-mountains addcred1"  onClick={this.topicCredential}>Topics</i>
+                                            <i class="fal fa-mountains addcred1" onClick={this.topicCredential}>Topics</i>
                                             <hr></hr>
-                                            <i class="fal fa-globe addcred1"  onClick={this.languageCredential} >Language</i>
+                                            <i class="fal fa-globe addcred1" onClick={this.languageCredential} >Language</i>
                                         </PopoverBody>
                                     </UncontrolledPopover>
 
@@ -261,7 +381,7 @@ export class Profile extends Component {
                                             <div class="col-md-4">
                                                 <p>I currently work here</p>
                                             </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            
+
                                             <div class="col-md-1">
                                                 <Input type="checkbox"></Input>
                                             </div>
@@ -321,7 +441,7 @@ export class Profile extends Component {
                                             <div class="col-md-4">
                                                 <p>I currently Study here</p>
                                             </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                            
+
                                             <div class="col-md-2">
                                                 <Input type="checkbox"></Input>
                                             </div>
@@ -372,7 +492,7 @@ export class Profile extends Component {
                                             <div class="col-md-5">
                                                 <p>I currently Live here</p>
                                             </div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                           
+
                                             <div class="col-md-1">
                                                 <Input type="checkbox"></Input>
                                             </div>
@@ -433,7 +553,7 @@ export class Profile extends Component {
 
                                             </div>
                                             <div class="col-md-8 ">
-                                                <p style={{color:"#A8A8A8"}}>More examples: travel blogger</p>
+                                                <p style={{ color: "#A8A8A8" }}>More examples: travel blogger</p>
                                             </div>
                                         </div>
                                     </Form>
@@ -456,7 +576,7 @@ export class Profile extends Component {
                                     <div>
                                         <Input placeholder="Search for a language"></Input>
                                         {/* <div class="pcred"> */}
-                                        <p style={{color:"#A8A8A8"}} class="font-weight-light" >Adding a language credential will add you to Quora in that language, when supported.</p>
+                                        <p style={{ color: "#A8A8A8" }} class="font-weight-light" >Adding a language credential will add you to Quora in that language, when supported.</p>
                                         {/* </div> */}
                                     </div>
                                 </div>

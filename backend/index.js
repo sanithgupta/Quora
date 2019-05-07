@@ -9,6 +9,7 @@ app.set('view engine', 'ejs');
 var bcrypt = require('bcryptjs');
 var mongoose = require('./config/mongodb');
 
+
 var passport = require('passport');
 app.use(passport.initialize());
 require('./auth/passport')(passport);
@@ -39,7 +40,7 @@ var getFeedList = require('./routes/get_feed')
 var Activity = require('./routes/activity')
 var FollowTopic = require('./routes/followTopic')
 var Get_bookmark_answers = require('./routes/get_bookmark_answers')
-
+var Profile_pic = require('./routes/profilepic')
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
@@ -51,9 +52,32 @@ app.use(session({
     duration: 60 * 60 * 1000,    // Overall duration of Session : 30 minutes : 1800 seconds
     activeDuration: 5 * 60 * 1000
 }));
+// app.use(busboy());
+
 
 app.use(bodyParser.json());
 
+const busboy = require('connect-busboy');
+const busboyBodyParser = require('busboy-body-parser');
+app.use(busboy());
+
+app.use(bodyParser.urlencoded({
+    extended: true,
+    limit: '50mb',
+    parameterLimit: 100000
+  }))
+
+  app.use(bodyParser.json({
+    limit: '50mb',
+    parameterLimit: 100000
+  }))
+
+   app.use(bodyParser.raw({
+    limit: '50mb',
+    inflate: true,
+    parameterLimit: 100000
+  }))
+app.use(busboyBodyParser());
 //Allow Access Control
 app.use(function (req, res, next) {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -89,7 +113,7 @@ app.use(function (req, res, next) {
     app.use('/',getFeedList)
     app.use ('/',Activity)
     app.use('/',FollowTopic)
-
+    app.use('/',Profile_pic)
     app.use('/',Get_bookmark_answers)
 //start your server on port 3001
 app.listen(3001);

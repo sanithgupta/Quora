@@ -192,7 +192,11 @@ export default class viewanswers extends Component {
             answertext:e.target.value
         })
     }
+    handleScroll=(e)=>{
+        alert("hi")
+    }
     async componentDidMount(){
+       
     // alert(localStorage.getItem('questionclicked'))
         axios.defaults.withCredentials = true;
         const data = {
@@ -256,7 +260,7 @@ export default class viewanswers extends Component {
                <input type="radio" onChange={this.anonymous} defaultChecked={this.state.anonymous}></input>Anonymous
 
                </div>
-                   <textarea onChange={this.textanswer} rows="9" cols="70"></textarea>
+                   <textarea  onChange={this.textanswer} rows="9" cols="70"></textarea>
                    <br></br>
                    <button onClick={this.submitAnswer} class="btn btn-default">Submit Answer</button>
                </div>
@@ -311,7 +315,7 @@ console.log(this.state.commentStatus)
             return (
               
              <div style={{padding:"3px"}}>
-               <div >
+               <div>
                    <div class="row" >
                    <div class="col col-sm-1" style={{marginLeft:"-20px"}}>
                <span class="font_bold" style={{color:"#333D46"}} ><a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "80%", width: "150%" }} alt="Quora LOGO"></img></a></span></div>
@@ -351,7 +355,7 @@ console.log(this.state.commentStatus)
         }
 
         return (
-            <div>
+            <div >
                 <div class="bg" >
                     <Navbar />
                  <hr></hr>
