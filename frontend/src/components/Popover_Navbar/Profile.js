@@ -52,7 +52,7 @@ export class Profile extends Component {
         this.topicCredential = this.topicCredential.bind(this);
         this.languageCredential = this.languageCredential.bind(this);
     }
-    componentDidMount = async() => {
+    componentDidMount = async () => {
         let friend = localStorage.getItem('friend_id')
         let user = localStorage.getItem('user_id')
         let data
@@ -210,6 +210,7 @@ export class Profile extends Component {
                 }
             })
     }
+
     render() {
         return (
             <div>
@@ -223,7 +224,7 @@ export class Profile extends Component {
                             <i class="fa fa-user fa fa-9x circle1"></i>
                         </div>
                         <div class="col-md-5">
-                            <span class="font1"><h2 onClick={this.setName} >{localStorage.getItem('Full_Name')}</h2></span>
+                            <span class="font1"><h2  >{localStorage.getItem('Full_Name')}</h2></span>
                             {/* <Button> */}
                             <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.profileCrediential}</a><br></br>
                             <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.description}</a><br></br>

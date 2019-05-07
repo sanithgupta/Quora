@@ -616,7 +616,7 @@ window.location.reload();
                   <hr class="hrClass"></hr>
                   <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Ads Manager</li></a>
                   <hr class="hrClass"></hr>
-                  <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Settings</li></a>
+                  <a style={{ color: "#3775B1" }} class="less" href="/settings"><li class="liStyle">Settings</li></a>
                 </ul>
               </PopoverHeader>
               <PopoverBody>
