@@ -1,6 +1,6 @@
-// var Answers = require('../models/Answers');
-var topics = require('../models/topics');
+var Users = require('../models/Users');
 var routerr = require('express').Router();
+<<<<<<< HEAD
 var Users = require('../models/Users')
 const fetch = require("node-fetch");
 const redis = require('redis');
@@ -72,18 +72,27 @@ topics.create(topic_new,function(err,results){
 //         });
 //         res.end('Error in getting Answers');
 //     }
+=======
+
+routerr.post('/topics',function(req,res){
+    console.log("Inside backend topupvotes")
+    console.log("req body",req.body);
+    // Model.findByIdAndUpdate(id, { $set: { name: 'jason borne' }}, options, callback)
+    Users.findByIdAndUpdate(req.body.user_id,{$push:{topics:req.body.intrests}},{'new':true},function(err,results){
+        if(err){console.log("error",err)}
+        else{
+            console.log("results after modyfying ",results);
+            res.json(results).status(200);
+        }
+    })
+// Users.findOne({_id:req.body.user_id},function(err,result){
+//     if(err){console.log("error",err);}
+>>>>>>> 4a5f16274894038eca0dfb1ea21f0bb5584040e2
 //     else{
-//         result = {'question_details':Question_result,'answer_details':Answer_result}
-//         console.log(result);
-//         res.writeHead(200, {
-//             'Content-type': 'application/json'
-//         });
-//         res.end(JSON.stringify(result));
+//         result.topics=req.body.intrests;
 //     }
-// })
 // })
 
 })
 
 module.exports=routerr
- 

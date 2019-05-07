@@ -805,7 +805,7 @@ setPage =(e)=>{
                   <hr class="hrClass"></hr>
                   <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Your Content</li></a>
                   <hr class="hrClass"></hr>
-                  <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Stats</li></a>
+                  <a style={{ color: "#3775B1" }} class="less" href="/ConsolidatedGraphs"><li class="liStyle">Stats</li></a>
                   <hr class="hrClass"></hr>
                   <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Ads Manager</li></a>
                   <hr class="hrClass"></hr>

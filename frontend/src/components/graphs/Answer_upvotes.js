@@ -1,15 +1,16 @@
 import React,{Component} from 'react';
 import {Line} from 'react-chartjs-2';
+import axios from 'axios';
 
 class line_graph extends Component{
     constructor(props){
         super(props);
     this.state={
      data : {
-        labels: ['Answer1', 'Answer2', 'Answer3', 'Answer4', 'Answer5', 'Answer6', 'Answer7'],
+        labels: [],
         datasets: [
           {
-            label: 'Answers vs upvotes',
+            label: 'Upvotes',
             fill: false,
             lineTension: 0.1,
             backgroundColor: 'rgba(75,192,192,0.4)',
@@ -27,11 +28,37 @@ class line_graph extends Component{
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data: [65, 59, 80, 20, 56, 55, 40]
+            data: []
           }
         ]
       }}}
 
+      componentDidMount() {
+        console.log("entered component didmount answersupvotes")
+        // axios.defaults.withCredentials = true;
+        let user  = localStorage.getItem('user_id');
+        console.log("user id ",user);
+        var user_id={user_id:user}
+        axios.post("http://localhost:3001/topupvotes",user_id)
+          .then((response) => {
+            console.log("after then console log linegraph", response.data);
+            let ids = response.data.map(e => e._id.substring(1,5));
+            let count = response.data.map(e => e.user_id_upvoted.length);
+            console.log("ids",ids);
+            console.log("couhnt",count);
+            this.setState((prev)=>{
+              let _s = prev.data; 
+              _s.labels = ids;
+              _s.datasets[0].data = count;
+              return {
+                data : _s
+              }
+            })
+            // this.setState({data : { ...this.state.data,labels: ids}});
+            // this.setState({data:{...this.state.data.datasets,data:count}});
+        
+          });
+      }
 
       render(){
           return(
@@ -49,7 +76,7 @@ class line_graph extends Component{
     xAxes: [{
       scaleLabel: {
         display: true,
-        labelString: 'Answers'
+        labelString: ''
       }
     }]}}}
     />
