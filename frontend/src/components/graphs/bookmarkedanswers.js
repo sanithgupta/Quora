@@ -7,12 +7,14 @@ class bookmarkedanswers extends Component{
 
          data : {
             datasets: [{
+              label: 'Upvotes',
               data: [
                 11,
                 16,
                 7,
                 3,
-                14
+                12
+                
               ],
               backgroundColor: [
                 '#FF6384',
@@ -21,14 +23,16 @@ class bookmarkedanswers extends Component{
                 '#E7E9ED',
                 '#36A2EB'
               ],
-              label: 'My dataset' // for legend
+              // label: 'My dataset' // for legend
+
             }],
             labels: [
-              'Answer1',
-              'Answer2',
-              'Answer3',
-              'Answer4',
-              'Answer5'
+              'cced',
+              'cd02',
+              'cd0b',
+              'cd0f',
+              'cd0h'
+              
             ]
           }
     }

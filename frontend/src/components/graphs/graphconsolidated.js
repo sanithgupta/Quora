@@ -13,11 +13,14 @@ class ConsolidatedGraphs extends Component {
     state = {  }
     render() { 
         return ( 
-            <div>
+            <div><blockquote class="blockquote text-center">
+  <p class="mb-0">User Graphs</p>
+  {/* <footer class="blockquote-footer">Someone famous in <cite title="Source Title">Source Title</cite></footer> */}
+</blockquote>   
                 <div  className="row">
                     
                     <div className="col-lg-4" id="bookmarkedleftmost" style ={{marginTop:"200px"}}>
-                    <h1 style={{marginTop:'-100px'}}>user</h1>
+                    {/* <h1 style={{marginTop:'-100px'}}>user</h1> */}
                      <Bookmarkedanswers  />    
                     </div>
                     <div className="col-lg-8" >
