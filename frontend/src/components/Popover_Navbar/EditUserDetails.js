@@ -11,7 +11,7 @@ export class EditUserDetails extends Component {
         first_name:"",
         last_name:"",
         city:"",
-        state1:"",
+        state:"",
         zipcode:"",
         education:"",
         career:"",
@@ -27,25 +27,68 @@ export class EditUserDetails extends Component {
     e.preventDefault();
     console.log("In handle change")
     await this.setState({
-      output:{
-        ...this.state.output,
+      
         [e.target.name]: e.target.value,
-      }
+      
      
     });
+    console.log("Modified User Details",this.state.output,this.state.first_name)
+
   }
-  saveDetails = (e) => {
+  saveDetails = async(e) => {
     e.preventDefault();
-    console.log("Modified User Details",this.state.output)
-    axios.post("http://localhost:3001/modifyingDetails", this.state.output)
+    const data ={
+      "user_id":localStorage.getItem('user_id'),
+      "first_name":this.state.first_name,
+      "last_name":this.state.last_name,
+      "city" : this.state.city,
+      "state":this.state.state,
+      "zipcode": this.state.zipcode,
+      "education": this.state.education,
+      "career": this.state.career,
+      "description":this.state.description
+    }
+    
+    await axios.post("http://localhost:3001/modifyingDetails",  data)
     .then(response=>{
       if(response.status==200){
         console.log(response.data)
+       
       }
     })
 
-
+    window.location.reload();
   }
+  componentDidMount = async() => {
+    let data = {
+        friend: localStorage.getItem('user_id')
+    }
+    await axios.post("http://localhost:3001/getUserDetails", data)
+        .then((response) => {
+            if (response.status == 200) {
+                // alert("Got user details")
+                if (response.data.length!==0) {
+
+                    console.log("Got user details for settings page", response.data)
+                    this.setState({
+                        first_name:response.data[0].first_name,
+                        last_name:response.data[0].last_name,
+                        city : response.data[0].city,
+                        state:response.data[0].state,
+                        zipcode: response.data[0].zip_code,
+                        education: response.data[0].education,
+                        career: response.data[0].career_info,
+                        description:response.data[0].about,
+                    })
+                    // this.setState({
+                    //     output: response.data[0]
+                    // })
+                    // console.log("State---------->", this.state.output)
+                    // console.log(this.state.output)
+                }
+            }
+        })
+}
   render() {
     return (
       <div>
@@ -62,15 +105,15 @@ export class EditUserDetails extends Component {
               <p class="accountSettings">Edit User Details</p>
               <hr></hr>
               {/* {details} */}
-              <p class="accountComponents">First Name : <input onChange={this.handleChange} name="first_name" value={this.state.first_name} type="text"></input> </p>
-              <p class="accountComponents">Last Name : <input onChange={this.handleChange} name="last_name" value={this.state.last_name} type="text"></input> </p>
-              <p class="accountComponents">City : <input onChange={this.handleChange} name="city" value={this.state.city} type="text"></input></p>
+              <p class="accountComponents">First Name : <input onChange={this.handleChange} name="first_name"  type="text"></input> </p>
+              <p class="accountComponents">Last Name : <input onChange={this.handleChange} name="last_name" type="text"></input> </p>
+              <p class="accountComponents">City : <input onChange={this.handleChange} name="city" type="text"></input></p>
          
-              <p class="accountComponents">State : <input onChange={this.handleChange} name="state" value={this.state.state1} type="text"></input></p>
-              <p class="accountComponents">Zipcode : <input onChange={this.handleChange} name="zipcode" value={this.state.zipcode} type="text"></input></p>
-              <p class="accountComponents">Education : <input onChange={this.handleChange} name="education" value={this.state.education} type="text"></input></p>
-              <p class="accountComponents">Career Information : <input onChange={this.handleChange} name="career" value={this.state.career} type="text"></input></p>
-              <p class="accountComponents">Description about yourself : <input onChange={this.handleChange} name="description" value={this.state.description} type="text"></input></p>
+              <p class="accountComponents">State : <input onChange={this.handleChange} name="state"  type="text"></input></p>
+              <p class="accountComponents">Zipcode : <input onChange={this.handleChange} name="zipcode"  type="text"></input></p>
+              <p class="accountComponents">Education : <input onChange={this.handleChange} name="education"  type="text"></input></p>
+              <p class="accountComponents">Career Information : <input onChange={this.handleChange} name="career"  type="text"></input></p>
+              <p class="accountComponents">Description about yourself : <input onChange={this.handleChange} name="description"  type="text"></input></p>
               {/* <button type="reset" class="">Cancel</button>&nbsp;&nbsp;&nbsp;&nbsp; */}
               <button class="btn btn-primary " onClick={this.saveDetails}>Save</button>{' '}
 
