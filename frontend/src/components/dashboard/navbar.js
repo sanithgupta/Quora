@@ -21,6 +21,7 @@ class navbar extends Component {
     this.state = {
       popoverOpen: false,
       notify_popover: false,
+      search_popover: false,
       redirectVar: "",
       question: "",
       addQuestionModal: false,
@@ -36,7 +37,12 @@ class navbar extends Component {
       conversation_list: [],
       notification_list: [],
       notification_count: 0,
-      notification_number: true
+      notification_number: true,
+      search_value: '',
+      question_search_result: [],
+      answer_search_result: [],
+      topic_search_result: [],
+      user_search_result: []
     };
     this.toggle = this.toggle.bind(this);
     this.message_modal = this.message_modal.bind(this)
@@ -45,6 +51,40 @@ class navbar extends Component {
     this.toggleNested_nest = this.toggleNested_nest.bind(this);
     this.toggleAll = this.toggleAll.bind(this);
     this.conversation_list = this.conversation_list.bind(this);
+  }
+
+  search_changehandler = async(e)=>{
+    await this.setState({
+      search_value : e.target.value,
+      search_popover: true
+    })
+
+    let data = {
+      'search_value': this.state.search_value
+    }
+    console.log("In getting user details", data)
+    await axios.post("http://localhost:3001/get_search_content", data)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            question_search_result:response.data.questions,
+            answer_search_result:response.data.answers,
+            topic_search_result:response.data.topics,
+            user_search_result:response.data.users
+          })
+        }
+      })
+    console.log(this.state.question_search_result)
+    console.log(this.state.answer_search_result)
+    console.log(this.state.topic_search_result)
+    console.log(this.state.user_search_result)
+  }
+
+  search_popover = async()=>{
+    await this.setState({
+      search_popover: false,
+    })
   }
 
   componentDidMount = async () => {
@@ -379,11 +419,73 @@ class navbar extends Component {
   }
 
   question_view = (val, e) => {
-    localStorage.setItem('questionclicked')
+    localStorage.setItem('questionclicked',val)
+  }
+
+  topic_view = (val1,val2, e) => {
+    localStorage.setItem('topicclicked_id',val1)
+    localStorage.setItem('topicclicked',val2)
+  }
+
+  profile_view = (val, e) => {
+    localStorage.setItem('friend',val)
   }
 
 
   render() {
+
+    if(this.state.question_search_result.length > 0){
+      var question_search_result = this.state.question_search_result.map(question=>{
+        return (
+          <div class="font_bold text_color" style={{ borderBottom: '1px solid black', cursor: 'pointer', backgroundColor: '#EAF4FF' }}>
+            Question:&nbsp;&nbsp;
+            <a href='/viewanswers' onClick={this.question_view.bind(this, question._id)}>
+              <div class="font_bold text_color">{question.question}</div>
+            </a>
+          </div>
+        )
+      })
+    }
+
+    if(this.state.answer_search_result.length > 0){
+      var answer_search_result = this.state.answer_search_result.map(answer=>{
+        return (
+          <div class="font_bold text_color" style={{ borderBottom: '1px solid black', backgroundColor: '#EAF4FF' }}>
+            Answer:
+            <a href='javascript:void(0)'>
+              <div class="font_bold text_color">{answer.answer}</div>
+            </a>
+          </div>
+        )
+      })
+    }
+
+    if(this.state.topic_search_result.length > 0){
+      var topic_search_result = this.state.topic_search_result.map(topic=>{
+        return (
+          <div class="font_bold text_color" style={{ borderBottom: '1px solid black', backgroundColor: '#EAF4FF' }}>
+            Topic:
+            <a href='/' onClick={this.topic_view.bind(this, topic._id,topic.topic_name)}>
+              <div class="font_bold text_color">{topic.topic_name}</div>
+            </a>
+          </div>
+        )
+      })
+    }
+
+    if(this.state.user_search_result.length > 0){
+      var user_search_result = this.state.user_search_result.map(user=>{
+        var full_name = user.first_name + ' ' + user.last_name
+        return (
+          <div class="font_bold text_color" style={{ borderBottom: '1px solid black', backgroundColor: '#EAF4FF' }}>
+            User:
+            <a href='/profile' onClick={this.profile_view.bind(this, user._id)}>
+              <div class="font_bold text_color">{full_name}</div>
+            </a>
+          </div>
+        )
+      })
+    }
 
     if(localStorage.getItem('user_status') == 'Active'){
       var change_status_to = 'Deactivate'
@@ -395,8 +497,8 @@ class navbar extends Component {
     if (this.state.notification_list.length != 0) {
       var notifications = this.state.notification_list.map(notification => {
         return (
-          <div style={{ borderBottom: '1px solid b}lack', cursor: 'pointer', backgroundColor: '#EAF4FF' }}>
-            <a href='javascript:void(0)'>
+          <div style={{ borderBottom: '1px solid black', cursor: 'pointer', backgroundColor: '#EAF4FF' }}>
+            <a href='/profile' onClick = {this.profile_view.bind(this,notification.notification_content.answered_by)}>
               <div class="font_bold text_color">{notification.notification_content.answered_by_name}</div>
             </a>
             answered:&nbsp;&nbsp;
@@ -492,7 +594,7 @@ class navbar extends Component {
             </ul>
             <form class="form-inline my-2 my-lg-0">
 
-              <input class="form-control mr-sm-2" style={{ height: "30px" }} type="search" placeholder="Search" aria-label="Search"></input>
+              <input onChange = {this.search_changehandler} onClick = {this.search_popover} id = 'search_popover' class="form-control mr-sm-2" style={{ height: "30px" }} type="search" placeholder="Search" aria-label="Search"></input>
               <a id="Popover1" href="javascript:void(0)" style={{ marginLeft: "60px" }}><img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img></a>
 
               <button onClick={this.modal} class="btn btn-default" style={{ marginLeft: "10px", height: "35px", padding: "6px", backgroundColor: "#B92B27", color: "white" }}>Add Question or Link</button>
@@ -679,6 +781,25 @@ class navbar extends Component {
               <PopoverBody>
                 <div>
                   {notifications}
+                </div>
+              </PopoverBody>
+            </Popover>
+
+            <Popover style={{ flex:1, maxWidth: '300px' }} placement="bottom" isOpen={this.state.search_popover} target="search_popover">
+              <PopoverHeader>
+                <div class='row' style={{ backgroundColor: '#F7F7F7', marginLeft:'10px' }}>
+                  <a href='#'>
+                    <i class="fas fa-search"></i>
+                    <span style={{ fontSize: "15px", padding: "4px" }}>Search: {this.state.search_value}</span>
+                  </a>
+                </div>
+              </PopoverHeader>
+              <PopoverBody>
+                <div>
+                  {question_search_result}
+                  {answer_search_result}
+                  {topic_search_result}
+                  {user_search_result}
                 </div>
               </PopoverBody>
             </Popover>
