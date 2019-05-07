@@ -37,10 +37,17 @@ var view_notification = require('./routes/Notification/view_notification')
 var getUserDetails = require('./routes/Get_User_Details/getUserDetails')
 var getUserQuestions = require('./routes/Get_User_Details/getUserQuestions')
 var getFeedList = require('./routes/get_feed')
+var following = require('./routes/Following/following')
+var get_following = require('./routes/Following/getFollowing')
+var followers= require('./routes/Following/followers')
+var get_followers = require('./routes/Following/getFollowers')
+var modifyingDetails = require('./routes/modifyingDetails')
 var Activity = require('./routes/activity')
 var FollowTopic = require('./routes/followTopic')
 var Get_bookmark_answers = require('./routes/get_bookmark_answers')
 var Profile_pic = require('./routes/profilepic')
+var get_search_content = require('./routes/Search/get_search_content')
+
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
@@ -107,10 +114,19 @@ app.use(function (req, res, next) {
     app.use('/',get_conversation);
     app.use('/',get_notification); 
     app.use('/',view_notification); 
+    app.use('/',get_search_content);
     //===========User Specfic=============
     app.use('/', getUserDetails)
     app.use('/', getUserQuestions)
     app.use('/',getFeedList)
+
+
+    app.use('/', following)
+    app.use('/', get_following)
+    app.use('/', followers)
+    app.use('/', get_followers)
+
+    app.use('/', modifyingDetails)
     app.use ('/',Activity)
     app.use('/',FollowTopic)
     app.use('/',Profile_pic)

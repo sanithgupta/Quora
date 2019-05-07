@@ -13,13 +13,30 @@ export default class userfeed extends Component {
           limit:0,
           temp:0,
           status:"",
-          tempvar:0
+          tempvar:0,
+          profilePic:null
         }
     }
     get_answers=(e)=>{
   alert(this.props.topics[0].topic_name)
 
     }
+
+    getProfilePic = async () => {
+      
+      console.log("fetching user profile pic...");
+      var email = localStorage.getItem('friend')
+      await axios.get("http://localhost:3001/getProfilePic/?email=" + email)
+          .then(async (res) => {
+              console.log("base64 Image received");
+              //console.log("response from AWS S3 bucket... ", res.data);
+              await this.setState({
+                  profilePic: res.data
+              })
+          })
+      console.log("profile pic", this.state.profilePic)
+     
+  }
 async  componentDidUpdate(){
 
   
@@ -144,6 +161,7 @@ await axios.post('http://localhost:3001/followTopic',data)
   async componentDidMount(){
     // alert("worked")
     axios.defaults.withCredentials = true;
+    this.getProfilePic();
     // alert(this.props.data.topics[0].topic_id)
     // if(localStorage.getItem('topicclicked')=="userfeed"){
 
@@ -195,7 +213,16 @@ status:"initial",tempvar:1
 
   }
   render() {    
-   
+    var profilePicDiv;
+    if (this.state.profilePic) {
+        console.log("data is present in this.state.profilePic");
+        profilePicDiv = (<div className="profilePic">
+            <img className="img-fluid" style={{borderRadius:"50%",width:"5%",height:"5%"}} onClick="{this.onProfileClick}" data-toggle="modal" src={'data:image/jpeg;base64,' + this.state.profilePic} data-target="#profilePicUpload" ></img>
+            &nbsp;&nbsp;{localStorage.getItem('Full_Name')}
+        </div>)
+    } else {
+        profilePicDiv = (<div><i class="fa fa-user  circle1"></i> &nbsp;&nbsp;{localStorage.getItem('Full_Name')}</div>)
+    }
     if(this.state.answerslist.length==0){
       feedlist = (<div>....Loading</div>)
     }
@@ -205,8 +232,10 @@ status:"initial",tempvar:1
    if(val.topic_id==0){
     return (
         <div class="font_white pad border">
-                <div class="font_bold text_color"><a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "5%", width: "5%",marginLeft:"1%" }} alt="Quora LOGO"></img></a>
-                   {localStorage.getItem('Full_Name')}</div> 
+                <div class="font_bold text_color">
+                {profilePicDiv}
+                {/* <a href="#" ><img src={require('../../images/profile.JPG')} style={{ height: "5%", width: "5%",marginLeft:"1%" }} alt="Quora LOGO"></img></a> */}
+                   </div> 
                 <div class="font_more_bold text_color font_size" style={{opacity:"0.8"}}>What is your question or link?</div>
               </div>
                 )    

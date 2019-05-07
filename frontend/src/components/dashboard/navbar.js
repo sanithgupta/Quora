@@ -21,6 +21,7 @@ class navbar extends Component {
     this.state = {
       popoverOpen: false,
       notify_popover: false,
+      search_popover: false,
       redirectVar: "",
       question: "",
       addQuestionModal: false,
@@ -31,12 +32,18 @@ class navbar extends Component {
       topics: [],
       message_to_name: '',
       message_from: '',
+      profilePic:null,
       message_content: '',
       messages: [],
       conversation_list: [],
       notification_list: [],
       notification_count: 0,
-      notification_number: true
+      notification_number: true,
+      search_value: '',
+      question_search_result: [],
+      answer_search_result: [],
+      topic_search_result: [],
+      user_search_result: []
     };
     this.toggle = this.toggle.bind(this);
     this.message_modal = this.message_modal.bind(this)
@@ -47,8 +54,72 @@ class navbar extends Component {
     this.conversation_list = this.conversation_list.bind(this);
   }
 
+  search_changehandler = async(e)=>{
+    await this.setState({
+      search_value : e.target.value,
+      search_popover: true
+    })
+
+    let data = {
+      'search_value': this.state.search_value
+    }
+    console.log("In getting user details", data)
+    await axios.post("http://localhost:3001/get_search_content", data)
+      .then((response) => {
+        if (response.status == 200) {
+          console.log(response.data)
+          this.setState({
+            question_search_result:response.data.questions,
+            answer_search_result:response.data.answers,
+            topic_search_result:response.data.topics,
+            user_search_result:response.data.users
+          })
+        }
+      })
+    console.log(this.state.question_search_result)
+    console.log(this.state.answer_search_result)
+    console.log(this.state.topic_search_result)
+    console.log(this.state.user_search_result)
+  }
+  getProfilePic = async () => {
+      
+    console.log("fetching user profile pic...");
+    var email = localStorage.getItem('friend')
+    await axios.get("http://localhost:3001/getProfilePic/?email=" + email)
+        .then(async (res) => {
+            console.log("base64 Image received");
+            //console.log("response from AWS S3 bucket... ", res.data);
+            await this.setState({
+                profilePic: res.data
+            })
+            
+        })
+
+        .catch(async(err)=>{
+          await axios.get("http://localhost:3001/getProfilePic/?email=" + "abc")
+        .then(async (res) => {
+            console.log("base64 Image received");
+            //console.log("response from AWS S3 bucket... ", res.data);
+            await this.setState({
+                profilePic: res.data
+            })
+            
+        })
+        })
+    console.log("profile pic", this.state.profilePic)
+   
+}
+  search_popover = async()=>{
+    await this.setState({
+      search_popover: false,
+    })
+  }
+
   componentDidMount = async () => {
     // alert(this.props.redirectVar)
+    await this.getProfilePic();
+    
+    
     if (this.props.redirectVar == false) {
       // alert('here')
       this.setState({
@@ -67,14 +138,39 @@ class navbar extends Component {
           console.log(response.data)
           console.log(response.data[0]._id)
           localStorage.setItem('user_id', response.data[0]._id)
+          localStorage.setItem('user_status',response.data[0].status)
           let full_name = response.data[0].first_name + " " + response.data[0].last_name;
           console.log(full_name)
           localStorage.setItem('Full_Name', full_name)
         }
       })
-
       this.timer = setInterval(()=> this.get_notification(), 10000);
+  }
 
+  user_deactivate = async(val,e)=>{
+
+    let data = {
+      'change_user_status' : val,
+      'user_id' : localStorage.getItem('user_id')
+    }
+    await axios.post("http://localhost:3001/userDeactivate", data)
+    .then((response) => {
+      if (response.status == 200) {
+        console.log(response.data)
+      }
+    })
+
+    let data1 = {
+      email_id: localStorage.getItem('email_id')
+    }
+
+    await axios.post("http://localhost:3001/getUserDetails", data1)
+    .then((response) => {
+      if (response.status == 200) {
+        console.log("Status Code : ", response.status);
+        localStorage.setItem('user_status',response.data[0].status)
+      }
+    })
   }
 
   get_notification=async()=>{
@@ -354,12 +450,46 @@ class navbar extends Component {
   }
 
   question_view = (val, e) => {
-    localStorage.setItem('questionclicked')
+    localStorage.setItem('questionclicked',val)
+  }
+
+  topic_view = (val1,val2, e) => {
+    localStorage.setItem('topicclicked_id',val1)
+    localStorage.setItem('topicclicked',val2)
+  }
+
+  profile_view = (val, e) => {
+    localStorage.setItem('friend',val)
   }
 
 
+// setProfile=async(e)=>{
+//   e.preventDefault();
+//   alert("Inside set profile")
+//   console.log("Inside set profile")
+//   localStorage.setItem('friend_id',localStorage.getItem('user_id'))
+//  await this.setState({
+//     redirectVar: <Redirect to='/profile' />
+// })
+// window.location.reload();
+
+// }
+setPage =(e)=>{
+  localStorage.setItem('friend', localStorage.getItem('user_id'))
+}
   render() {
 
+    var profilePicDiv;
+    if (this.state.profilePic) {
+        console.log("data is present in this.state.profilePic");
+        profilePicDiv = (<div className="profilePic">
+            <img className="img-fluid" style={{borderRadius:"50%",width:"5%",height:"5%"}} onClick="{this.onProfileClick}" data-toggle="modal" src={'data:image/jpeg;base64,' + this.state.profilePic} data-target="#profilePicUpload" ></img>
+            &nbsp;&nbsp;{localStorage.getItem('Full_Name')}
+        </div>)
+    } else {
+        profilePicDiv = (<div><i class="fa fa-user  circle1"></i> &nbsp;&nbsp;{localStorage.getItem('Full_Name')}</div>)
+    }
+//Hello
     // var count = <div>{this.state.notification_count}</div>
 
     if (this.state.notification_list.length != 0) {
@@ -367,6 +497,82 @@ class navbar extends Component {
         return (
           <div style={{ borderBottom: '1px solid b}lack', cursor: 'pointer', backgroundColor: '#EAF4FF' }}>
             <a href='javascript:void(0)'>
+              <div class="font_bold text_color">{notification.notification_content.answered_by_name}</div>
+            </a>
+            answered:&nbsp;&nbsp;
+            <a href='/viewanswers' onClick={this.question_view.bind(this, notification.notification_content.question_id)}>
+              {notification.notification_content.question}
+            </a>
+          </div>
+        )
+      })
+    }
+
+    if(this.state.question_search_result.length > 0){
+      var question_search_result = this.state.question_search_result.map(question=>{
+        return (
+          <div class="font_bold text_color" style={{ borderBottom: '1px solid black', cursor: 'pointer', backgroundColor: '#EAF4FF' }}>
+            Question:&nbsp;&nbsp;
+            <a href='/viewanswers' onClick={this.question_view.bind(this, question._id)}>
+              <div class="font_bold text_color">{question.question}</div>
+            </a>
+          </div>
+        )
+      })
+    }
+
+    if(this.state.answer_search_result.length > 0){
+      var answer_search_result = this.state.answer_search_result.map(answer=>{
+        return (
+          <div class="font_bold text_color" style={{ borderBottom: '1px solid black', backgroundColor: '#EAF4FF' }}>
+            Answer:
+            <a href='javascript:void(0)'>
+              <div class="font_bold text_color">{answer.answer}</div>
+            </a>
+          </div>
+        )
+      })
+    }
+
+    if(this.state.topic_search_result.length > 0){
+      var topic_search_result = this.state.topic_search_result.map(topic=>{
+        return (
+          <div class="font_bold text_color" style={{ borderBottom: '1px solid black', backgroundColor: '#EAF4FF' }}>
+            Topic:
+            <a href='/' onClick={this.topic_view.bind(this, topic._id,topic.topic_name)}>
+              <div class="font_bold text_color">{topic.topic_name}</div>
+            </a>
+          </div>
+        )
+      })
+    }
+
+    if(this.state.user_search_result.length > 0){
+      var user_search_result = this.state.user_search_result.map(user=>{
+        var full_name = user.first_name + ' ' + user.last_name
+        return (
+          <div class="font_bold text_color" style={{ borderBottom: '1px solid black', backgroundColor: '#EAF4FF' }}>
+            User:
+            <a href='/profile' onClick={this.profile_view.bind(this, user._id)}>
+              <div class="font_bold text_color">{full_name}</div>
+            </a>
+          </div>
+        )
+      })
+    }
+
+    if(localStorage.getItem('user_status') == 'Active'){
+      var change_status_to = 'Deactivate'
+    }
+    else{
+      var change_status_to = 'Activate'
+    }
+
+    if (this.state.notification_list.length != 0) {
+      var notifications = this.state.notification_list.map(notification => {
+        return (
+          <div style={{ borderBottom: '1px solid black', cursor: 'pointer', backgroundColor: '#EAF4FF' }}>
+            <a href='/profile' onClick = {this.profile_view.bind(this,notification.notification_content.answered_by)}>
               <div class="font_bold text_color">{notification.notification_content.answered_by_name}</div>
             </a>
             answered:&nbsp;&nbsp;
@@ -462,8 +668,12 @@ class navbar extends Component {
             </ul>
             <form class="form-inline my-2 my-lg-0">
 
-              <input class="form-control mr-sm-2" style={{ height: "30px" }} type="search" placeholder="Search" aria-label="Search"></input>
-              <a id="Popover1" href="javascript:void(0)" style={{ marginLeft: "60px" }}><img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img></a>
+              <input onChange = {this.search_changehandler} onClick = {this.search_popover} id = 'search_popover' class="form-control mr-sm-2" style={{ height: "30px" }} type="search" placeholder="Search" aria-label="Search"></input>
+              <a id="Popover1" href="javascript:void(0)" style={{ marginLeft: "60px" }}>
+            <img className="img-fluid" style={{borderRadius:"50%",width:"40px",height:"40px"}} onClick="{this.onProfileClick}" data-toggle="modal" src={'data:image/jpeg;base64,' + this.state.profilePic} data-target="#profilePicUpload" ></img>
+              
+              {/* <img src={require('../../images/profile.JPG')} style={{ height: "40px", width: "40px" }} alt="Quora LOGO"></img> */}
+              </a>
 
               <button onClick={this.modal} class="btn btn-default" style={{ marginLeft: "10px", height: "35px", padding: "6px", backgroundColor: "#B92B27", color: "white" }}>Add Question or Link</button>
 
@@ -586,7 +796,7 @@ class navbar extends Component {
             <Popover placement="bottom" isOpen={this.state.popoverOpen} target="Popover1" toggle={this.toggle}>
               <PopoverHeader>
                 <ul class="widthHeight" style={{ marginLeft: "-20%" }}>
-                  <a style={{ color: "#3775B1", marginTop: "-6px" }} class="less" href="/profile"> <li >Profile</li></a>
+                  <a style={{ color: "#3775B1", marginTop: "-6px" }} class="less" href="/profile" onClick={this.setPage} > <li >Profile</li></a>
                   <hr class="hrClass"></hr>
                   <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Blogs</li></a>
                   <hr class="hrClass"></hr>
@@ -598,12 +808,16 @@ class navbar extends Component {
                   <hr class="hrClass"></hr>
                   <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Ads Manager</li></a>
                   <hr class="hrClass"></hr>
-                  <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Settings</li></a>
+                  <a style={{ color: "#3775B1" }} class="less" href="/settings"><li class="liStyle">Settings</li></a>
                 </ul>
               </PopoverHeader>
               <PopoverBody>
                 <ul style={{ marginLeft: "-20%", marginTop: "-10px" }}>
-                  <li ><a class="aclass" href="#">Help</a><span> . </span></li>
+                  <li >
+                    <a class="aclass" href="#">Help</a>
+                    <span> . </span>
+                    <a class="aclass" onClick = {this.user_deactivate.bind(this,change_status_to)} href="javascript:void(0)">{change_status_to}</a>
+                  </li>
                   <hr class="hrClass"></hr>
                   <li class="liStyle">
                     <a class="aclass" href="#">About</a>
@@ -645,6 +859,25 @@ class navbar extends Component {
               <PopoverBody>
                 <div>
                   {notifications}
+                </div>
+              </PopoverBody>
+            </Popover>
+
+            <Popover style={{ flex:1, maxWidth: '300px' }} placement="bottom" isOpen={this.state.search_popover} target="search_popover">
+              <PopoverHeader>
+                <div class='row' style={{ backgroundColor: '#F7F7F7', marginLeft:'10px' }}>
+                  <a href='#'>
+                    <i class="fas fa-search"></i>
+                    <span style={{ fontSize: "15px", padding: "4px" }}>Search: {this.state.search_value}</span>
+                  </a>
+                </div>
+              </PopoverHeader>
+              <PopoverBody>
+                <div>
+                  {question_search_result}
+                  {answer_search_result}
+                  {topic_search_result}
+                  {user_search_result}
                 </div>
               </PopoverBody>
             </Popover>
@@ -698,17 +931,14 @@ class navbar extends Component {
   <div class="col col-sm-9">
     <a class="navbar-brand brandcol" href="#">Quora</a>
   </div>
-
   <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
     <ul class="nav navbar-nav">
       <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
       <li><a href="#">Answer</a></li>
       <li><a href="#">Spaces</a></li>
       <li><a href="#">Notifications</a></li>
-
     
       <input type="text" class="form-control" style={{width:"60%"}} placeholder="Search"></input>
-
       <button class="btn btn-danger">Add Question or Link</button>
       
     </ul>
@@ -720,7 +950,6 @@ class navbar extends Component {
     </form>
    
   </div>
-
 </nav> */
       // </div>
 

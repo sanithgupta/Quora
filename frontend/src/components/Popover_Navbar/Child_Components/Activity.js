@@ -9,7 +9,9 @@ export class Activity extends Component {
 // activity:[{user_id:"101",type:"QuestionsAsked",date_time:"05-04-2019",question:"When police officers stop people in a vehicle, why do they touch the taillight or the back of the car as they're walking towards it?",question_id:"201"},{user_id:"102",type:"QuestionsAnswered",date_time:"05-04-2019",question:"What is the best Git client for Mac OS X?",question_id:"201",answer:"I have recently started using Git Kraken by Axosoft for my personal projects and I am really amazed by how great it is. It is cross platform and is available for Linux, Mac and Windows.",answer_id:"202"},{user_id:"103",type:"TopicFollowed",date_time:"05-04-2019",topic_name:"Movies"},{user_id:"103",type:"TopicFollowed",date_time:"05-04-2019",topic_name:"Entertainment"},{user_id:"103",type:"TopicFollowed",date_time:"05-04-2019",topic_name:"Science"},{user_id:"103",type:"TopicFollowed",date_time:"05-04-2019",topic_name:"Technology"}]
 activity:[]  ,
 activityoption:"None" ,
-dateoption:"oldestFirst"
+dateoption:"oldestFirst",
+prevcount:0,
+nextcount:4,
 }
   }
   activityfilter=(e)=>{
@@ -38,10 +40,40 @@ this.setState({
         console.log("response",response.data)
           this.setState({
             activity:response.data,
-            
+            nextcount:4,
+            prevcount:0
           })
           console.log("answers",this.state.activity)
     })
+
+  }
+
+  next=(e)=>{
+    if(this.state.nextcount<this.state.activity.length){
+    this.setState({
+      nextcount:this.state.nextcount+4,
+      prevcount:this.state.prevcount+4
+    })
+  }
+    if(this.state.nextcount>=this.state.activity.length){
+     
+      alert("no next items")
+
+    }
+    
+
+  }
+  previous=(e)=>{
+    if(this.state.prevcount>1){
+    this.setState({
+      nextcount:this.state.nextcount-4,
+      prevcount:this.state.prevcount-4
+    })
+  }
+    if(this.state.prevcount<=0){  
+      alert("no previous items")
+    }
+   
 
   }
   async componentDidMount(){
@@ -60,13 +92,15 @@ this.setState({
             activity:response.data,
             
           })
+
           console.log("answers",this.state.activity)
     })
 
   }
   render() {
     let activityBlock = null
-    activityBlock = this.state.activity.map((task)=>{
+    activityBlock = this.state.activity.map((task,idx)=>{
+      if(idx>=this.state.prevcount && idx<this.state.nextcount){
       switch(task.type){
         case "QuestionsAsked":
         return(
@@ -127,6 +161,7 @@ this.setState({
           </div>
         )
       }
+    }
     })
     return (
       <div>
@@ -166,6 +201,10 @@ this.setState({
         </div>
 
        {activityBlock}
+       <button onClick={this.previous}   class="btn btn-primary" type="button" style={{marginLeft:"0px",marginBottom:"20px"}}>Previous</button>
+
+      <button onClick={this.next}  class="btn btn-primary" type="button" style={{marginLeft:"350px",marginBottom:"20px"}}>Next</button>
+                         
       </div>
     )
   }

@@ -139,6 +139,7 @@ export default class viewanswers extends Component {
                 user_id:localStorage.getItem('user_id'),
                 user_name:localStorage.getItem('Full_Name'),
                 profile_credential:"",
+                // is_anonymous:this.state.anonymous,
                 is_anonymous:this.state.anonymous,
                 question: this.state.question_val
             }
@@ -325,7 +326,7 @@ console.log(this.state.commentStatus)
                  </div>
                  </div>
         
-                <span  style={{fontWeight:"400",color:"#333D46"}}>{answer.answer}</span><br></br>
+                <pre style={{whiteSpace:"pre-wrap"}}><span  style={{fontWeight:"400",color:"#333D46"}}>{answer.answer}</span></pre><br></br>
                 <br></br>
                <div style={{marginLeft:"-16px"}}>
                <a onClick={this.upvote.bind(this,answer._id)}><i class="fal fa-arrow-alt-up">&nbsp;&nbsp;</i><label style={{cursor:"pointer"}}>Upvote {answer.user_id_upvoted.length} </label></a>&nbsp;&nbsp;&nbsp;&nbsp;

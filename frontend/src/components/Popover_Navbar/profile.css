@@ -60,3 +60,14 @@
 .form-control{
     height: 25px;
 }
+
+.accountSettings{
+    font-size: 15px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.accountComponents{
+    font-size: 13px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+

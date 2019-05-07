@@ -3,7 +3,7 @@ import Navbar from '../dashboard/navbar'
 import './profile.css'
 import { Button, Form, FormGroup, Label, Col, Modal, ModalHeader, ModalBody, ModalFooter, Tooltip, Popover, PopoverHeader, PopoverBody, UncontrolledPopover, Input } from 'reactstrap';
 import { Alert } from 'reactstrap';
-import axios from 'axios';
+// import axios from 'axios';
 import FormData from 'form-data'
 
 
@@ -18,8 +18,10 @@ import { Blogs } from '../Popover_Navbar/Child_Components/Blogs'
 import { Followers } from '../Popover_Navbar/Child_Components/Followers'
 import { Edits } from '../Popover_Navbar/Child_Components/Edits'
 import { Activity } from '../Popover_Navbar/Child_Components/Activity'
+import { Following } from '../Popover_Navbar/Child_Components/Following'
 
 import './profile.css'
+import axios from 'axios';
 export class Profile extends Component {
     constructor(props) {
         super(props);
@@ -37,7 +39,11 @@ export class Profile extends Component {
             locationCredentialModal: false,
             topicCredentialModal: false,
             languageCredentialModal: false,
-            val: <Profile_det />
+            val: <Profile_det />,
+            fullname: localStorage.getItem('Full_Name'),
+            hidebtn: "",
+            btnhide: "",
+            someone_id: localStorage.getItem('friend_id')
         };
         this.toggle = this.toggle.bind(this);
         this.onDismiss = this.onDismiss.bind(this);
@@ -52,6 +58,56 @@ export class Profile extends Component {
         this.handleProfilePicChange = this.handleProfilePicChange.bind(this);
         this.submitProfilePic = this.submitProfilePic.bind(this);
     }
+    componentDidMount = async () => {
+      
+         this.getProfilePic()
+        let friend = localStorage.getItem('friend')
+        let user = localStorage.getItem('user_id')
+        let data
+        console.log("friend : ", friend)
+        if (friend) {
+            data = {
+                friend: localStorage.getItem('friend')
+            }
+
+        }
+        else {
+            data = {
+                friend: localStorage.getItem('user_id')
+            }
+
+        }
+        await axios.post("http://localhost:3001/getUserDetails", data)
+            .then((response) => {
+                if (response.status == 200) {
+                    console.log("friends details", response.data)
+                    let first_name = response.data[0].first_name
+                    localStorage.setItem('first_name', first_name)
+                    let full_name = response.data[0].first_name + " " + response.data[0].last_name;
+                    console.log("Friend full name", full_name)
+                    localStorage.setItem('Full_Name', full_name)
+                }
+            })
+
+        if (friend !== user) {
+
+            this.setState({
+                hidebtn: "hidden",
+                btnhide: "",
+            })
+            console.log("in if part ", this.state.hidebtn)
+        }
+        else {
+            this.setState({
+                hidebtn: "",
+                btnhide: "hidden",
+            })
+            console.log("In else", this.state.hidebtn)
+        }
+        // alert(localStorage.getItem('Full_Name'))
+
+    }
+
     tool() {
         this.setState({
             tooltipOpen: !this.state.tooltipOpen
@@ -120,7 +176,7 @@ export class Profile extends Component {
         e.preventDefault();
         const h = {};
 
-        const desc = localStorage.getItem('email_id');
+        const desc = localStorage.getItem('friend');
 
         // const  data  = Object.assign({},this.state);
 
@@ -137,7 +193,7 @@ export class Profile extends Component {
         }
 
         console.log(this.state.profilePic)
-        axios.post('http://localhost:3001/profilePicUpload', formData, {
+        await axios.post('http://localhost:3001/profilePicUpload', formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
             }
@@ -146,26 +202,26 @@ export class Profile extends Component {
                 this.setState({ profilePic: '' });
                 //   this.componentDidMount();
             });
+            window.location.reload();
 
 
     }
-    componentDidMount(){
-        this.getProfilePic()
-    }
-
+   
 
     getProfilePic = async () => {
+        // alert("hi")
         console.log("fetching user profile pic...");
         var email = localStorage.getItem('friend')
         await axios.get("http://localhost:3001/getProfilePic/?email=" + email)
-            .then((res) => {
+            .then(async (res) => {
                 console.log("base64 Image received");
                 //console.log("response from AWS S3 bucket... ", res.data);
-                this.setState({
+                await this.setState({
                     profilePic: res.data
                 })
             })
         console.log("profile pic", this.state.profilePic)
+       
     }
     // submitProfilePic = async() => {
     //     let extension = this.state.profilePic.name.slice(- 4);
@@ -231,6 +287,34 @@ export class Profile extends Component {
             val: e
         })
     }
+
+    addToFollowing = (e) => {
+        e.preventDefault()
+        console.log("In adding to following")
+        let data = {
+            friend: localStorage.getItem('friend_id'),
+            user_id: localStorage.getItem('user_id'),
+            friend_first_name: localStorage.getItem('Full_Name'),
+            first_name: localStorage.getItem('duplicate_name')
+        }
+        console.log("adding to our following ", data)
+        axios.post("http://localhost:3001/following", data)
+            .then((response) => {
+                if (response.status == 200) {
+                    console.log(response.data)
+
+                }
+            })
+
+        axios.post("http://localhost:3001/followers", data)
+            .then((response) => {
+                if (response.status == 200) {
+                    console.log(response.data)
+
+                }
+            })
+    }
+
     render() {
         var profilePicDiv;
         if (this.state.profilePic) {
@@ -255,7 +339,7 @@ export class Profile extends Component {
                         </div>
 
                         <div class="col-md-5">
-                            <span class="font1"><h2 >Sai Krishna Reddy Jali</h2></span>
+                            <span class="font1"><h2  >{localStorage.getItem('Full_Name')}</h2></span>
                             {/* <Button> */}
                             <a style={{ color: "gray" }} href="#" onClick={this.toggle}>{this.state.profileCrediential}</a><br></br>
                             <a style={{ color: "gray" }} href="#" onClick={this.toggle}>{this.state.description}</a>
@@ -266,6 +350,9 @@ export class Profile extends Component {
 
 
                             </div>
+                            <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.profileCrediential}</a><br></br>
+                            <a style={{ color: "gray", visibility: this.state.hidebtn }} href="#" onClick={this.toggle}>{this.state.description}</a><br></br>
+                            <button style={{ visibility: this.state.btnhide }} onClick={this.addToFollowing}><i class="fas fa-portrait"></i>Follow</button>
                             {/* </Button> */}
                         </div>
                         <div class="">
@@ -618,7 +705,7 @@ export class Profile extends Component {
                                     <li class="pointer1" onClick={this.child.bind(this, <Post />)}>Posts</li>
                                     <li class="pointer1" onClick={this.child.bind(this, <Blogs />)}>Blogs</li>
                                     <li class="pointer1" onClick={this.child.bind(this, <Followers />)}>Followers</li>
-                                    <li class="pointer1" onClick={this.child.bind(this, <Followers />)}>Following</li>
+                                    <li class="pointer1" onClick={this.child.bind(this, <Following />)}>Following</li>
                                     <li class="pointer1" onClick={this.child.bind(this, <Edits />)}>Edits</li>
                                     <li class="pointer1" onClick={this.child.bind(this, <Activity />)}>Activity</li>
                                 </ul>
