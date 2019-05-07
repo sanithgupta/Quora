@@ -26,7 +26,7 @@ export class settings extends Component {
                             first_name:response.data[0].first_name,
                             city : response.data[0].city,
                             state:response.data[0].state,
-                            zipcode: response.data[0].zipcode,
+                            zipcode: response.data[0].zip_code,
                             education: response.data[0].education,
                             Career: response.data[0].career_info,
                             Description:response.data[0].about,
