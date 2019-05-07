@@ -47,6 +47,7 @@ var FollowTopic = require('./routes/followTopic')
 var Get_bookmark_answers = require('./routes/get_bookmark_answers')
 var Profile_pic = require('./routes/profilepic')
 var get_search_content = require('./routes/Search/get_search_content')
+var topics = require('./routes/topics')
 
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
@@ -115,6 +116,7 @@ app.use(function (req, res, next) {
     app.use('/',get_notification); 
     app.use('/',view_notification); 
     app.use('/',get_search_content);
+    app.use('/',topics);
     //===========User Specfic=============
     app.use('/', getUserDetails)
     app.use('/', getUserQuestions)

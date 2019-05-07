@@ -63,9 +63,17 @@ class login extends Component {
     renderRedirect = () => {
         if (this.props.redirectVar) {
             localStorage.setItem('email_id', this.state.email_id)
-            this.setState({
-                redirectVar: <Redirect to='/' />
-            })
+            if(localStorage.getItem('topic_count')>0){
+                this.setState({
+                    redirectVar: <Redirect to='/' />
+                })
+            }
+            else{
+                this.setState({
+                    redirectVar: <Redirect to='/Interests' />
+                })
+            }
+
         }
     }
 
@@ -92,7 +100,7 @@ class login extends Component {
             setTimeout(() => {
                 if(this.props.response == 200){
                     alert('200 status in login')
-                }
+                }   
                 this.renderRedirect();
             }, 500);
     

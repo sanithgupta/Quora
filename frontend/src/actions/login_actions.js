@@ -19,10 +19,12 @@ export const submit_login = (email_id, password) => dispatch => {
         .then(response => {
             // alert("response received after login :", response.status);
             console.log("response",response.status);
+            console.log(response.data)
             if(response.status == 200){
             console.log('Token'+response.data.taoken)
             localStorage.setItem("token", response.data.token)
             localStorage.setItem('user_id',response.data.user_id)
+            localStorage.setItem('topic_count',response.data.topics.length)
             dispatch({
                 type: SUBMIT_LOGIN,
                 payload: response.status,
