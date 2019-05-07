@@ -378,7 +378,7 @@ window.location.reload();
 
 }
   render() {
-
+//Hello
     // var count = <div>{this.state.notification_count}</div>
 
     if (this.state.notification_list.length != 0) {
