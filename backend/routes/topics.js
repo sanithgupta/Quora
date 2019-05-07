@@ -22,7 +22,7 @@ routerr.post('/get_topics', function (req, res) {
                             console.log(err)
                         }
                         else{
-                            console.log('resultout',resultout[0].topic_icon)
+                            // console.log('resultout',resultout[0].topic_icon)
                             if(resultout.length>0){
 
                             
