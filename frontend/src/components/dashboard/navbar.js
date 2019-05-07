@@ -366,17 +366,17 @@ class navbar extends Component {
     localStorage.setItem('questionclicked')
   }
 
-setProfile=async(e)=>{
-  e.preventDefault();
-  alert("Inside set profile")
-  console.log("Inside set profile")
-  localStorage.setItem('friend_id',localStorage.getItem('user_id'))
- await this.setState({
-    redirectVar: <Redirect to='/profile' />
-})
-window.location.reload();
+// setProfile=async(e)=>{
+//   e.preventDefault();
+//   alert("Inside set profile")
+//   console.log("Inside set profile")
+//   localStorage.setItem('friend_id',localStorage.getItem('user_id'))
+//  await this.setState({
+//     redirectVar: <Redirect to='/profile' />
+// })
+// window.location.reload();
 
-}
+// }
   render() {
 //Hello
     // var count = <div>{this.state.notification_count}</div>
@@ -604,7 +604,7 @@ window.location.reload();
             <Popover placement="bottom" isOpen={this.state.popoverOpen} target="Popover1" toggle={this.toggle}>
               <PopoverHeader>
                 <ul class="widthHeight" style={{ marginLeft: "-20%" }}>
-                  <a style={{ color: "#3775B1", marginTop: "-6px" }} class="less" href="#" onClick={this.setProfile}> <li >Profile</li></a>
+                  <a style={{ color: "#3775B1", marginTop: "-6px" }} class="less" href="/profile" onClick={localStorage.setItem('friend', localStorage.getItem('user_id'))} > <li >Profile</li></a>
                   <hr class="hrClass"></hr>
                   <a style={{ color: "#3775B1" }} class="less" href="#"><li class="liStyle">Blogs</li></a>
                   <hr class="hrClass"></hr>

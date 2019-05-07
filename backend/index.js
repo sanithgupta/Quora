@@ -38,6 +38,7 @@ var following = require('./routes/Following/following')
 var get_following = require('./routes/Following/getFollowing')
 var followers= require('./routes/Following/followers')
 var get_followers = require('./routes/Following/getFollowers')
+var modifyingDetails = require('./routes/modifyingDetails')
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
@@ -89,6 +90,8 @@ app.use(function (req, res, next) {
     app.use('/', get_following)
     app.use('/', followers)
     app.use('/', get_followers)
+
+    app.use('/', modifyingDetails)
 
 //start your server on port 3001
 app.listen(3001);
