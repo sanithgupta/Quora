@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import Navbar from './navbar';
 import './home.css'
 import UserFeed from './userfeed'
+import axios from 'axios';
+
 export default class home extends Component {
   
     constructor() {
@@ -11,13 +13,15 @@ export default class home extends Component {
             topic_id:"0",
             topic_name:"Madhusudhan Shagam",
             topic_icon:"fa fa-user",
-          topics:[{topic_id:"10",topic_name:"Technology",topic_icon:"fal fa-book"},{topic_id:"11",topic_name:"Movies",topic_icon:"fal fa-film"},{topic_id:"12",topic_name:"Cooking",topic_icon:"fal fa-utensils"},{topic_id:"13",topic_name:"Photography",topic_icon:"fal fa-camera"},{topic_id:"14",topic_name:"Health",topic_icon:"fal fa-medkit"},{topic_id:"15",topic_name:"Techonology",topic_icon:"fal fa-book"},{topic_id:"16",topic_name:"Movies",topic_icon:"fal fa-film"},{topic_id:"17",topic_name:"Cooking",topic_icon:"fal fa-utensils"},{topic_id:"18",topic_name:"Photography",topic_icon:"fal fa-camera"},{topic_id:"19",topic_name:"Health",topic_icon:"fal fa-medkit"}],
+            topics:[]
+          // topics:[{topic_id:"10",topic_name:"Technology",topic_icon:"fal fa-book"},{topic_id:"11",topic_name:"Movies",topic_icon:"fal fa-film"},{topic_id:"12",topic_name:"Cooking",topic_icon:"fal fa-utensils"},{topic_id:"13",topic_name:"Photography",topic_icon:"fal fa-camera"},{topic_id:"14",topic_name:"Health",topic_icon:"fal fa-medkit"},{topic_id:"15",topic_name:"Techonology",topic_icon:"fal fa-book"},{topic_id:"16",topic_name:"Movies",topic_icon:"fal fa-film"},{topic_id:"17",topic_name:"Cooking",topic_icon:"fal fa-utensils"},{topic_id:"18",topic_name:"Photography",topic_icon:"fal fa-camera"},{topic_id:"19",topic_name:"Health",topic_icon:"fal fa-medkit"}],
     
         }
         
     }
     topic_click=(val,e)=>{
         // alert("hi")
+       
         this.setState({
             topic_id:val.topic_id,
             topic_name:val.topic_name,
@@ -25,9 +29,31 @@ export default class home extends Component {
         })
         localStorage.setItem('topicclicked',val.topic_name)
     }
-  render() {
+   async componentDidMount(){
+
+      axios.defaults.withCredentials = true;
+      const data = {
+          user_id:localStorage.getItem('user_id'),
+
+         
+      }
     
-    let topic_list = this.state.topics.map(topic => {
+      await axios.post('http://localhost:3001/get_topics',data)
+      .then(response => {
+          // alert("after response")
+          console.log("response",response.data)
+            this.setState({
+              topics:response.data,
+              
+            })
+  
+            console.log("topics",this.state.topics)
+      })
+    }
+  render() {
+    let topic_list = null
+    if(this.state.topics.length>0){
+    topic_list = this.state.topics.map(topic => {
    
         return (
           
@@ -42,6 +68,7 @@ export default class home extends Component {
          </div>
         )
       });
+    }
 
     return (
       <div class="bg" >

@@ -16,6 +16,9 @@ const topics = new mongoose.Schema({topic_id:{
     followers:{
         type:Array
     },
+    topic_icon:{
+        type:String
+    }
 
 },{strict:"false"})
 var Topics = mongoose.model('topics',topics);

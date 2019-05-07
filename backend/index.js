@@ -135,6 +135,8 @@ app.use(function (req, res, next) {
     app.use('/',FollowTopic)
     app.use('/',Profile_pic)
     app.use('/',Get_bookmark_answers)
+
+    app.use('/',topics)
 //start your server on port 3001
 app.listen(3001);
 console.log("Server Listening on port 3001");

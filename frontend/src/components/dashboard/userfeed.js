@@ -39,7 +39,6 @@ export default class userfeed extends Component {
   }
 async  componentDidUpdate(){
 
-  
   this.state.answerslist=[]
   axios.defaults.withCredentials = true;
   
