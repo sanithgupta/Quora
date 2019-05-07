@@ -25,6 +25,7 @@ function handle_request(message, callback) {
                     "last_name": message.last_name,
                     "email_id": message.email_id,
                     "password": message.password,
+                    "status":"Active"
                 });
 
                 bcrypt.genSalt(10, (err, salt) => {

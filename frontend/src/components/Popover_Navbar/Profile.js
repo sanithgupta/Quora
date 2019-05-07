@@ -53,13 +53,13 @@ export class Profile extends Component {
         this.languageCredential = this.languageCredential.bind(this);
     }
     componentDidMount = async () => {
-        let friend = localStorage.getItem('friend_id')
+        let friend = localStorage.getItem('friend')
         let user = localStorage.getItem('user_id')
         let data
         console.log("friend : ", friend)
         if (friend) {
             data = {
-                friend: localStorage.getItem('friend_id')
+                friend: localStorage.getItem('friend')
             }
 
         }

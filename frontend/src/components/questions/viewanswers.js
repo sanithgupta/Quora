@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import Navbar from '../dashboard/navbar'
 import axios from 'axios';
-// import {Editor, EditorState} from 'draft-js';
-import { transcode } from 'buffer';
 
 export default class viewanswers extends Component {
     constructor() {
@@ -19,8 +17,9 @@ export default class viewanswers extends Component {
     answerBlock:"0px",
     answerBlock1:["a"],
     answertext:"",
-    ansvis:"visible",
-    anonymous:false
+    ansvis:"Answer",
+    anonymous:false,
+    question_val:""
 
     
     // bookmark_check:"checked"
@@ -140,7 +139,9 @@ export default class viewanswers extends Component {
                 user_id:localStorage.getItem('user_id'),
                 user_name:localStorage.getItem('Full_Name'),
                 profile_credential:"",
-                is_anonymous:this.state.anonymous
+                // is_anonymous:this.state.anonymous,
+                is_anonymous:this.state.anonymous,
+                question: this.state.question_val
             }
             
              axios.post('http://localhost:3001/add_answer',answer_data)
@@ -251,8 +252,9 @@ export default class viewanswers extends Component {
                <i  style={{fontWeight:"500"}} class="fal fa-video"></i>&nbsp;&nbsp;&nbsp;&nbsp;
                <i style={{fontWeight:"500"}} class="fal fa-images"></i>&nbsp;&nbsp;&nbsp;&nbsp;
                <i style={{fontWeight:"500"}} class="fal fa-link"></i>&nbsp;&nbsp;&nbsp;&nbsp;
-               <i style={{fontWeight:"500"}} class="fal fa-ellipsis-h-alt"></i>&nbsp;&nbsp;&nbsp;&nbsp;
-               <input type="checkbox" onChange={this.anonymous} defaultChecked={this.state.anonymous}></input>Anonymous
+               <i style={{fontWeight:"500"}} class="fal fa-ellipsis-h-alt"></i>&nbsp;&nbsp;&nbsp;
+              
+               <input type="radio" onChange={this.anonymous} defaultChecked={this.state.anonymous}></input>Anonymous
 
                </div>
                    <textarea onChange={this.textanswer} rows="9" cols="70"></textarea>
@@ -268,6 +270,7 @@ console.log(this.state.commentStatus)
         let answerdiv = null;
         if(this.state.answers){
             question_val = this.state.answers.question_details[0].question
+            this.state.question_val = question_val
          answerdiv = this.state.answers.answer_details.map(answer => {
              var user_name = answer.user_name
           
@@ -277,7 +280,7 @@ console.log(this.state.commentStatus)
             
           var bookmark_check = "Bookmark"
           if(answer.user_id==localStorage.getItem('user_id')){
-              this.state.ansvis="hidden"
+              this.state.ansvis="Edit"
           }
             this.state.answers_bookmarked.map(booked=>{
                 console.log("booked",booked)
@@ -363,7 +366,7 @@ console.log(this.state.commentStatus)
                     
                     </div>
                 <div>
-                    <a style={{visibility:this.state.ansvis}} onClick={this.answerBlock}><i class="fal fa-edit"></i>&nbsp;Answer</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                    <a  onClick={this.answerBlock}><i class="fal fa-edit"></i>&nbsp;{this.state.ansvis}</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                    
                     <a onClick={this.followQuestion} style={{cursor:"pointer"}}><i class="fal fa-rss"></i>&nbsp;Follow</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     <span><i class="fal fa-user"></i>&nbsp;Request</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;

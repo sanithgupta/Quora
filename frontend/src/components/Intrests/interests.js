@@ -56,7 +56,7 @@ class Interests extends Component {
     return (
       <li className="interestli">
         <input
-          type="checkbox"
+          class="checkbox1"
           id={id}
           value={value}
           onChange={() => this.handleSelect(value, src)}

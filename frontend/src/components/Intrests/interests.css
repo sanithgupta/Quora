@@ -13,7 +13,7 @@
     padding: 0px 0px;
   }
   
-  ul {
+  .ulinterest {
     list-style-type: none;
     border: 1px solid rgb(196, 196, 196);
     box-shadow: 0 0 5px #888;
@@ -27,17 +27,17 @@
     text-align: center;
   }
   
-  li {
+  .interestli {
     display: inline-block;
     margin: 0px 10px;
     height: 32%;
   }
   
-  input[type="checkbox"] {
+  .checkbox1 {
     display: none;
   }
   
-  label {
+  .interestlabel {
     border: 1px solid whitesmoke;
     padding: 10px;
     display: block;
@@ -52,7 +52,7 @@
     user-select: none;
   }
   
-  label::before {
+  .interestlabel::before {
     background-color: white;
     color: white;
     content: " ";
@@ -70,22 +70,22 @@
     transform: scale(0);
   }
   
-  label img {
+  .interestlabel img {
     transition-duration: 0.2s;
     transform-origin: 50% 50%;
   }
   
-  :checked + label {
+  :checked + .interestlabel {
     border-color: #ddd;
   }
   
-  :checked + label::before {
+  :checked + .interestlabel::before {
     content: "✓";
     background-color: grey;
     transform: scale(1);
   }
   
-  :checked + label img {
+  :checked + .interestlabel img {
     transform: scale(0.9);
     box-shadow: 0 0 5px #333;
     z-index: -1;

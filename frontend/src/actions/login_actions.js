@@ -21,7 +21,8 @@ export const submit_login = (email_id, password) => dispatch => {
             console.log("response",response.status);
             if(response.status == 200){
             console.log('Token'+response.data.taoken)
-            localStorage.setItem("token", response.data.token);
+            localStorage.setItem("token", response.data.token)
+            localStorage.setItem('user_id',response.data.user_id)
             dispatch({
                 type: SUBMIT_LOGIN,
                 payload: response.status,

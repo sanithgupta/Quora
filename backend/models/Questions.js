@@ -12,7 +12,8 @@ views:{
     type:Array
 },
 question:{
-    type:String
+    type:String,
+    text: true
 },
 user_id:{
     type:String
@@ -33,6 +34,6 @@ date_time:{
     type:String
 }
 
-})
+},{autoIndex:false})
 var Questions = mongoose.model('Questions',questions);
 module.exports = Questions;
