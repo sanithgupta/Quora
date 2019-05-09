@@ -75,6 +75,11 @@ export class Followers extends Component {
   //       })
   //   }
   // }
+
+profile_view =(val,e)=>{
+  localStorage.setItem('friend', val)
+}
+
   render() {
     let view = (<div>...............</div>)
     if (this.state.followers) {
@@ -83,7 +88,7 @@ export class Followers extends Component {
           <div class="col-sm-6">
             <Card>
               <CardBody>
-                <CardTitle ><a onClick={() => { localStorage.setItem('friend_id', followers.followers_id) }} href="/profile">{followers.name}</a></CardTitle>
+                <CardTitle ><a onClick={this.profile_view.bind(this,followers.followers_id)} href="/profile">{followers.name}</a></CardTitle>
                 <CardSubtitle></CardSubtitle>
                 <CardText><br></br><br></br></CardText>
                 {/* <Button onClick={this.setFollow}>{this.state.follow ? "Follow" : "Following"}</Button> */}

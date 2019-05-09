@@ -296,7 +296,7 @@ export class Profile extends Component {
             friend: localStorage.getItem('friend'),
             user_id: localStorage.getItem('user_id'),
             friend_first_name: localStorage.getItem('Full_Name'),
-            first_name: localStorage.getItem('duplicate_name')
+            first_name: localStorage.getItem('first_name')
         }
         console.log("adding to our following ", data)
         axios.post("http://localhost:3001/following", data)

@@ -115,6 +115,7 @@ topics.find({  } ,function(err,result){
             var this_topic = topic.topic_name.toLowerCase()
             // console.log('aaaaaaaaaaaaaaaaaaa',this_question)
             // console.log(this_question.indexOf(search_value))
+            console.log(topic.topic_name)
             if(this_topic.indexOf(search_value)>-1){
                 topic_result.push(topic)
                 console.log('-------------here',topic_result)

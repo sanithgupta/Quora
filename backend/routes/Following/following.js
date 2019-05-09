@@ -61,7 +61,7 @@ routerr.post('/following', function (req, res) {
                 })
                 console.log("temp", temp)
                 if (temp == 0) {
-                    following.following.push({ following_id: req.body.friend, name: req.body.friend_first_name })
+                    following.following.push({ following_id: req.body.friend, name: req.body.first_name })
                     Users.findOneAndUpdate({ _id: req.body.user_id }, {
                         following: following.following
                     }, function (err, follow) {

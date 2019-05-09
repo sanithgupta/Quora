@@ -4,7 +4,7 @@ import axios from "axios";
 
 //const ROOT_URL = "http://localhost:3001";
 
-export const submit_login = (email_id, password) => dispatch => {
+export const submit_login = (email_id, password) => async dispatch => {
 
     // alert("Actions : verfying login...");
     axios.defaults.withCredentials = true;
@@ -15,7 +15,7 @@ export const submit_login = (email_id, password) => dispatch => {
     console.log(data);
 
     /********************LOGIN **************************/
-    axios.post('http://localhost:3001/login', data)
+    await axios.post('http://localhost:3001/login', data)
         .then(response => {
             // alert("response received after login :", response.status);
             console.log("response",response.status);

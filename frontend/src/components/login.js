@@ -62,6 +62,9 @@ class login extends Component {
 
     renderRedirect = () => {
         if (this.props.redirectVar) {
+            alert(this.props.redirectVar)
+            alert(localStorage.getItem('topic_Count'))
+            console.log('topic count: ',localStorage.getItem('topic_count'))
             localStorage.setItem('email_id', this.state.email_id)
             if (localStorage.getItem('topic_count') > 0) {
                 this.setState({
